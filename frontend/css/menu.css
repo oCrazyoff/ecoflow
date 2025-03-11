@@ -1,0 +1,47 @@
+.sidebar {
+    width: 250px;
+    background: #218380;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar .titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.sidebar .titulo img {
+    width: 2.5em;
+    height: 2.5em;
+    margin: 0;
+}
+
+.sidebar .titulo h1 {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #246a73;
+    padding: 10px;
+    background: #73d2de;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.3s ease all;
+}
+
+.sidebar a i {
+    color: #160f29;
+    font-size: 1.2em;
+}
+
+.sidebar a:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}

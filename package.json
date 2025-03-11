@@ -1,0 +1,17 @@
+{
+  "name": "financial-management",
+  "version": "1.0.0",
+  "description": "A financial management application using PHP and MySQL for the backend and HTML, CSS, and JavaScript for the frontend.",
+  "main": "src/frontend/index.html",
+  "scripts": {
+    "start": "live-server src/frontend",
+    "build": "echo 'Build step not defined'",
+    "test": "echo 'No tests defined'"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  },
+  "devDependencies": {}
+}
