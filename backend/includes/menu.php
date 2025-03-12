@@ -7,7 +7,7 @@ if (!defined('BASE_URL')) {
     }
 }
 ?>
-<link rel="stylesheet" href="<?php echo BASE_URL ?>frontend/css/menu.css">
+<link rel="stylesheet" href="<?php echo BASE_URL ?>frontend/css/menu.css?v=<?php echo time(); ?>">
 <div class="sidebar">
     <div class="top">
         <div class="titulo">
