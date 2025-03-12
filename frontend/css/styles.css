@@ -12,6 +12,9 @@ body {
 }
 
 .main-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     flex: 1;
     padding: 20px;
     overflow-y: auto;
