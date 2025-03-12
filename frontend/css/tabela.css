@@ -9,7 +9,8 @@
     margin: 0;
 }
 
-.titulo button {
+.titulo a {
+    text-decoration: none;
     background-color: #246a73;
     color: white;
     border: none;

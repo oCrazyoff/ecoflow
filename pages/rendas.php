@@ -14,7 +14,7 @@
     <div class="main-content">
         <div class="titulo">
             <h2>Rendas</h2>
-            <button class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</button>
+            <a class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
         </div>
         <table>
             <tr>

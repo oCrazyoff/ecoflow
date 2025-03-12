@@ -14,7 +14,7 @@
     <div class="main-content">
         <div class="titulo">
             <h2>Despesas</h2>
-            <button class="btn"><i class="bi bi-plus-circle"></i> Nova Despesa</button>
+            <a class="btn"><i class="bi bi-plus-circle"></i> Nova Despesa</a>
         </div>
         <table>
             <tr>

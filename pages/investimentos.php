@@ -14,21 +14,26 @@
     <div class="main-content">
         <div class="titulo">
             <h2>Investimentos</h2>
-            <button class="btn"><i class="bi bi-plus-circle"></i> Novo Invesimento</button>
+            <a href="investimentos/cadastrar_investimento.php" class="btn"><i class="bi bi-plus-circle"></i> Novo
+                Invesimento</a>
         </div>
         <table>
             <tr>
-                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Nome</th>
                 <th>Valor</th>
                 <th>Data</th>
                 <th>Rendimento</th>
+                <th>Frequencia</th>
                 <th colspan="2">Ações</th>
             </tr>
             <tr>
-                <td>Ações</td>
-                <td>R$ 1.000,00</td>
+                <td>Ação</td>
+                <td>KNCR11</td>
+                <td>R$ 101,66</td>
                 <td>01/01/2021</td>
-                <td>15%</td>
+                <td>9,56%</td>
+                <td>Mensal</td>
                 <td><button class="btn-edit"><i class="bi bi-pencil"></i></button></td>
                 <td><button class="btn-delete"><i class="bi bi-trash"></i></button></td>
         </table>

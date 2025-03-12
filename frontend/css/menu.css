@@ -4,7 +4,17 @@
     padding: .5em;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar .titulo {
@@ -32,6 +42,7 @@
     display: flex;
     align-items: center;
     gap: 1em;
+    margin-top: .5em;
     text-decoration: none;
     color: #246a73;
     padding: 10px;
@@ -49,6 +60,22 @@
 .sidebar a:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.sidebar .user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    background-color: #246a73;
+    padding: .5em;
+    border-radius: .5em;
+    bottom: 20px;
+}
+
+.sidebar .user i {
+    font-size: 1.5em;
+}
+
 
 @media screen and (max-width: 768px) {
     .sidebar {
@@ -72,6 +99,7 @@
 
     .sidebar a {
         padding: .5em;
+        justify-content: center;
     }
 
     .sidebar p {
