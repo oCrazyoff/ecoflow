@@ -58,7 +58,7 @@ header #btn-cadastro:hover {
     height: 100vh;
     display: flex;
     justify-content: space-between;
-    width: 85%;
+    width: 65%;
 }
 
 #hero .left {
@@ -77,12 +77,12 @@ header #btn-cadastro:hover {
 }
 
 #hero .right img {
-    width: 25em;
-    height: 25em;
+    width: 30em;
+    height: 30em;
 }
 
 #hero h1 {
-    font-size: 5em;
+    font-size: 4.5em;
 }
 
 #hero h1 span {
@@ -91,7 +91,7 @@ header #btn-cadastro:hover {
 
 #hero p {
     width: 60%;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 #hero a {
@@ -99,7 +99,7 @@ header #btn-cadastro:hover {
     color: #fff;
     background-color: #246a73;
     padding: .5em;
-    font-size: 2em;
+    font-size: 1.5em;
     border-radius: 5em;
     width: fit-content;
     transition: .2s ease all;

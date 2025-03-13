@@ -28,9 +28,9 @@ if (!defined('BASE_URL')) {
         </a>
     </div>
     <div class="bottom">
-        <div class="user">
+        <a href="<?php echo BASE_URL ?>pages/user_config.php">
             <i class="bi bi-person-circle"></i>
             <p><?= isset($_SESSION['nome']) ? $_SESSION['nome'] : "Usuario" ?></p>
-        </div>
+        </a>
     </div>
 </div>

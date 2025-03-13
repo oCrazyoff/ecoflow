@@ -33,7 +33,7 @@
                 <a id="btn-cadastro" href="<?php echo BASE_URL ?>pages/dashboard.php">Abrir conta</a>
             </div>
             <div class="right">
-                <img src="<?php echo BASE_URL ?>assets/img/moeda_index.png" alt="Hero">
+                <img src="<?php echo BASE_URL ?>assets/img/index_img.png" alt="Hero">
             </div>
         </div>
     </div>
