@@ -10,6 +10,7 @@
         h2 {
             color: #218380;
             margin-bottom: 1em;
+            font-size: 3em;
         }
 
         #btn-voltar {
@@ -38,7 +39,12 @@
         }
 
         .container-tipos button {
-            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 20em;
+            height: 20em;
             border: 2px solid #218380;
             color: #1c6b63;
             border-radius: 5px;
@@ -48,12 +54,13 @@
         }
 
         .container-tipos button i {
-            font-size: 1.5em;
+            font-size: 4em;
             margin-bottom: 5px;
         }
 
         .container-tipos button p {
-            font-size: 1.2em;
+            font-size: 2.5em;
+            text-align: center;
         }
 
         .container-tipos button:hover {
