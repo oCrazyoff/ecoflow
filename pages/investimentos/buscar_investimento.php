@@ -26,6 +26,7 @@ $modelo = "deepseek-chat";
 
 $pergunta = "
 Você é um assistente financeiro. Responda sucintamente com os dados sobre o ativo solicitado.
+Caso o valor não tiver em Reais, converta!
 
 Ativo:
 - Nome ou ticker: $nome
