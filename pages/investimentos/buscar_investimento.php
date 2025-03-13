@@ -46,7 +46,6 @@ if ($tipo == "acao") {
 } elseif ($tipo == "fii") {
     $pergunta .= "
     {
-        \"nome\": \"$nome\",
         \"ticker\": \"TICKER\",
         \"emissor\": \"EMISSOR\",
         \"valor\": \"R$ 00,00\",

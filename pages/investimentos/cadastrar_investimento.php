@@ -154,16 +154,7 @@
             </form>
         </div>
         <div class="container-resposta">
-            <table id="tabelaInvestimentos">
-                <tr>
-                    <th>Tipo</th>
-                    <th>Nome</th>
-                    <th>Valor</th>
-                    <th>Data</th>
-                    <th>Rendimento</th>
-                    <th>Frequencia</th>
-                </tr>
-            </table>
+            <table id="tabelaInvestimentos"></table>
         </div>
     </div>
 
@@ -210,10 +201,22 @@
         if (tipo === "acao") {
             novaLinha = `
             <tr>
+                <th>Tipo</th>
+                <th>Nome</th>
+                <th>Ticker</th>
+                <th>Empresa</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Rendimento</th>
+                <th>Frequencia</th>
+            </tr>
+            <tr>
                 <td>Ação</td>
                 <td>${data.nome}</td>
-                <td>${data.valor}</td>
+                <td>${data.ticker}</td>
+                <td>${data.empresa}</td>
                 <td><input type="date" id="data" name="data"></td>
+                <td>${data.valor}</td>
                 <td>${data.rendimento}</td>
                 <td>${data.recorrencia}</td>
             </tr>
@@ -221,10 +224,20 @@
         } else if (tipo === "fii") {
             novaLinha = `
             <tr>
-                <td>FII</td>
-                <td>${data.nome}</td>
-                <td>${data.valor}</td>
+                <th>Tipo</th>
+                <th>Ticker</th>
+                <th>Emissor</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Rendimento</th>
+                <th>Frequencia</th>
+            </tr>
+            <tr>
+                <td>Fundo Imobilíario</td>
+                <td>${data.ticker}</td>
+                <td>${data.emissor}</td>
                 <td><input type="date" id="data" name="data"></td>
+                <td>${data.valor}</td>
                 <td>${data.rendimento}</td>
                 <td>${data.recorrencia}</td>
             </tr>
@@ -232,10 +245,20 @@
         } else if (tipo === "rendafixa") {
             novaLinha = `
             <tr>
+                <th>Tipo</th>
+                <th>Nome</th>
+                <th>Emissor</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Rendimento</th>
+                <th>Vencimento</th>
+            </tr>
+            <tr>
                 <td>Renda Fixa</td>
                 <td>${data.nome}</td>
-                <td>${data.valor}</td>
+                <td>${data.emissor}</td>
                 <td><input type="date" id="data" name="data"></td>
+                <td>${data.valor}</td>
                 <td>${data.rendimento}</td>
                 <td>${data.vencimento}</td>
             </tr>
