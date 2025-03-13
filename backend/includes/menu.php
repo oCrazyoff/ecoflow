@@ -14,8 +14,8 @@ if (!defined('BASE_URL')) {
             <img src="<?php echo BASE_URL ?>frontend/img/logo.png" alt="Logo Eco Flow">
             <h1>Eco Flow</h1>
         </div>
-        <a href="<?php echo BASE_URL ?>index.php"><i class="bi bi-house"></i>
-            <p>Inicio</p>
+        <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
+            <p>Dashboard</p>
         </a>
         <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
             <p>Despesas</p>

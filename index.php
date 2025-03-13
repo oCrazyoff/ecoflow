@@ -5,48 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Inicio</title>
-    <link rel="stylesheet" href="frontend/css/inicio.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="frontend/css/index.css?v=<?php echo time(); ?>">
     <?php include("backend/includes/head.php") ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <?php include("backend/includes/menu.php") ?>
     <div class="main-content">
-        <div class="header">
-            <h2>Saldo Atual: R$ 5.000,00</h2>
-        </div>
-
-        <div class="cards">
-            <div class="card">
-                <h3>Resumo Financeiro</h3>
-                <p><strong>Renda Total:</strong> R$ 6.500,00</p>
-                <p><strong>Despesas Totais:</strong> R$ 1.500,00</p>
+        <header>
+            <div class="left">
+                <img src="<?php echo BASE_URL ?>frontend/img/logo.png" alt="Logo Eco Flow">
+                <h1>Eco Flow</h1>
             </div>
-
-            <div class="card">
-                <h3>Despesas Obrigatórias</h3>
-                <p>Aluguel: R$ 1.000,00</p>
-                <p>Energia: R$ 200,00</p>
-                <p>Internet: R$ 100,00</p>
+            <div class="right">
+                <a id="btn-login" href="<?php echo BASE_URL ?>backend/usuario/login.php">Login</a>
+                <a id="btn-cadastro" href="<?php echo BASE_URL ?>backend/usuario/cadastrar.php">Cadastro</a>
             </div>
-
-            <div class="card">
-                <h3>Despesas Não Obrigatórias</h3>
-                <p>Streaming: R$ 50,00</p>
-                <p>Restaurante: R$ 150,00</p>
+        </header>
+        <div id="hero">
+            <div class="left">
+                <h1>Vem ser <br><span>Eco Flow</span></h1>
+                <p>
+                    Faça como os melhores investidores do Brasil
+                    e invista seu salário com consciência
+                    e sabedoria.
+                </p>
+                <a id="btn-cadastro" href="<?php echo BASE_URL ?>pages/dashboard.php">Abrir conta</a>
             </div>
-
-            <div class="card">
-                <h3>Rendas</h3>
-                <p><strong>Ativa:</strong> R$ 6.000,00</p>
-                <p><strong>Passiva:</strong> R$ 500,00</p>
-            </div>
-
-            <div class="card">
-                <h3>Investimentos</h3>
-                <p>Total Investido: R$ 10.000,00</p>
-                <p>Meta: 6x do salário (R$ 36.000,00)</p>
+            <div class="right">
+                <img src="<?php echo BASE_URL ?>frontend/img/moeda_index.png" alt="Hero">
             </div>
         </div>
     </div>
