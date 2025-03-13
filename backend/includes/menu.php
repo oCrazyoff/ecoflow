@@ -7,11 +7,11 @@ if (!defined('BASE_URL')) {
     }
 }
 ?>
-<link rel="stylesheet" href="<?php echo BASE_URL ?>frontend/css/menu.css?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo BASE_URL ?>assets/css/menu.css?v=<?php echo time(); ?>">
 <div class="sidebar">
     <div class="top">
         <div class="titulo">
-            <img src="<?php echo BASE_URL ?>frontend/img/logo.png" alt="Logo Eco Flow">
+            <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
             <h1>Eco Flow</h1>
         </div>
         <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>

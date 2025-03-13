@@ -7,69 +7,133 @@
     <title>Cadastro de Investimentos</title>
     <?php include("../../backend/includes/head.php") ?>
     <style>
-        form {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1em;
-            flex-wrap: wrap;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 65%;
+    h2 {
+        color: #218380;
+        margin-bottom: 1em;
+    }
+
+    .container-busca form {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .container-busca input {
+        padding: 10px;
+        border: 1px solid #218380;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .container-busca select {
+        padding: 10px;
+        border: 1px solid #218380;
+        border-radius: 5px;
+    }
+
+    .container-busca button {
+        padding: 10px;
+        background-color: #218380;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 1em;
+        transition: .2s ease all;
+    }
+
+    .container-busca button:hover {
+        background-color: #1c6b63;
+    }
+
+    .container-resposta table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .container-resposta table th {
+        background-color: #218380;
+        color: white;
+        padding: 10px;
+    }
+
+    .container-resposta table td {
+        padding: 10px;
+        border-bottom: 1px solid #218380;
+    }
+
+    .container-resposta table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .container-resposta table tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    .container-resposta table button {
+        padding: 5px;
+        background-color: #218380;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: .2s ease all;
+    }
+
+    .container-resposta table button:hover {
+        background-color: #1c6b63;
+    }
+
+    .container-resposta table button+button {
+        background-color: #ff4d4d;
+    }
+
+    .container-resposta table button+button:hover {
+        background-color: #e63a3a;
+    }
+
+    .container-resposta table th,
+    .container-resposta table td {
+        text-align: center;
+    }
+
+    /* Loading screen styles */
+    .loading-screen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-screen.active {
+        display: flex;
+    }
+
+    .loading-spinner {
+        border: 16px solid #f3f3f3;
+        border-top: 16px solid #218380;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
         }
 
-        h2 {
-            color: #218380;
-            text-align: center;
-            margin-bottom: .5em;
+        100% {
+            transform: rotate(360deg);
         }
-
-        .card {
-            background: #ffffff;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #218380;
-            margin-bottom: 10px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-
-        select,
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #218380;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #176d5c;
-        }
+    }
     </style>
 </head>
 
@@ -77,84 +141,119 @@
     <?php include("../../backend/includes/menu.php") ?>
     <div class="main-content">
         <h2>Cadastro de Investimentos</h2>
-        <form id="form-investimento" onsubmit="enviarFormulario(event)">
-            <div class="card">
-                <div class="section-title">Informações Gerais</div>
-                <label for="nome">Nome/Descrição:</label>
-                <input type="text" id="nome" name="nome" placeholder="Nome do investimento" required>
-
-                <label for="tipo">Tipo de Investimento:</label>
-                <select id="tipo" name="tipo" onchange="atualizarCampos()" required>
-                    <option value="acao">Ações</option>
+        <div class="container-busca">
+            <form id="formBusca">
+                <input type="text" id="nomeInvestimento" placeholder="Buscar Investimento" required>
+                <select name="tipo" id="tipo" required>
+                    <option value="" disabled selected>Selecione o tipo</option>
+                    <option value="acao">Ação</option>
                     <option value="fii">FII</option>
-                    <option value="renda_fixa">Renda Fixa</option>
+                    <option value="rendafixa">Renda Fixa</option>
                 </select>
-            </div>
-
-            <div class="card">
-                <div class="section-title">Detalhes Financeiros</div>
-                <label for="rendimento">Rendimento (% ao ano):</label>
-                <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="Ex: 10" required>
-
-                <label for="valor">Valor Investido:</label>
-                <input type="number" step="0.01" id="valor" name="valor" placeholder="Ex: 1000" required>
-            </div>
-
-            <div class="card">
-                <div class="section-title">Configuração da Compra</div>
-                <label for="data_compra">Data de Compra:</label>
-                <input type="date" id="data_compra" name="data_compra" value="" required>
-
-                <label for="frequencia">Frequência:</label>
-                <select id="frequencia" name="frequencia" required>
-                    <option value="diaria">Diária</option>
-                    <option value="mensal">Mensal</option>
-                    <option value="anual">Anual</option>
-                </select>
-            </div>
-
-            <div class="card" id="campos-adicionais">
-                <div class="section-title">Detalhes Específicos</div>
-            </div>
-
-            <button type="submit">Cadastrar</button>
-        </form>
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="container-resposta">
+            <table id="tabelaInvestimentos">
+                <tr>
+                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Rendimento</th>
+                    <th>Frequencia</th>
+                </tr>
+            </table>
+        </div>
     </div>
+
+    <!-- Loading screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
     <script>
-        document.getElementById("data_compra").valueAsDate = new Date();
+    document.querySelector('#formBusca').addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-        function atualizarCampos() {
-            const tipo = document.getElementById("tipo").value;
-            const campos = document.getElementById("campos-adicionais");
-            campos.innerHTML = '<div class="section-title">Detalhes Específicos</div>';
+        const tipo = document.querySelector('#tipo').value;
+        const nome = document.querySelector('#nomeInvestimento').value;
 
-            if (tipo === "acao" || tipo === "fii") {
-                campos.innerHTML += `
-                    <label for="ticker">Ticker:</label>
-                    <input type="text" id="ticker" name="ticker" placeholder="Ex: PETR4" required>
-                    <label for="quantidade">Quantidade:</label>
-                    <input type="number" id="quantidade" name="quantidade" placeholder="Número de cotas ou ações" required>
-                `;
-            } else if (tipo === "renda_fixa") {
-                campos.innerHTML += `
-                    <label for="emissor">Emissor:</label>
-                    <input type="text" id="emissor" name="emissor" placeholder="Ex: Tesouro Nacional" required>
-                    <label for="vencimento">Data de Vencimento:</label>
-                    <input type="date" id="vencimento" name="vencimento" required>
-                `;
-            }
+        // Show loading screen
+        const loadingScreen = document.getElementById('loadingScreen');
+        loadingScreen.classList.add('active');
+
+        const resposta = await fetch("buscar_investimento.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                tipo,
+                nome
+            })
+        });
+
+        const data = await resposta.json();
+
+        // Hide loading screen
+        loadingScreen.classList.remove('active');
+
+        if (data.erro) {
+            alert(data.erro);
+            return;
         }
 
-        function enviarFormulario(event) {
-            event.preventDefault();
-            const formData = new FormData(document.getElementById("form-investimento"));
-            const dados = {};
-            formData.forEach((value, key) => dados[key] = value);
-            console.log("Dados enviados:", dados);
-            alert("Investimento cadastrado com sucesso!");
+        const tabela = document.getElementById('tabelaInvestimentos');
+        let novaLinha = '';
+
+        if (tipo === "acao") {
+            novaLinha = `
+            <tr>
+                <td>Ação</td>
+                <td>${data.nome}</td>
+                <td>${data.valor}</td>
+                <td><input type="date" id="data" name="data"></td>
+                <td>${data.rendimento}</td>
+                <td>${data.recorrencia}</td>
+            </tr>
+            `;
+        } else if (tipo === "fii") {
+            novaLinha = `
+            <tr>
+                <td>FII</td>
+                <td>${data.nome}</td>
+                <td>${data.valor}</td>
+                <td><input type="date" id="data" name="data"></td>
+                <td>${data.rendimento}</td>
+                <td>${data.recorrencia}</td>
+            </tr>
+            `;
+        } else if (tipo === "rendafixa") {
+            novaLinha = `
+            <tr>
+                <td>Renda Fixa</td>
+                <td>${data.nome}</td>
+                <td>${data.valor}</td>
+                <td><input type="date" id="data" name="data"></td>
+                <td>${data.rendimento}</td>
+                <td>${data.vencimento}</td>
+            </tr>
+            `;
         }
+
+        tabela.innerHTML += novaLinha;
+
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+
+        const dataHoje = `${ano}-${mes}-${dia}`;
+
+        document.getElementById('data').value = dataHoje;
+    });
     </script>
-
 </body>
 
 </html>

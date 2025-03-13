@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Dashboard</title>
-    <link rel="stylesheet" href="../frontend/css/dashboard.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/dashboard.css?v=<?php echo time(); ?>">
     <?php include("../backend/includes/head.php") ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>

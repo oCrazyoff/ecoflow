@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Inicio</title>
-    <link rel="stylesheet" href="frontend/css/index.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/index.css?v=<?php echo time(); ?>">
     <?php include("backend/includes/head.php") ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -14,7 +14,7 @@
     <div class="main-content">
         <header>
             <div class="left">
-                <img src="<?php echo BASE_URL ?>frontend/img/logo.png" alt="Logo Eco Flow">
+                <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
                 <h1>Eco Flow</h1>
             </div>
             <div class="right">
@@ -33,7 +33,7 @@
                 <a id="btn-cadastro" href="<?php echo BASE_URL ?>pages/dashboard.php">Abrir conta</a>
             </div>
             <div class="right">
-                <img src="<?php echo BASE_URL ?>frontend/img/moeda_index.png" alt="Hero">
+                <img src="<?php echo BASE_URL ?>assets/img/moeda_index.png" alt="Hero">
             </div>
         </div>
     </div>

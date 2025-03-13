@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Investimentos</title>
-    <link rel="stylesheet" href="../frontend/css/tabela.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/tabela.css?v=<?php echo time(); ?>">
     <?php include("../backend/includes/head.php") ?>
 </head>
 
