@@ -22,7 +22,6 @@
                 <th>Tipo</th>
                 <th>Nome</th>
                 <th>Valor</th>
-                <th>Data</th>
                 <th>Rendimento</th>
                 <th>Frequencia</th>
                 <th colspan="2">Ações</th>
@@ -31,7 +30,6 @@
                 <td>Ação</td>
                 <td>KNCR11</td>
                 <td>R$ 101,66</td>
-                <td>01/01/2021</td>
                 <td>9,56%</td>
                 <td>Mensal</td>
                 <td><button class="btn-edit"><i class="bi bi-pencil"></i></button></td>

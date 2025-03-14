@@ -49,40 +49,31 @@
                 <p>Meta: 6x do salário (R$ 36.000,00)</p>
             </div>
 
-            <div class="graficos">
-                <!-- Gráfico Financeiro -->
-                <div class="card" id="grafico">
-                    <h3>Rendas | Despesas | Investimentos</h3>
-                    <canvas id="graficoFinanceiro"></canvas>
-                </div>
+            <div class="card" id="grafico-coluna">
+                <h3>Rendas | Despesas | Investimentos</h3>
+                <canvas id="graficoFinanceiro"></canvas>
+            </div>
 
-                <!-- Gráfico de Pizza da Meta -->
-                <div class="card">
-                    <h3>Meta de Investimentos</h3>
-                    <canvas id="graficoProgresso"></canvas>
-                </div>
+            <div class="card" id="grafico">
+                <h3>Progresso da Meta de Investimentos</h3>
+                <canvas id="graficoProgresso"></canvas>
+            </div>
 
-                <!-- Imagem -->
-                <div class="card" id="imagem">
-                    <img src="../assets/img/dashboard_img.jpg" alt="Eco Flow">
-                </div>
+            <div class="card" id="grafico">
+                <h3>Distribuição das Despesas e Rendimento</h3>
+                <canvas id="graficoDistribuicao"></canvas>
             </div>
         </div>
     </div>
 
     <script>
-        // Substitua esses valores pelos dados reais puxados do banco
-        let rendaAtiva = 6000;
-        let totalDespesas = 1500;
-        let totalInvestimentos = 10000;
+        let rendaTotal = 6500;
+        let despesasObrigatorias = 1300;
+        let despesasNaoObrigatorias = 200;
+        let totalDespesas = despesasObrigatorias + despesasNaoObrigatorias;
+        let investimentos = rendaTotal - totalDespesas;
+        if (investimentos < 0) investimentos = 0;
 
-        let metaInvestimento = rendaAtiva * 6; // Meta de investimento = 6x renda ativa
-        let faltaInvestir = metaInvestimento - totalInvestimentos; // Quanto falta para atingir a meta
-
-        // Garante que o valor não fique negativo (caso já tenha ultrapassado a meta)
-        faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
-
-        // Gráfico de Barras
         let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
         new Chart(ctx1, {
             type: 'bar',
@@ -90,8 +81,8 @@
                 labels: ['Renda', 'Despesas', 'Investimentos'],
                 datasets: [{
                     label: 'Valores em R$',
-                    data: [rendaAtiva + 500, totalDespesas, totalInvestimentos],
-                    backgroundColor: ['green', 'red', 'blue']
+                    data: [rendaTotal, totalDespesas, 10000],
+                    backgroundColor: ['#4c956c', '#d90429', '#219ebc']
                 }]
             },
             options: {
@@ -112,10 +103,15 @@
             }
         });
 
-        // Gráfico de Pizza (Progresso da Meta)
         let ctx2 = document.getElementById('graficoProgresso').getContext('2d');
+        let rendaAtiva = 6000;
+        let metaInvestimento = rendaAtiva * 6;
+        let totalInvestimentos = 10000;
+        let faltaInvestir = metaInvestimento - totalInvestimentos;
+        faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
+
         new Chart(ctx2, {
-            type: 'doughnut', // Tipo "doughnut" para ficar mais bonito
+            type: 'doughnut',
             data: {
                 labels: ['Já Investido', 'Falta Investir'],
                 datasets: [{
@@ -132,8 +128,36 @@
                 }
             }
         });
-    </script>
 
+        let totalDistribuicao = despesasObrigatorias + despesasNaoObrigatorias + investimentos;
+        let pctObrigatorias = (despesasObrigatorias / totalDistribuicao) * 100;
+        let pctNaoObrigatorias = (despesasNaoObrigatorias / totalDistribuicao) * 100;
+        let pctInvestimentos = (investimentos / totalDistribuicao) * 100;
+
+        let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
+        new Chart(ctxDistribuicao, {
+            type: 'pie',
+            data: {
+                labels: [
+                    `Obrigatórias (${pctObrigatorias.toFixed(1)}%)`,
+                    `Não Obrigatórias (${pctNaoObrigatorias.toFixed(1)}%)`,
+                    `Investimentos (${pctInvestimentos.toFixed(1)}%)`
+                ],
+                datasets: [{
+                    data: [pctObrigatorias, pctNaoObrigatorias, pctInvestimentos],
+                    backgroundColor: ['#d90429', '#fb8500', '#4c956c']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

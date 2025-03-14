@@ -37,18 +37,9 @@
 }
 
 #grafico {
-    width: 30em;
-    padding: 1em;
+    width: 15em;
 }
 
-#imagem {
-    box-shadow: none;
-    width: 25em;
-    background-color: transparent;
-    padding: 0;
-}
-
-#imagem img {
-    width: 100%;
-    border-radius: 1em;
+#grafico-coluna {
+    width: 35em;
 }

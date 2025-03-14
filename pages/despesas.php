@@ -20,14 +20,14 @@
             <tr>
                 <th>Descrição</th>
                 <th>Valor</th>
-                <th>Data</th>
+                <th>Frequencia</th>
                 <th>Tipo</th>
                 <th colspan="2">Ações</th>
             </tr>
             <tr>
                 <td>Aluguel</td>
                 <td>R$ 1.000,00</td>
-                <td>01/01/2021</td>
+                <td>Mensal</td>
                 <td>Obrigatoria</td>
                 <td><button class="btn-edit"><i class="bi bi-pencil"></i></button></td>
                 <td><button class="btn-delete"><i class="bi bi-trash"></i></button></td>
