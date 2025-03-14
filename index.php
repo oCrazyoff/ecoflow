@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco Flow | Inicio</title>
+    <title>Eco Flow</title>
     <link rel="stylesheet" href="assets/css/index.css?v=<?php echo time(); ?>">
     <?php include("backend/includes/head.php") ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -12,25 +12,25 @@
 <body>
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
-        <h1>Configurações do Usuário</h1>
+        <h1><i class="bi bi-person-gear"></i> Configurações do Usuário</h1>
         <form>
             <div class="form-group">
-                <label for="username">Nome de Usuário:</label>
+                <label for="username"><i class="bi bi-person"></i> Nome de Usuário:</label>
                 <input type="text" id="username" name="username">
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email"><i class="bi bi-envelope"></i> Email:</label>
                 <input type="email" id="email" name="email">
             </div>
             <div class="form-group">
-                <label for="password">Senha:</label>
+                <label for="password"><i class="bi bi-lock"></i> Senha:</label>
                 <input type="password" id="password" name="password">
             </div>
             <div class="form-group">
-                <label for="confirm-password">Confirmar Senha:</label>
+                <label for="confirm-password"><i class="bi bi-lock-fill"></i> Confirmar Senha:</label>
                 <input type="password" id="confirm-password" name="confirm-password">
             </div>
-            <button type="submit">Salvar</button>
+            <button type="submit"><i class="bi bi-save"></i> Salvar</button>
         </form>
     </div>
 </body>

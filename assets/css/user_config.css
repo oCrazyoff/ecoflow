@@ -1,52 +1,72 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+.main-content h1 {
+    color: #218380;
+    font-size: 2.5em;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
 }
 
-.main-content {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
+h1 i {
+    margin-right: 10px;
+}
+
+form {
+    width: 100%;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    text-align: center;
-    color: #333;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 1.5em;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5em;
     color: #333;
+    font-size: 1.1em;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 0.8em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-top: 0.5em;
 }
 
-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: #fff;
+button[type="submit"] {
+    padding: 1em 2em;
+    background-color: #218380;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1.2em;
+    transition: 0.3s ease all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
 }
 
-button:hover {
-    background-color: #218838;
+button[type="submit"] i {
+    margin-right: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #1c6b63;
+}
+
+button[type="submit"]:focus {
+    outline: none;
+}
+
+/* Ícones nos campos de formulário */
+.form-group i {
+    color: #218380;
+    margin-right: 10px;
 }

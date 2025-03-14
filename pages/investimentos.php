@@ -14,7 +14,7 @@
     <div class="main-content">
         <div class="titulo">
             <h2>Investimentos</h2>
-            <a href="investimentos/cadastrar_investimento.php" class="btn"><i class="bi bi-plus-circle"></i> Novo
+            <a href="cadastro/investimento.php" class="btn"><i class="bi bi-plus-circle"></i> Novo
                 Invesimento</a>
         </div>
         <table>
