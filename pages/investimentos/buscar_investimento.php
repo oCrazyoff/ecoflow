@@ -40,6 +40,7 @@ if ($tipo == "acao") {
         \"ticker\": \"TICKER\",
         \"empresa\": \"EMPRESA\",
         \"valor\": \"R$ 00,00\",
+        \"cota\": \"R$ 00,00\",
         \"rendimento\": \"X% ao ano\",
         \"recorrencia\": \"Mensal/Trimestral/Anual\"
     }
@@ -110,6 +111,7 @@ if (isset($mensagem->choices[0]->message->content)) {
         if ($tipo == "acao") {
             $resultado["empresa"] = $resposta_json["empresa"] ?? "Desconhecido";
             $resultado["recorrencia"] = $resposta_json["recorrencia"] ?? "Desconhecido";
+            $resultado["cota"] = $resposta_json["cota"] ?? "Desconhecido";
         } elseif ($tipo == "fii") {
             $resultado["emissor"] = $resposta_json["emissor"] ?? "Desconhecido";
             $resultado["recorrencia"] = $resposta_json["recorrencia"] ?? "Desconhecido";

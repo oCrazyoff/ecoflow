@@ -294,6 +294,7 @@
                         <th>Empresa</th>
                         <th>Data</th>
                         <th>Valor</th>
+                        <th>Cota</th>
                         <th>Rendimento</th>
                         <th>Frequência</th>
                     </tr>
@@ -304,6 +305,7 @@
                         <td>${data.empresa}</td>
                         <td><input type="date" id="data" name="data"></td>
                         <td>${data.valor}</td>
+                        <td>${data.cota}</td>
                         <td>${data.rendimento}</td>
                         <td>${data.recorrencia}</td>
                     </tr>
