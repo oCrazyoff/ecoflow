@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if (empty($_SESSION['_csrf'])) {
+    $_SESSION['_csrf'] = hash('sha256', random_bytes(32)); // Gera um token CSRF seguro
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -108,7 +115,8 @@
     <div class="main-content">
         <div class="form-container">
             <h2>Cadastre-se</h2>
-            <form action="backend/auth/cadastrese.php" method="POST">
+            <form action="backend/auth/cadastro.php" method="POST">
+                <input type="hidden" name="_csrf" value="<?php echo $_SESSION['_csrf']; ?>">
                 <div class="form-group">
                     <label for="nome">Nome</label>
                     <input type="text" id="nome" name="nome" placeholder="Seu nome:" required>

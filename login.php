@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if (empty($_SESSION['_csrf'])) {
+    $_SESSION['_csrf'] = hash('sha256', random_bytes(32)); // Gera um token CSRF seguro
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -108,7 +115,8 @@
     <div class="main-content">
         <div class="form-container">
             <h2>Login</h2>
-            <form action="pages/dashboard.php" method="POST">
+            <form action="backend/auth/login.php" method="POST">
+                <input type="hidden" name="_csrf" value="<?php echo $_SESSION['_csrf']; ?>">
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" name="email" placeholder="Seu E-mail:" required>
@@ -125,6 +133,14 @@
             </div>
         </div>
     </div>
+    <script>
+        <?php
+        if ($_SESSION['resposta']) {
+            echo "alert('" . $_SESSION['resposta'] . "')";
+            unset($_SESSION['resposta']);
+        }
+        ?>
+    </script>
 </body>
 
 </html>
