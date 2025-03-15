@@ -18,8 +18,8 @@
                 <h1>Eco Flow</h1>
             </div>
             <div class="right">
-                <a id="btn-login" href="<?php echo BASE_URL ?>backend/usuario/login.php">Login</a>
-                <a id="btn-cadastro" href="<?php echo BASE_URL ?>backend/usuario/cadastrar.php">Cadastro</a>
+                <a id="btn-login" href="<?php echo BASE_URL ?>login.php">Login</a>
+                <a id="btn-cadastro" href="<?php echo BASE_URL ?>cadastro.php">Cadastro</a>
             </div>
         </header>
         <div id="hero">
@@ -30,7 +30,7 @@
                     e invista seu salário com consciência
                     e sabedoria.
                 </p>
-                <a id="btn-cadastro" href="<?php echo BASE_URL ?>pages/dashboard.php">Abrir conta</a>
+                <a id="btn-cadastro" href="<?php echo BASE_URL ?>cadastro.php">Abrir conta</a>
             </div>
             <div class="right">
                 <img src="<?php echo BASE_URL ?>assets/img/index_img.png" alt="Hero">

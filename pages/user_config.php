@@ -30,7 +30,10 @@
                 <label for="confirm-password"><i class="bi bi-lock-fill"></i> Confirmar Senha:</label>
                 <input type="password" id="confirm-password" name="confirm-password">
             </div>
-            <button type="submit"><i class="bi bi-save"></i> Salvar</button>
+            <div class="botoes">
+                <button type="submit"><i class="bi bi-save"></i> Salvar</button>
+                <a href="../backend/auth/logout.php"><i class="bi bi-box-arrow-left"></i> Trocar conta</a>
+            </div>
         </form>
     </div>
 </body>

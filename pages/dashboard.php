@@ -50,7 +50,7 @@
             </div>
 
             <div class="card" id="grafico-coluna">
-                <h3>Rendas | Despesas | Investimentos</h3>
+                <h3>Rendas • Despesas • Investimentos</h3>
                 <canvas id="graficoFinanceiro"></canvas>
             </div>
 
