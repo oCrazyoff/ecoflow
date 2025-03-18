@@ -17,13 +17,6 @@ header img {
     margin: 0;
 }
 
-header h1 {
-    text-align: center;
-    font-size: 1.5em;
-    margin: 0;
-    font-family: "Bruno Ace SC", sans-serif;
-}
-
 header a {
     text-decoration: none;
     color: #fff;
@@ -105,4 +98,38 @@ header #btn-cadastro:hover {
 
 #hero a:hover {
     background-color: #145553;
+}
+
+@media screen and (max-width: 768px) {
+    #hero {
+        width: 100%;
+        flex-direction: column-reverse;
+        justify-content: center;
+    }
+
+    #hero .left,
+    #hero .right {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    #hero .right img {
+        width: 18em;
+        height: 18em;
+    }
+
+    #hero h1 {
+        font-size: 2.5em;
+    }
+
+    #hero p {
+        width: 90%;
+        font-size: 1.2em;
+    }
+
+    #hero a {
+        font-size: 1.2em;
+        width: 100%;
+    }
 }

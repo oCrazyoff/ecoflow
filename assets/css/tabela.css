@@ -11,6 +11,11 @@
 }
 
 .titulo a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: .1em;
     text-decoration: none;
     background-color: #246a73;
     color: white;
@@ -18,6 +23,11 @@
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
 }
 
 table {
@@ -73,7 +83,20 @@ td form {
 
 @media screen and (max-width: 768px) {
     table {
-        font-size: 16px;
+        width: 100%;
+        min-width: 600px;
+    }
+
+    .titulo {
+        margin-top: 2em;
+    }
+
+    .titulo a {
+        padding: .5em .3em;
+    }
+
+    .titulo h2 {
+        font-size: 1.4em;
     }
 
     table th,

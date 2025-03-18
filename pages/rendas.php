@@ -27,38 +27,40 @@ $result = $stmt->get_result();
             <h2>Rendas</h2>
             <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
         </div>
-        <table>
-            <tr>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Frequencia</th>
-                <th>Tipo</th>
-                <th colspan="2">Ações</th>
-            </tr>
-            <?php
-            while ($row = $result->fetch_assoc()) {
-                echo "<td>" . $row['descricao'] . "</td>";
-                echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                echo "<td>" . $row['frequencia'] . "</td>";
-                echo "<td>" . $row['tipo'] . "</td>";
-                echo "
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Frequencia</th>
+                    <th>Tipo</th>
+                    <th colspan="2">Ações</th>
+                </tr>
+                <?php
+                while ($row = $result->fetch_assoc()) {
+                    echo "<td>" . $row['descricao'] . "</td>";
+                    echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
+                    echo "<td>" . $row['frequencia'] . "</td>";
+                    echo "<td>" . $row['tipo'] . "</td>";
+                    echo "
                     <td>
                         <form action='editar/renda.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-delete'><i class='bi bi-pencil'></i></button>
                         </form>
                     </td>";
-                echo "
+                    echo "
                     <td>
                         <form action='../backend/database/rendas/deletar.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                         </form>
                     </td>";
-                echo "</tr>";
-            }
-            ?>
-        </table>
+                    echo "</tr>";
+                }
+                ?>
+            </table>
+        </div>
     </div>
     <script>
         <?php

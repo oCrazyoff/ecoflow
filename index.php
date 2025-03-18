@@ -15,7 +15,6 @@
         <header>
             <div class="left">
                 <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
-                <h1>Eco Flow</h1>
             </div>
             <div class="right">
                 <a id="btn-login" href="<?php echo BASE_URL ?>login.php">Login</a>

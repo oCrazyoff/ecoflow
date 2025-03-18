@@ -28,41 +28,43 @@ $result = $stmt->get_result();
             <a href="cadastro/investimento.php" class="btn"><i class="bi bi-plus-circle"></i> Novo
                 Invesimento</a>
         </div>
-        <table>
-            <tr>
-                <th>Tipo</th>
-                <th>Nome</th>
-                <th>Custo</th>
-                <th>Rendimento</th>
-                <th>Frequencia</th>
-                <th colspan="2">Ações</th>
-            </tr>
-            <tr>
-                <?php
-                while ($row = $result->fetch_assoc()) {
-                    echo "<td>" . $row['tipo'] . "</td>";
-                    echo "<td>" . $row['nome'] . "</td>";
-                    echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
-                    echo "<td>" . number_format($row['rendimento'], 2, ',') . "%</td>";
-                    echo "<td>" . $row['frequencia'] . "</td>";
-                    echo "
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Custo</th>
+                    <th>Rendimento</th>
+                    <th>Frequencia</th>
+                    <th colspan="2">Ações</th>
+                </tr>
+                <tr>
+                    <?php
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<td>" . $row['tipo'] . "</td>";
+                        echo "<td>" . $row['nome'] . "</td>";
+                        echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
+                        echo "<td>" . number_format($row['rendimento'], 2, ',') . "%</td>";
+                        echo "<td>" . $row['frequencia'] . "</td>";
+                        echo "
                     <td>
                         <form action='editar/investimento.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-delete'><i class='bi bi-pencil'></i></button>
                         </form>
                     </td>";
-                    echo "
+                        echo "
                     <td>
                         <form action='../backend/database/investimentos/deletar.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                         </form>
                     </td>";
-                    echo "</tr>";
-                }
-                ?>
-        </table>
+                        echo "</tr>";
+                    }
+                    ?>
+            </table>
+        </div>
     </div>
     <script>
         <?php

@@ -27,16 +27,17 @@ $result = $stmt->get_result();
             <h2>Despesas</h2>
             <a href="cadastro/despesa.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Despesa</a>
         </div>
-        <table>
-            <tr>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Frequencia</th>
-                <th>Tipo</th>
-                <th colspan="2">Ações</th>
-            </tr>
-            <tr>
-                <?php
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Frequencia</th>
+                    <th>Tipo</th>
+                    <th colspan="2">Ações</th>
+                </tr>
+                <tr>
+                    <?php
                 while ($row = $result->fetch_assoc()) {
                     echo "<td>" . $row['descricao'] . "</td>";
                     echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
@@ -59,10 +60,11 @@ $result = $stmt->get_result();
                     echo "</tr>";
                 }
                 ?>
-        </table>
+            </table>
+        </div>
     </div>
     <script>
-        <?php
+    <?php
         if (isset($_SESSION['resposta'])) {
             echo "alert('" . $_SESSION['resposta'] . "');";
             unset($_SESSION['resposta']);
