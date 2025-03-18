@@ -43,3 +43,26 @@
 #grafico-coluna {
     width: 30em;
 }
+
+@media screen and (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+    }
+
+    .graficos {
+        flex-direction: column;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    #grafico {
+        width: 100%;
+    }
+
+    #grafico-coluna {
+        width: 100%;
+    }
+
+}

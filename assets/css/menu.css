@@ -6,7 +6,6 @@
     flex-direction: column;
     justify-content: space-between;
     transition: .5s ease all;
-    overflow: hidden;
 }
 
 .sidebar .top {
@@ -104,6 +103,12 @@
     .sidebar {
         width: 0;
         visibility: hidden;
+        position: absolute;
+        height: 100vh;
+        overflow-x: auto;
+        top: 0;
+        left: 0;
+        z-index: 1000;
     }
 
     .sidebar.active {
