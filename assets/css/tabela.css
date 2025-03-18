@@ -46,9 +46,18 @@ table tr:hover {
     background-color: #f1f1f1;
 }
 
+td form,
+td form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .btn-edit,
 .btn-delete {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     background: none;
     border: none;

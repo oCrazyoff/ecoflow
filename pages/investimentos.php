@@ -1,3 +1,14 @@
+<?php
+require_once("../backend/includes/valida.php");
+require_once("../backend/config/database.php");
+
+$sql = "SELECT * FROM investimentos WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -21,21 +32,46 @@
             <tr>
                 <th>Tipo</th>
                 <th>Nome</th>
-                <th>Valor</th>
+                <th>Custo</th>
                 <th>Rendimento</th>
                 <th>Frequencia</th>
                 <th colspan="2">Ações</th>
             </tr>
             <tr>
-                <td>Ação</td>
-                <td>KNCR11</td>
-                <td>R$ 101,66</td>
-                <td>9,56%</td>
-                <td>Mensal</td>
-                <td><button class="btn-edit"><i class="bi bi-pencil"></i></button></td>
-                <td><button class="btn-delete"><i class="bi bi-trash"></i></button></td>
+                <?php
+                while ($row = $result->fetch_assoc()) {
+                    echo "<td>" . $row['tipo'] . "</td>";
+                    echo "<td>" . $row['nome'] . "</td>";
+                    echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
+                    echo "<td>" . number_format($row['rendimento'], 2, ',') . "%</td>";
+                    echo "<td>" . $row['frequencia'] . "</td>";
+                    echo "
+                    <td>
+                        <form action='editar/investimento.php' method='POST'>
+                            <input type='hidden' name='id' value='" . $row['id'] . "'>
+                            <button type='submit' class='btn-delete'><i class='bi bi-pencil'></i></button>
+                        </form>
+                    </td>";
+                    echo "
+                    <td>
+                        <form action='../backend/database/investimentos/deletar.php' method='POST'>
+                            <input type='hidden' name='id' value='" . $row['id'] . "'>
+                            <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
+                        </form>
+                    </td>";
+                    echo "</tr>";
+                }
+                ?>
         </table>
     </div>
+    <script>
+        <?php
+        if (isset($_SESSION['resposta'])) {
+            echo "alert('" . $_SESSION['resposta'] . "');";
+            unset($_SESSION['resposta']);
+        }
+        ?>
+    </script>
 </body>
 
 </html>

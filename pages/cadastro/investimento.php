@@ -1,3 +1,5 @@
+<?php require_once("../../backend/includes/valida.php") ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -7,105 +9,105 @@
     <title>Cadastro de Investimentos</title>
     <?php include("../../backend/includes/head.php") ?>
     <style>
-        h2 {
-            color: #218380;
-            margin-bottom: 1em;
-            font-size: 3em;
-        }
+    h2 {
+        color: #218380;
+        margin-bottom: 1em;
+        font-size: 3em;
+    }
 
-        #btn-voltar {
-            padding: .2em .5em;
-            background-color: #218380;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: .2s ease all;
-            position: absolute;
-            top: 1em;
-            left: 1em;
-            font-size: 1.5em;
-        }
+    #btn-voltar {
+        padding: .2em .5em;
+        background-color: #218380;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: .2s ease all;
+        position: absolute;
+        top: 1em;
+        left: 1em;
+        font-size: 1.5em;
+    }
 
-        #btn-voltar:hover {
-            background-color: #1c6b63;
-        }
+    #btn-voltar:hover {
+        background-color: #1c6b63;
+    }
 
-        .form-container {
-            margin: 0 auto;
-        }
+    .form-container {
+        margin: 0 auto;
+    }
 
-        .form-container .top-form {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1em;
-        }
+    .form-container .top-form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1em;
+    }
 
-        .card {
-            width: 40%;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+    .card {
+        width: 40%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        .card h3 {
-            color: #218380;
-            margin-bottom: 1em;
-        }
+    .card h3 {
+        color: #218380;
+        margin-bottom: 1em;
+    }
 
-        .form-group {
-            margin-bottom: 1.5em;
-        }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5em;
-            color: #333;
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5em;
+        color: #333;
+    }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.8em;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1em;
-        }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.8em;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+    }
 
-        .form-group input[type="number"] {
-            display: inline-block;
-        }
+    .form-group input[type="number"] {
+        display: inline-block;
+    }
 
-        .form-group select {
-            display: inline-block;
-        }
+    .form-group select {
+        display: inline-block;
+    }
 
-        .form-group .frequency-select {
-            width: 100%;
-        }
+    .form-group .frequency-select {
+        width: 100%;
+    }
 
-        .container-btn {
-            display: flex;
-            justify-content: right;
-            margin-top: 1em;
-        }
+    .container-btn {
+        display: flex;
+        justify-content: right;
+        margin-top: 1em;
+    }
 
-        button[type="submit"] {
-            padding: .5em 1em;
-            background-color: #218380;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: 0.3s ease all;
-        }
+    button[type="submit"] {
+        padding: .5em 1em;
+        background-color: #218380;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        transition: 0.3s ease all;
+    }
 
-        button[type="submit"]:hover {
-            background-color: #1c6b63;
-        }
+    button[type="submit"]:hover {
+        background-color: #1c6b63;
+    }
     </style>
 </head>
 
@@ -118,7 +120,7 @@
         </button>
 
         <div class="form-container">
-            <form action="processar_cadastro.php" method="POST">
+            <form action="../../backend/database/investimentos/cadastrar.php" method="POST">
                 <div class="top-form">
                     <!-- Informações Gerais -->
                     <div class="card">

@@ -1,3 +1,30 @@
+<?php
+require_once("../backend/includes/valida.php");
+require_once("../backend/config/database.php");
+
+$user_id = $_SESSION['id'];
+
+$sqlRendaTotal = "SELECT valor FROM rendas WHERE user_id = $user_id";
+$resultadoRendaTotal = $conn->query($sqlRendaTotal);
+$rendaTotal = 0;
+if ($resultadoRendaTotal->num_rows > 0) {
+    while ($row = $resultadoRendaTotal->fetch_assoc()) {
+        $rendaTotal += $row['valor'];
+    }
+}
+
+$sqlDespesasTotal = "SELECT valor FROM despesas WHERE user_id = $user_id";
+$resultadoDespesasTotal = $conn->query($sqlDespesasTotal);
+$despesasTotal = 0;
+if ($resultadoDespesasTotal->num_rows > 0) {
+    while ($row = $resultadoDespesasTotal->fetch_assoc()) {
+        $despesasTotal += $row['valor'];
+    }
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -14,7 +41,7 @@
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <div class="header">
-            <h2>Saldo Atual: R$ 5.000,00</h2>
+            <h2>Saldo Atual: R$ <?php echo $rendaTotal - $despesasTotal ?></h2>
         </div>
 
         <div class="cards">
@@ -67,96 +94,96 @@
     </div>
 
     <script>
-        let rendaTotal = 6500;
-        let despesasObrigatorias = 1300;
-        let despesasNaoObrigatorias = 200;
-        let totalDespesas = despesasObrigatorias + despesasNaoObrigatorias;
-        let investimentos = rendaTotal - totalDespesas;
-        if (investimentos < 0) investimentos = 0;
+    let rendaTotal = 6500;
+    let despesasObrigatorias = 1300;
+    let despesasNaoObrigatorias = 200;
+    let totalDespesas = despesasObrigatorias + despesasNaoObrigatorias;
+    let investimentos = rendaTotal - totalDespesas;
+    if (investimentos < 0) investimentos = 0;
 
-        let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Renda', 'Despesas', 'Investimentos'],
-                datasets: [{
-                    label: 'Valores em R$',
-                    data: [rendaTotal, totalDespesas, 10000],
-                    backgroundColor: ['#4c956c', '#d90429', '#219ebc']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
+    let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Renda', 'Despesas', 'Investimentos'],
+            datasets: [{
+                label: 'Valores em R$',
+                data: [rendaTotal, totalDespesas, 10000],
+                backgroundColor: ['#4c956c', '#d90429', '#219ebc']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                tooltip: {
+                    enabled: true
                 }
-            }
-        });
-
-        let ctx2 = document.getElementById('graficoProgresso').getContext('2d');
-        let rendaAtiva = 6000;
-        let metaInvestimento = rendaAtiva * 6;
-        let totalInvestimentos = 10000;
-        let faltaInvestir = metaInvestimento - totalInvestimentos;
-        faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
-
-        new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['Já Investido', 'Falta Investir'],
-                datasets: [{
-                    data: [totalInvestimentos, faltaInvestir],
-                    backgroundColor: ['#3498db', '#e0e0e0']
-                }]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        let totalDistribuicao = despesasObrigatorias + despesasNaoObrigatorias + investimentos;
-        let pctObrigatorias = (despesasObrigatorias / totalDistribuicao) * 100;
-        let pctNaoObrigatorias = (despesasNaoObrigatorias / totalDistribuicao) * 100;
-        let pctInvestimentos = (investimentos / totalDistribuicao) * 100;
+    let ctx2 = document.getElementById('graficoProgresso').getContext('2d');
+    let rendaAtiva = 6000;
+    let metaInvestimento = rendaAtiva * 6;
+    let totalInvestimentos = 10000;
+    let faltaInvestir = metaInvestimento - totalInvestimentos;
+    faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
 
-        let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
-        new Chart(ctxDistribuicao, {
-            type: 'pie',
-            data: {
-                labels: [
-                    `Obrigatórias (${pctObrigatorias.toFixed(1)}%)`,
-                    `Não Obrigatórias (${pctNaoObrigatorias.toFixed(1)}%)`,
-                    `Investimentos (${pctInvestimentos.toFixed(1)}%)`
-                ],
-                datasets: [{
-                    data: [pctObrigatorias, pctNaoObrigatorias, pctInvestimentos],
-                    backgroundColor: ['#d90429', '#fb8500', '#4c956c']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: ['Já Investido', 'Falta Investir'],
+            datasets: [{
+                data: [totalInvestimentos, faltaInvestir],
+                backgroundColor: ['#3498db', '#e0e0e0']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
             }
-        });
+        }
+    });
+
+    let totalDistribuicao = despesasObrigatorias + despesasNaoObrigatorias + investimentos;
+    let pctObrigatorias = (despesasObrigatorias / totalDistribuicao) * 100;
+    let pctNaoObrigatorias = (despesasNaoObrigatorias / totalDistribuicao) * 100;
+    let pctInvestimentos = (investimentos / totalDistribuicao) * 100;
+
+    let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
+    new Chart(ctxDistribuicao, {
+        type: 'pie',
+        data: {
+            labels: [
+                `Obrigatórias (${pctObrigatorias.toFixed(1)}%)`,
+                `Não Obrigatórias (${pctNaoObrigatorias.toFixed(1)}%)`,
+                `Investimentos (${pctInvestimentos.toFixed(1)}%)`
+            ],
+            datasets: [{
+                data: [pctObrigatorias, pctNaoObrigatorias, pctInvestimentos],
+                backgroundColor: ['#d90429', '#fb8500', '#4c956c']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
     </script>
 </body>
 

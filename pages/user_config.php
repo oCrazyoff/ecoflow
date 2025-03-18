@@ -1,3 +1,15 @@
+<?php
+require_once("../backend/includes/valida.php");
+require_once("../backend/config/database.php");
+
+$sql = "SELECT * FROM usuarios WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $_SESSION['email']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -13,22 +25,18 @@
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <h1><i class="bi bi-person-gear"></i> Configurações do Usuário</h1>
-        <form>
+        <form action="../backend/database/usuario/editar.php" method="POST">
             <div class="form-group">
-                <label for="username"><i class="bi bi-person"></i> Nome de Usuário:</label>
-                <input type="text" id="username" name="username">
+                <label for="nome"><i class="bi bi-person"></i> Nome de Usuário:</label>
+                <input type="text" id="nome" name="nome" value="<?php echo $row['nome']; ?>">
             </div>
             <div class="form-group">
                 <label for="email"><i class="bi bi-envelope"></i> Email:</label>
-                <input type="email" id="email" name="email">
+                <input type="email" id="email" name="email" value="<?php echo $row['email']; ?>">
             </div>
             <div class="form-group">
                 <label for="password"><i class="bi bi-lock"></i> Senha:</label>
                 <input type="password" id="password" name="password">
-            </div>
-            <div class="form-group">
-                <label for="confirm-password"><i class="bi bi-lock-fill"></i> Confirmar Senha:</label>
-                <input type="password" id="confirm-password" name="confirm-password">
             </div>
             <div class="botoes">
                 <button type="submit"><i class="bi bi-save"></i> Salvar</button>
@@ -36,6 +44,14 @@
             </div>
         </form>
     </div>
+    <script>
+        <?php
+        if (isset($_SESSION['resposta'])) {
+            echo "alert('" . $_SESSION['resposta'] . "');";
+            unset($_SESSION['resposta']);
+        }
+        ?>
+    </script>
 </body>
 
 </html>
