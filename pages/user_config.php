@@ -36,7 +36,7 @@ $row = $result->fetch_assoc();
             </div>
             <div class="form-group">
                 <label for="password"><i class="bi bi-lock"></i> Senha:</label>
-                <input type="password" id="password" name="password">
+                <input type="password" id="password" name="password" required>
             </div>
             <div class="botoes">
                 <button type="submit"><i class="bi bi-save"></i> Salvar</button>

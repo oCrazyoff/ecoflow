@@ -59,6 +59,10 @@
                             <label for="rendimento">Rendimento</label>
                             <input type="number" id="rendimento" name="rendimento" required>
                         </div>
+                        <div class="form-group">
+                            <label for="vencimento">Data de Vencimento</label>
+                            <input type="date" id="vencimento" name="vencimento" required>
+                        </div>
                     </div>
 
                     <!-- Frequência de Rendimento -->
@@ -84,6 +88,10 @@
             </form>
         </div>
     </div>
+    <script>
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('vencimento').value = hoje;
+    </script>
 </body>
 
 </html>

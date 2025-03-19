@@ -23,9 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        if (!password_verify($password, $row['senha'])) {
+            $_SESSION['resposta'] = "Senha incorreta.";
+            header("Location: ../../../pages/user_config.php");
+            exit();
+        }
+
         // Atualiza os dados do usuário
         if (!empty($password)) {
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
             $sql = "UPDATE usuarios SET nome = ?, email = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssi", $nome, $email, $id);
@@ -41,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Atualiza a sessão com os novos dados
             $_SESSION['nome'] = $nome;
             $_SESSION['email'] = $email;
-            $_SESSION['senha'] = $passwordHash;
         } else {
             $_SESSION['resposta'] = "Erro ao atualizar o usuário.";
         }

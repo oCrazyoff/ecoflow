@@ -4,60 +4,39 @@ require_once("../backend/config/database.php");
 
 $user_id = $_SESSION['id'];
 
-$sqlRendaTotal = "SELECT valor FROM rendas WHERE user_id = $user_id";
-$resultadoRendaTotal = $conn->query($sqlRendaTotal);
-$rendaTotal = 0;
-if ($resultadoRendaTotal->num_rows > 0) {
-    while ($row = $resultadoRendaTotal->fetch_assoc()) {
-        $rendaTotal += $row['valor'];
+// Função para calcular o total de valores com base em uma consulta SQL
+function calcularTotal($conn, $sql)
+{
+    $resultado = $conn->query($sql);
+    $total = 0;
+    if ($resultado->num_rows > 0) {
+        while ($row = $resultado->fetch_assoc()) {
+            $total += $row['valor'];
+        }
     }
+    return $total;
 }
 
-$sqlDespesasTotal = "SELECT valor FROM despesas WHERE user_id = $user_id";
-$resultadoDespesasTotal = $conn->query($sqlDespesasTotal);
-$despesasTotal = 0;
-if ($resultadoDespesasTotal->num_rows > 0) {
-    while ($row = $resultadoDespesasTotal->fetch_assoc()) {
-        $despesasTotal += $row['valor'];
+// Consultas otimizadas
+$rendaTotal = calcularTotal($conn, "SELECT valor FROM rendas WHERE user_id = $user_id");
+$despesasTotal = calcularTotal($conn, "SELECT valor FROM despesas WHERE user_id = $user_id");
+$despesasObrigatorias = calcularTotal($conn, "SELECT valor FROM despesas WHERE user_id = $user_id AND tipo = 'Obrigatória'");
+$despesasNaoObrigatorias = calcularTotal($conn, "SELECT valor FROM despesas WHERE user_id = $user_id AND tipo = 'Não Obrigatória'");
+$rendaAtiva = calcularTotal($conn, "SELECT valor FROM rendas WHERE user_id = $user_id AND tipo = 'Ativo'");
+$rendaPassiva = calcularTotal($conn, "SELECT valor FROM rendas WHERE user_id = $user_id AND tipo = 'Passivo'");
+
+// Meta de investimento
+$metaInvestimento = $rendaAtiva * 6;
+
+// Consultar investimentos
+$investimentos = [];
+$sqlInvestimentos = "SELECT nome, custo FROM investimentos WHERE user_id = $user_id";
+$resultadoInvestimentos = $conn->query($sqlInvestimentos);
+if ($resultadoInvestimentos->num_rows > 0) {
+    while ($row = $resultadoInvestimentos->fetch_assoc()) {
+        $investimentos[] = $row;
     }
 }
-
-$sqlDesesasObrigatorias = "SELECT valor FROM despesas WHERE user_id = $user_id AND tipo = 'Obrigatória'";
-$resultadoDespesasObrigatorias = $conn->query($sqlDesesasObrigatorias);
-$despesasObrigatorias = 0;
-if ($resultadoDespesasObrigatorias->num_rows > 0) {
-    while ($row = $resultadoDespesasObrigatorias->fetch_assoc()) {
-        $despesasObrigatorias += $row['valor'];
-    }
-}
-
-$sqlDesesasNaoObrigatorias = "SELECT valor FROM despesas WHERE user_id = $user_id AND tipo = 'Não Obrigatória'";
-$resultadoDespesasNaoObrigatorias = $conn->query($sqlDesesasNaoObrigatorias);
-$despesasNaoObrigatorias = 0;
-if ($resultadoDespesasNaoObrigatorias->num_rows > 0) {
-    while ($row = $resultadoDespesasNaoObrigatorias->fetch_assoc()) {
-        $despesasNaoObrigatorias += $row['valor'];
-    }
-}
-
-$sqlRendaAtiva = "SELECT valor FROM rendas WHERE user_id = $user_id AND tipo = 'Ativo'";
-$resultadoRendaAtiva = $conn->query($sqlRendaAtiva);
-$rendaAtiva = 0;
-if ($resultadoRendaAtiva->num_rows > 0) {
-    while ($row = $resultadoRendaAtiva->fetch_assoc()) {
-        $rendaAtiva += $row['valor'];
-    }
-}
-
-$sqlRendaPassiva = "SELECT valor FROM rendas WHERE user_id = $user_id AND tipo = 'Passivo'";
-$resultadoRendaPassiva = $conn->query($sqlRendaPassiva);
-$rendaPassiva = 0;
-if ($resultadoRendaPassiva->num_rows > 0) {
-    while ($row = $resultadoRendaPassiva->fetch_assoc()) {
-        $rendaPassiva += $row['valor'];
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -76,39 +55,56 @@ if ($resultadoRendaPassiva->num_rows > 0) {
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <div class="header">
-            <h2>Saldo Atual: R$ <?php echo $rendaTotal - $despesasTotal ?></h2>
+            <h2>Saldo Atual: R$ <?php echo number_format($rendaTotal - $despesasTotal, 2, ',', '.') ?></h2>
         </div>
 
         <div class="cards">
             <div class="card">
                 <h3>Resumo Financeiro</h3>
-                <p><strong>Renda Total:</strong> R$ <?php echo $rendaTotal ?></p>
-                <p><strong>Despesas Totais:</strong> R$ <?php echo $despesasTotal ?></p>
+                <p><strong>Renda Total:</strong> R$ <?php echo number_format($rendaTotal, 2, ',', '.') ?></p>
+                <p><strong>Despesas Totais:</strong> R$ <?php echo number_format($despesasTotal, 2, ',', '.') ?></p>
             </div>
 
             <div class="card">
                 <h3>Despesas Obrigatórias</h3>
-                <p>Aluguel: R$ 1.000,00</p>
-                <p>Energia: R$ 200,00</p>
-                <p>Internet: R$ 100,00</p>
+                <?php
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Obrigatória'";
+                $resultado = $conn->query($sql);
+                if ($resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                    }
+                }
+                ?>
             </div>
 
             <div class="card">
                 <h3>Despesas Não Obrigatórias</h3>
-                <p>Streaming: R$ 50,00</p>
-                <p>Restaurante: R$ 150,00</p>
+                <?php
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Não Obrigatória'";
+                $resultado = $conn->query($sql);
+                if ($resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                    }
+                }
+                ?>
             </div>
 
             <div class="card">
                 <h3>Rendas</h3>
-                <p><strong>Ativa:</strong> R$ <?php echo $rendaAtiva ?></p>
-                <p><strong>Passiva:</strong> R$ <?php echo $rendaPassiva ?></p>
+                <p><strong>Ativa:</strong> R$ <?php echo number_format($rendaAtiva, 2, ',', '.') ?></p>
+                <p><strong>Passiva:</strong> R$ <?php echo number_format($rendaPassiva, 2, ',', '.') ?></p>
             </div>
 
             <div class="card">
                 <h3>Investimentos</h3>
-                <p>Total Investido: R$ 10.000,00</p>
-                <p>Meta: 6x do salário (R$ 36.000,00)</p>
+                <?php
+                foreach ($investimentos as $investimento) {
+                    echo "<p><strong>" . $investimento['nome'] . ":</strong> R$ " . number_format($investimento['custo'], 2, ',', '.') . "</p>";
+                }
+                ?>
+                <p><strong>Meta:</strong> R$ <?php echo number_format($metaInvestimento, 2, ',', '.') ?></p>
             </div>
 
             <div class="card" id="grafico-coluna">
@@ -129,13 +125,7 @@ if ($resultadoRendaPassiva->num_rows > 0) {
     </div>
 
     <script>
-        let rendaTotal = <?php echo $rendaTotal ?>;
-        let despesasObrigatorias = <?php echo $despesasObrigatorias ?>;
-        let despesasNaoObrigatorias = <?php echo $despesasNaoObrigatorias ?>;
-        let totalDespesas = <?php echo $despesasTotal ?>;
-        let investimentos = rendaTotal - totalDespesas;
-        if (investimentos < 0) investimentos = 0;
-
+        // Gráfico de Rendas, Despesas e Investimentos
         let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
         new Chart(ctx1, {
             type: 'bar',
@@ -143,7 +133,9 @@ if ($resultadoRendaPassiva->num_rows > 0) {
                 labels: ['Rendas', 'Despesas', 'Investimentos'],
                 datasets: [{
                     label: 'Valores em R$',
-                    data: [rendaTotal, totalDespesas, investimentos],
+                    data: [<?php echo $rendaTotal ?>, <?php echo $despesasTotal ?>,
+                        <?php echo array_sum(array_column($investimentos, 'custo')) ?>
+                    ],
                     backgroundColor: ['#4c956c', '#d90429', '#219ebc']
                 }]
             },
@@ -165,11 +157,10 @@ if ($resultadoRendaPassiva->num_rows > 0) {
             }
         });
 
+        // Gráfico de Progresso da Meta de Investimentos
         let ctx2 = document.getElementById('graficoProgresso').getContext('2d');
-        let rendaAtiva = <?php echo $rendaAtiva ?>;
-        let metaInvestimento = rendaAtiva * 6;
-        let totalInvestimentos = <?php echo $rendaTotal * 0.5 ?>;
-        let faltaInvestir = metaInvestimento - totalInvestimentos;
+        let totalInvestimentos = <?php echo array_sum(array_column($investimentos, 'custo')) ?>;
+        let faltaInvestir = <?php echo $metaInvestimento ?> - totalInvestimentos;
         faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
 
         new Chart(ctx2, {
@@ -191,10 +182,12 @@ if ($resultadoRendaPassiva->num_rows > 0) {
             }
         });
 
-        let totalDistribuicao = despesasObrigatorias + despesasNaoObrigatorias + investimentos;
-        let pctObrigatorias = (despesasObrigatorias / totalDistribuicao) * 100;
-        let pctNaoObrigatorias = (despesasNaoObrigatorias / totalDistribuicao) * 100;
-        let pctInvestimentos = (investimentos / totalDistribuicao) * 100;
+        // Gráfico de Distribuição
+        let totalDistribuicao =
+            <?php echo $despesasObrigatorias + $despesasNaoObrigatorias + ($rendaTotal - $despesasTotal) ?>;
+        let pctObrigatorias = (<?php echo $despesasObrigatorias ?> / totalDistribuicao) * 100;
+        let pctNaoObrigatorias = (<?php echo $despesasNaoObrigatorias ?> / totalDistribuicao) * 100;
+        let pctInvestimentos = ((<?php echo $rendaTotal - $despesasTotal ?>) / totalDistribuicao) * 100;
 
         let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
         new Chart(ctxDistribuicao, {

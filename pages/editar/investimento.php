@@ -77,6 +77,10 @@ $row = $result->fetch_assoc();
                             <input type="number" id="rendimento" name="rendimento"
                                 value="<?php echo $row['rendimento'] ?>" required>
                         </div>
+                        <div class="form-group">
+                            <label for="vencimento">Data de Vencimento</label>
+                            <input type="date" id="vencimento" name="vencimento" required>
+                        </div>
                     </div>
 
                     <!-- Frequência de Rendimento -->
@@ -109,6 +113,10 @@ $row = $result->fetch_assoc();
             </form>
         </div>
     </div>
+    <script>
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('vencimento').value = hoje;
+    </script>
 </body>
 
 </html>

@@ -9,6 +9,7 @@ if (!defined('BASE_URL')) {
 ?>
 <link rel="stylesheet" href="<?php echo BASE_URL ?>assets/css/menu.css?v=<?php echo time(); ?>">
 <div class="btn-menu"><i class="bi bi-list"></i></div>
+<div class="overlay"></div>
 <div class="sidebar">
     <div class="top">
         <div class="logo">
@@ -37,10 +38,19 @@ if (!defined('BASE_URL')) {
 </div>
 
 <script>
-    document.querySelector('.btn-menu').addEventListener('click', () => {
+    function toggleSidebar() {
         document.querySelector('.sidebar').classList.toggle('active');
         document.querySelector('.btn-menu').classList.toggle('active');
         document.querySelector('.btn-menu i').classList.toggle('bi-list');
         document.querySelector('.btn-menu i').classList.toggle('bi-x');
+        document.querySelector('.overlay').classList.toggle('active');
+    }
+
+    document.querySelector('.btn-menu').addEventListener('click', () => {
+        toggleSidebar();
+    });
+
+    document.querySelector('.overlay').addEventListener('click', () => {
+        toggleSidebar();
     });
 </script>
