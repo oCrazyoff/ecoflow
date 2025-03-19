@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 1em;
+    text-align: center;
 }
 
 h1 i {
@@ -70,6 +71,10 @@ button[type="submit"]:focus {
 }
 
 .botoes a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     background-color: #832121;
     padding: 1em 2em;
     border-radius: 5px;
@@ -92,4 +97,22 @@ button[type="submit"]:focus {
 
 .botoes i {
     margin-right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .main-content h1 {
+        flex-direction: column;
+        font-size: 1.5em;
+    }
+
+    .botoes {
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    .botoes a,
+    button[type="submit"] {
+        width: 100%;
+        padding: .7em;
+    }
 }

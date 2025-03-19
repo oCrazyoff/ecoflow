@@ -45,6 +45,10 @@
 }
 
 @media screen and (max-width: 768px) {
+    .header {
+        margin-top: 1em;
+    }
+
     .cards {
         flex-direction: column;
     }
