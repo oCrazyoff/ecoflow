@@ -36,6 +36,12 @@
 .sidebar .logo h1 {
     text-align: center;
     font-size: 1.5em;
+    color: #fff;
+    text-shadow:
+        -2px -2px 0 #2f5054,
+        2px -2px 0 #2f5054,
+        -2px 2px 0 #2f5054,
+        2px 2px 0 #2f5054;
     margin: 0;
     font-family: "Bruno Ace SC", sans-serif;
 }
@@ -48,13 +54,13 @@
     text-decoration: none;
     color: #fff;
     padding: 10px;
-    border-bottom: 2px solid #2f5054;
     text-align: center;
     transition: 0.3s ease all;
 }
 
 .sidebar a i {
     font-size: 1.2em;
+    color: #73d2de;
 }
 
 .sidebar a:hover {
@@ -62,6 +68,10 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     color: #246a73;
     background: #73d2de;
+}
+
+.sidebar a:hover i {
+    color: #246a73;
 }
 
 .sidebar .bottom a {

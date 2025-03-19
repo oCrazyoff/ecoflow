@@ -79,7 +79,7 @@ $row = $result->fetch_assoc();
                         </div>
                         <div class="form-group">
                             <label for="vencimento">Data de Vencimento</label>
-                            <input type="date" id="vencimento" name="vencimento" required>
+                            <input type="date" id="vencimento" name="vencimento">
                         </div>
                     </div>
 

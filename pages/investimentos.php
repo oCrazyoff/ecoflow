@@ -42,12 +42,13 @@ $result = $stmt->get_result();
                 <tr>
                     <?php
                     while ($row = $result->fetch_assoc()) {
+                        $vencimento = DateTime::createFromFormat('Y-m-d', $row['vencimento'])->format('d/m/Y');
                         echo "<td>" . $row['tipo'] . "</td>";
                         echo "<td>" . $row['nome'] . "</td>";
                         echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
                         echo "<td>" . number_format($row['rendimento'], 2, ',') . "%</td>";
                         echo "<td>" . $row['frequencia'] . "</td>";
-                        echo "<td>" . (isset($row['vencimento']) ? $row['vencimento'] : "N/A") . "</td>";
+                        echo "<td>" . (isset($vencimento) ? $vencimento : "N/A") . "</td>";
                         echo "
                     <td>
                         <form action='editar/investimento.php' method='POST'>

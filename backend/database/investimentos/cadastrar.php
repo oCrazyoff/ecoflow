@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Insere o investimento no banco de dados
     $sql = "INSERT INTO investimentos (nome, ticker, rendimento, frequencia, tipo, custo, vencimento, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssdi", $nome, $ticker, $rendimento, $frequencia, $tipo_investimento, $custo, $vencimento, $id);
+    $stmt->bind_param("sssssssi", $nome, $ticker, $rendimento, $frequencia, $tipo_investimento, $custo, $vencimento, $id);
 
     if ($stmt->execute()) {
         $_SESSION['resposta'] = "Investimento cadastrado com sucesso.";

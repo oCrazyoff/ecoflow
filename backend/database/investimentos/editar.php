@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Insere o investimento no banco de dados
     $sql = "UPDATE investimentos SET nome = ?, ticker = ?, rendimento = ?, frequencia = ?, tipo = ?, custo = ?, vencimento = ? WHERE id = ? AND user_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssdii", $nome, $ticker, $rendimento, $frequencia, $tipo_investimento, $custo, $vencimento, $id, $user_id);
+    $stmt->bind_param("sssssssii", $nome, $ticker, $rendimento, $frequencia, $tipo_investimento, $custo, $vencimento, $id, $user_id);
 
     if ($stmt->execute()) {
         $_SESSION['resposta'] = "Investimento editado com sucesso.";
