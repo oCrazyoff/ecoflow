@@ -13,20 +13,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_SESSION['id'];
 
     // Verifica se os campos estão preenchidos
-    if (empty($nome) || empty($ticker) || empty($rendimento) || empty($frequencia) || empty($tipo_investimento) || empty($custo) || empty($vencimento)) {
+    if (empty($nome) || empty($ticker) || empty($rendimento) || empty($frequencia) || empty($tipo_investimento) || empty($custo)) {
         $_SESSION['resposta'] = "Preencha todos os campos.";
         header("Location: ../../../pages/cadastro/investimento.php");
         exit();
     }
 
-    $dataObj = DateTime::createFromFormat('Y-m-d', $vencimento);
-    if (!$dataObj) {
-        $_SESSION['resposta'] = "Data de vencimento inválida.";
-        header("Location: ../../../pages/cadastro/investimento.php");
-        exit();
-    }
+    if (!empty($vencimento)) {
+        $dataObj = DateTime::createFromFormat('Y-m-d', $vencimento);
+        if (!$dataObj) {
+            $_SESSION['resposta'] = "Data de vencimento inválida.";
+            header("Location: ../../../pages/cadastro/investimento.php");
+            exit();
+        }
 
-    $vencimento = $dataObj->format('Y-m-d');
+        $vencimento = $dataObj->format('Y-m-d');
+    } else {
+        $vencimento = null;
+    }
 
     // Insere o investimento no banco de dados
     $sql = "INSERT INTO investimentos (nome, ticker, rendimento, frequencia, tipo, custo, vencimento, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

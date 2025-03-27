@@ -42,7 +42,11 @@ $result = $stmt->get_result();
                 <tr>
                     <?php
                     while ($row = $result->fetch_assoc()) {
-                        $vencimento = DateTime::createFromFormat('Y-m-d', $row['vencimento'])->format('d/m/Y');
+                        if (empty($row['vencimento'])) {
+                            $vencimento = null;
+                        } else {
+                            $vencimento = DateTime::createFromFormat('Y-m-d', $row['vencimento'])->format('d/m/Y');
+                        }
                         echo "<td>" . $row['tipo'] . "</td>";
                         echo "<td>" . $row['nome'] . "</td>";
                         echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
