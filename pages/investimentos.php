@@ -36,7 +36,6 @@ $result = $stmt->get_result();
                     <th>Custo</th>
                     <th>Rendimento</th>
                     <th>Frequencia</th>
-                    <th>Vencimento</th>
                     <th colspan="2">Ações</th>
                 </tr>
                 <tr>
@@ -52,7 +51,6 @@ $result = $stmt->get_result();
                         echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
                         echo "<td>" . number_format($row['rendimento'], 2, ',') . "%</td>";
                         echo "<td>" . $row['frequencia'] . "</td>";
-                        echo "<td>" . (isset($vencimento) ? $vencimento : "N/A") . "</td>";
                         echo "
                     <td>
                         <form action='editar/investimento.php' method='POST'>

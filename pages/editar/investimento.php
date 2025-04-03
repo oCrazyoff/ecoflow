@@ -43,10 +43,6 @@ $row = $result->fetch_assoc();
                             <input type="text" id="nome_investimento" name="nome_investimento"
                                 value="<?php echo $row['nome'] ?>" required>
                         </div>
-                        <div class="form-group">
-                            <label for="ticker">Ticker</label>
-                            <input type="text" id="ticker" name="ticker" value="<?php echo $row['ticker'] ?>" required>
-                        </div>
                     </div>
 
                     <!-- Tipo de Investimento -->
@@ -76,10 +72,6 @@ $row = $result->fetch_assoc();
                             <label for="rendimento">Rendimento</label>
                             <input type="number" id="rendimento" name="rendimento"
                                 value="<?php echo $row['rendimento'] ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="vencimento">Data de Vencimento</label>
-                            <input type="date" id="vencimento" name="vencimento">
                         </div>
                     </div>
 

@@ -30,13 +30,35 @@ $metaInvestimento = $rendaAtiva * 6;
 
 // Consultar investimentos
 $investimentos = [];
-$sqlInvestimentos = "SELECT nome, custo FROM investimentos WHERE user_id = $user_id";
+$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id LIMIT 4";
 $resultadoInvestimentos = $conn->query($sqlInvestimentos);
 if ($resultadoInvestimentos->num_rows > 0) {
     while ($row = $resultadoInvestimentos->fetch_assoc()) {
         $investimentos[] = $row;
     }
 }
+
+// Calcular os tipos de investimentos
+$totalInvestimentos = array_sum(array_column($investimentos, 'custo'));
+
+$investimentosFixo = 0;
+$investimentosAcao = 0;
+$investimentosFII = 0;
+
+foreach ($investimentos as $inv) {
+    if ($inv['tipo'] == 'Renda Fixa') {
+        $investimentosFixo += $inv['custo'];
+    } elseif ($inv['tipo'] == 'Ação') {
+        $investimentosAcao += $inv['custo'];
+    } elseif ($inv['tipo'] == 'FII') {
+        $investimentosFII += $inv['custo'];
+    }
+}
+
+$pctFixo = ($totalInvestimentos > 0) ? ($investimentosFixo / $totalInvestimentos) * 100 : 0;
+$pctAcao = ($totalInvestimentos > 0) ? ($investimentosAcao / $totalInvestimentos) * 100 : 0;
+$pctFII = ($totalInvestimentos > 0) ? ($investimentosFII / $totalInvestimentos) * 100 : 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -63,12 +85,14 @@ if ($resultadoInvestimentos->num_rows > 0) {
                 <h3>Resumo Financeiro</h3>
                 <p><strong>Renda Total:</strong> R$ <?php echo number_format($rendaTotal, 2, ',', '.') ?></p>
                 <p><strong>Despesas Totais:</strong> R$ <?php echo number_format($despesasTotal, 2, ',', '.') ?></p>
+                <p><strong>Investimentos Totais:</strong> R$
+                    <?php echo number_format($totalInvestimentos, 2, ',', '.') ?></p>
             </div>
 
             <div class="card">
                 <h3>Despesas Obrigatórias</h3>
                 <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Obrigatória'";
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Obrigatória' LIMIT 4";
                 $resultado = $conn->query($sql);
                 if ($resultado->num_rows > 0) {
                     while ($row = $resultado->fetch_assoc()) {
@@ -81,7 +105,7 @@ if ($resultadoInvestimentos->num_rows > 0) {
             <div class="card">
                 <h3>Despesas Não Obrigatórias</h3>
                 <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Não Obrigatória'";
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND tipo = 'Não Obrigatória' LIMIT 4";
                 $resultado = $conn->query($sql);
                 if ($resultado->num_rows > 0) {
                     while ($row = $resultado->fetch_assoc()) {
@@ -104,7 +128,7 @@ if ($resultadoInvestimentos->num_rows > 0) {
                     echo "<p><strong>" . $investimento['nome'] . ":</strong> R$ " . number_format($investimento['custo'], 2, ',', '.') . "</p>";
                 }
                 ?>
-                <p><strong>Meta:</strong> R$ <?php echo number_format($metaInvestimento, 2, ',', '.') ?></p>
+                </p>
             </div>
 
             <div class="card" id="grafico-coluna">
@@ -113,12 +137,12 @@ if ($resultadoInvestimentos->num_rows > 0) {
             </div>
 
             <div class="card" id="grafico">
-                <h3>Progresso da Meta de Investimentos</h3>
+                <h3>Meta de Investimentos</h3>
                 <canvas id="graficoProgresso"></canvas>
             </div>
 
             <div class="card" id="grafico">
-                <h3>Distribuição das Despesas e Rendimento</h3>
+                <h3>Distribuição dos Investimentos</h3>
                 <canvas id="graficoDistribuicao"></canvas>
             </div>
         </div>
@@ -159,7 +183,7 @@ if ($resultadoInvestimentos->num_rows > 0) {
 
         // Gráfico de Progresso da Meta de Investimentos
         let ctx2 = document.getElementById('graficoProgresso').getContext('2d');
-        let totalInvestimentos = <?php echo array_sum(array_column($investimentos, 'custo')) ?>;
+        let totalInvestimentos = <?php echo $totalInvestimentos ?>;
         let faltaInvestir = <?php echo $metaInvestimento ?> - totalInvestimentos;
         faltaInvestir = faltaInvestir < 0 ? 0 : faltaInvestir;
 
@@ -183,24 +207,23 @@ if ($resultadoInvestimentos->num_rows > 0) {
         });
 
         // Gráfico de Distribuição
-        let totalDistribuicao =
-            <?php echo $despesasObrigatorias + $despesasNaoObrigatorias + ($rendaTotal - $despesasTotal) ?>;
-        let pctObrigatorias = (<?php echo $despesasObrigatorias ?> / totalDistribuicao) * 100;
-        let pctNaoObrigatorias = (<?php echo $despesasNaoObrigatorias ?> / totalDistribuicao) * 100;
-        let pctInvestimentos = ((<?php echo $rendaTotal - $despesasTotal ?>) / totalDistribuicao) * 100;
+        let totalDistribuicao = <?php echo $totalInvestimentos; ?>;
+        let pctFixo = <?php echo $pctFixo; ?>;
+        let pctAcao = <?php echo $pctAcao; ?>;
+        let pctFII = <?php echo $pctFII; ?>;
 
         let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
         new Chart(ctxDistribuicao, {
             type: 'pie',
             data: {
                 labels: [
-                    `Obrigatórias (${pctObrigatorias.toFixed(1)}%)`,
-                    `Não Obrigatórias (${pctNaoObrigatorias.toFixed(1)}%)`,
-                    `Investimentos (${pctInvestimentos.toFixed(1)}%)`
+                    `Renda Fixa (${pctFixo.toFixed(1)}%)`,
+                    `Ações (${pctAcao.toFixed(1)}%)`,
+                    `Fundos Imboliarios (${pctFII.toFixed(1)}%)`
                 ],
                 datasets: [{
-                    data: [pctObrigatorias, pctNaoObrigatorias, pctInvestimentos],
-                    backgroundColor: ['#d90429', '#fb8500', '#4c956c']
+                    data: [pctFixo, pctAcao, pctFII],
+                    backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
                 }]
             },
             options: {

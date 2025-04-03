@@ -29,10 +29,6 @@
                             <label for="nome_investimento">Nome do Investimento</label>
                             <input type="text" id="nome_investimento" name="nome_investimento" required>
                         </div>
-                        <div class="form-group">
-                            <label for="ticker">Ticker</label>
-                            <input type="text" id="ticker" name="ticker" required>
-                        </div>
                     </div>
 
                     <!-- Tipo de Investimento -->
@@ -58,10 +54,6 @@
                         <div class="form-group">
                             <label for="rendimento">Rendimento</label>
                             <input type="number" id="rendimento" name="rendimento" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="vencimento">Data de Vencimento</label>
-                            <input type="date" id="vencimento" name="vencimento">
                         </div>
                     </div>
 

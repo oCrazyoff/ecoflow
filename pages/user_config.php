@@ -28,11 +28,11 @@ $row = $result->fetch_assoc();
         <form action="../backend/database/usuario/editar.php" method="POST">
             <div class="form-group">
                 <label for="nome"><i class="bi bi-person"></i> Nome de Usuário:</label>
-                <input type="text" id="nome" name="nome" value="<?php echo $row['nome']; ?>">
+                <input type="text" id="nome" name="nome" value="<?php echo $row['nome']; ?>" required>
             </div>
             <div class="form-group">
                 <label for="email"><i class="bi bi-envelope"></i> Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo $row['email']; ?>">
+                <input type="email" id="email" name="email" value="<?php echo $row['email']; ?>" required>
             </div>
             <div class="form-group">
                 <label for="password"><i class="bi bi-lock"></i> Senha:</label>
