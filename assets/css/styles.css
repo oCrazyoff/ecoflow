@@ -8,7 +8,6 @@
 body {
     display: flex;
     height: 100vh;
-    background-color: #f4f4f4;
 }
 
 .main-content {

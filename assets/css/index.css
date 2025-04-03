@@ -2,6 +2,7 @@ header {
     display: flex;
     width: 100%;
     justify-content: space-between;
+    padding: 0 10em;
 }
 
 header .left,
@@ -49,7 +50,7 @@ header #btn-cadastro:hover {
     height: 100vh;
     display: flex;
     justify-content: space-between;
-    width: 65%;
+    padding: 0 10em;
 }
 
 #hero .left {
@@ -57,19 +58,17 @@ header #btn-cadastro:hover {
     gap: 1em;
     justify-content: center;
     flex-direction: column;
-    width: 70%;
 }
 
 #hero .right {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
+    width: 50%;
 }
 
 #hero .right img {
-    width: 30em;
-    height: 30em;
+    width: 100%;
 }
 
 #hero h1 {
@@ -101,6 +100,12 @@ header #btn-cadastro:hover {
 }
 
 @media screen and (max-width: 768px) {
+
+    header,
+    #hero {
+        padding: 0 .5em;
+    }
+
     #hero {
         width: 100%;
         flex-direction: column-reverse;
