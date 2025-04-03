@@ -56,6 +56,7 @@ header #btn-cadastro:hover {
 #hero .left {
     display: flex;
     gap: 1em;
+    width: 50%;
     justify-content: center;
     flex-direction: column;
 }
@@ -80,7 +81,6 @@ header #btn-cadastro:hover {
 }
 
 #hero p {
-    width: 60%;
     font-size: 1.5em;
 }
 
@@ -117,11 +117,6 @@ header #btn-cadastro:hover {
         width: 100%;
         align-items: center;
         text-align: center;
-    }
-
-    #hero .right img {
-        width: 18em;
-        height: 18em;
     }
 
     #hero h1 {

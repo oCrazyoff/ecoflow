@@ -25,9 +25,8 @@
             <div class="left">
                 <h1>Vem ser <br><span>Eco Flow</span></h1>
                 <p>
-                    Faça como os melhores investidores do Brasil
-                    e invista seu salário com consciência
-                    e sabedoria.
+                    Gerencie seus gastos, acompanhe suas rendas e automatize seus investimentos em um só lugar. O
+                    EcoFlow simplifica seu planejamento financeiro para que você tenha mais controle e liberdade.
                 </p>
                 <a id="btn-cadastro" href="<?php echo BASE_URL ?>cadastro.php">Abrir conta</a>
             </div>
