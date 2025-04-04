@@ -61,7 +61,7 @@ $row = $result->fetch_assoc();
                         </div>
                     </div>
 
-                    <!-- Custos e Rendimentos -->
+                    <!-- Custos, Rendimentos e Data -->
                     <div class="card">
                         <h3>Custos e Rendimentos</h3>
                         <div class="form-group">
@@ -73,27 +73,10 @@ $row = $result->fetch_assoc();
                             <input type="number" id="rendimento" name="rendimento"
                                 value="<?php echo $row['rendimento'] ?>" required>
                         </div>
-                    </div>
-
-                    <!-- Frequência de Rendimento -->
-                    <div class="card">
-                        <h3>Frequência de Rendimento</h3>
                         <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Diário"
-                                    <?php echo ($row['frequencia'] == 'Diário') ? 'selected' : ''; ?>>Diário</option>
-                                <option value="Mensal"
-                                    <?php echo ($row['frequencia'] == 'Mensal') ? 'selected' : ''; ?>>Mensal</option>
-                                <option value="Anual" <?php echo ($row['frequencia'] == 'Anual') ? 'selected' : ''; ?>>
-                                    Anual</option>
-                                <option value="Bimestral"
-                                    <?php echo ($row['frequencia'] == 'Bimestral') ? 'selected' : ''; ?>>Bimestral
-                                </option>
-                                <option value="Trimestral"
-                                    <?php echo ($row['frequencia'] == 'Trimestral') ? 'selected' : ''; ?>>Trimestral
-                                </option>
-                            </select>
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data"
+                                value="<?php echo date('Y-m-d', strtotime($row['data'])); ?>" required>
                         </div>
                     </div>
                 </div>
@@ -106,8 +89,8 @@ $row = $result->fetch_assoc();
         </div>
     </div>
     <script>
-        const hoje = new Date().toISOString().split('T')[0];
-        document.getElementById('vencimento').value = hoje;
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('vencimento').value = hoje;
     </script>
 </body>
 

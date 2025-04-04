@@ -36,7 +36,7 @@ $row = $result->fetch_assoc();
                 <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
                 <div class="top-form">
                     <div class="card">
-                        <h3>Informações da Despesa</h3>
+                        <h3>Informações da Renda</h3>
                         <div class="form-group">
                             <label for="descricao">Descrição</label>
                             <input type="text" id="descricao" name="descricao" value="<?php echo $row['descricao'] ?>"
@@ -46,27 +46,15 @@ $row = $result->fetch_assoc();
                             <label for="valor">Valor</label>
                             <input type="number" id="valor" name="valor" value="<?php echo $row['valor'] ?>" required>
                         </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data"
+                                value="<?php echo date('Y-m-d', strtotime($row['data'])); ?>" required>
+                        </div>
                     </div>
 
                     <div class="card">
-                        <h3>Configuração da Despesa</h3>
-                        <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Mensal"
-                                    <?php echo ($row['frequencia'] == 'Mensal') ? 'selected' : ''; ?>>Mensal</option>
-                                <option value="Diária"
-                                    <?php echo ($row['frequencia'] == 'Diária') ? 'selected' : ''; ?>>Diária</option>
-                                <option value="Anual" <?php echo ($row['frequencia'] == 'Anual') ? 'selected' : ''; ?>>
-                                    Anual</option>
-                                <option value="Trimestral"
-                                    <?php echo ($row['frequencia'] == 'Trimestral') ? 'selected' : ''; ?>>Trimestral
-                                </option>
-                                <option value="Bimestral"
-                                    <?php echo ($row['frequencia'] == 'Bimestral') ? 'selected' : ''; ?>>Bimestral
-                                </option>
-                            </select>
-                        </div>
+                        <h3>Configuração da Renda</h3>
                         <div class="form-group">
                             <label for="tipo">Tipo</label>
                             <select id="tipo" name="tipo" required>
