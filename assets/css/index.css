@@ -1,3 +1,7 @@
+body {
+    background-color: #fff;
+}
+
 header {
     display: flex;
     width: 100%;
