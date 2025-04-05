@@ -150,7 +150,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             <div class="card">
                 <h3>Despesas Não Pagas</h3>
                 <?php if (empty($despesasNaoPagas)): ?>
-                    <p style="text-align:center;">Todas as despesas estão pagas ✅</p>
+                    <p style="text-align:center;">Todas despesas pagas ✅</p>
                 <?php else: ?>
                     <?php foreach ($despesasNaoPagas as $despesa): ?>
                         <p><strong><?php echo $despesa['nome']; ?>:</strong> R$
