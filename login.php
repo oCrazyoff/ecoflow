@@ -39,14 +39,7 @@ if (empty($_SESSION['_csrf'])) {
             </div>
         </div>
     </div>
-    <script>
-        <?php
-        if ($_SESSION['resposta']) {
-            echo "alert('" . $_SESSION['resposta'] . "')";
-            unset($_SESSION['resposta']);
-        }
-        ?>
-    </script>
+    <?php include("backend/includes/div_erro.php") ?>
 </body>
 
 </html>

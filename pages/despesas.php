@@ -93,14 +93,7 @@ $result = $stmt->get_result();
             </table>
         </div>
     </div>
-    <script>
-        <?php
-        if (isset($_SESSION['resposta'])) {
-            echo "alert('" . $_SESSION['resposta'] . "');";
-            unset($_SESSION['resposta']);
-        }
-        ?>
-    </script>
+    <?php include("../backend/includes/div_erro.php") ?>
     <script>
         const monthNames = [
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",

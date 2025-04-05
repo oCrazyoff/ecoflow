@@ -10,19 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['_csrf']) && $_POST['_csrf'] !== $_SESSION['_csrf']) {
         $_SESSION['resposta'] = 'Erro de CSRF';
         $_SESSION['_csrf'] = hash('sha256', random_bytes(32));
-        header('Location: ../cadastro.php');
+        header('Location: ../../cadastro.php');
         exit();
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['resposta'] = 'E-mail inválido';
-        header('Location: ../cadastro.php');
+        header('Location: ../../cadastro.php');
         exit();
     }
 
     if (strlen($senha) < 8) {
         $_SESSION['resposta'] = 'A senha deve ter pelo menos 8 caracteres';
-        header('Location: ../cadastro.php');
+        header('Location: ../../cadastro.php');
         exit();
     }
 
