@@ -31,23 +31,23 @@ $result = $stmt->get_result();
         <div class="titulo">
             <h2>Rendas</h2>
             <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
-        </div>
-        <div class="data-container">
-            <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
-            <ul id="monthList" style="display: none;">
-                <li data-month="0">Janeiro</li>
-                <li data-month="1">Fevereiro</li>
-                <li data-month="2">Março</li>
-                <li data-month="3">Abril</li>
-                <li data-month="4">Maio</li>
-                <li data-month="5">Junho</li>
-                <li data-month="6">Julho</li>
-                <li data-month="7">Agosto</li>
-                <li data-month="8">Setembro</li>
-                <li data-month="9">Outubro</li>
-                <li data-month="10">Novembro</li>
-                <li data-month="11">Dezembro</li>
-            </ul>
+            <div class="data-container">
+                <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
+                <ul id="monthList" style="display: none;">
+                    <li data-month="0">Janeiro</li>
+                    <li data-month="1">Fevereiro</li>
+                    <li data-month="2">Março</li>
+                    <li data-month="3">Abril</li>
+                    <li data-month="4">Maio</li>
+                    <li data-month="5">Junho</li>
+                    <li data-month="6">Julho</li>
+                    <li data-month="7">Agosto</li>
+                    <li data-month="8">Setembro</li>
+                    <li data-month="9">Outubro</li>
+                    <li data-month="10">Novembro</li>
+                    <li data-month="11">Dezembro</li>
+                </ul>
+            </div>
         </div>
         <div class="table-container">
             <table>
@@ -72,7 +72,7 @@ $result = $stmt->get_result();
                         <td>
                             <form action='editar/renda.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
-                                <button type='submit' class='btn-delete'><i class='bi bi-pencil'></i></button>
+                                <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>
                         </td>";
                         echo "

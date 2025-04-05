@@ -58,7 +58,7 @@ $row = $result->fetch_assoc();
                         <div class="form-group">
                             <label for="frequencia">Status</label>
                             <select id="status" name="status" required>
-                                <option value="Não pago" <?php echo ($row['status'] == 'Não pago') ? 'selected' : '' ?>>
+                                <option value="Não Pago" <?php echo ($row['status'] == 'Não Pago') ? 'selected' : '' ?>>
                                     Não pago
                                 </option>
                                 <option value="Pago" <?php echo ($row['status'] == 'Pago') ? 'selected' : '' ?>> Pago

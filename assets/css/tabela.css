@@ -101,6 +101,21 @@ td form {
     justify-content: center;
 }
 
+.btn-status {
+    padding: .5em;
+    background-color: rgb(151, 14, 14);
+    color: #fff;
+    border: none;
+    border-radius: 1em;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+#pago {
+    background-color: green;
+}
+
 .btn-edit,
 .btn-delete {
     display: flex;
@@ -121,10 +136,14 @@ td form {
 
 @media screen and (max-width: 768px) {
     .data-container {
+        position: relative;
         top: auto;
         left: auto;
-        bottom: 5%;
-        right: 5%;
+    }
+
+    #monthList {
+        bottom: auto;
+        top: 100%;
     }
 
     table {
@@ -137,7 +156,21 @@ td form {
     }
 
     .titulo a {
-        padding: .5em .3em;
+        position: absolute;
+        bottom: 5%;
+        right: 5%;
+        font-size: 0;
+        border-radius: 50%;
+    }
+
+    .titulo a::after {
+        content: "+";
+        font-size: 30px;
+        height: 1em;
+        width: .5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .titulo h2 {
