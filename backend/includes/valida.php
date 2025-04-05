@@ -9,6 +9,10 @@ if (!defined('BASE_URL')) {
     }
 }
 
+if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
+    $_SESSION['id'] = $_COOKIE['user_id'];
+}
+
 if (!isset($_SESSION['nome']) || !isset($_SESSION['email']) || !isset($_SESSION['id'])) {
     header("Location: " . BASE_URL . "login.php");
     exit();

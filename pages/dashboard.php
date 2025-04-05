@@ -234,7 +234,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             }
         });
 
-        // Gráfico de Progresso do Mês
+        // Despesas não pagas
         const despesasNaoPagas = <?php echo json_encode($despesasNaoPagas); ?>;
 
         if (despesasNaoPagas.length === 0) {
@@ -242,7 +242,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             document.getElementById('mensagemDespesasPagas').style.display = 'block';
         } else {
             const labels = despesasNaoPagas.map(d => d.nome);
-            const valores = despesasNaoPagas.map(d => d.valor);
+            const valores = despesasNaoPagas.map(d => Number(d.valor));
 
             new Chart(document.getElementById('graficoDespesasNaoPagas'), {
                 type: 'doughnut',
@@ -264,11 +264,13 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const valor = context.parsed;
+                                    const data = context.dataset.data.map(Number); // força números
+                                    const total = data.reduce((a, b) => a + b, 0);
+                                    const valor = Number(context.parsed);
                                     const pct = ((valor / total) * 100).toFixed(1);
                                     return `${context.label}: R$${valor.toFixed(2)} (${pct}%)`;
                                 }
+
                             }
                         }
                     }
@@ -321,7 +323,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
         const monthItems = monthList.querySelectorAll('li');
 
         // Exibir o mês selecionado no botão
-        monthButton.innerHTML = `<i class="bi bi-caret-down-fill"></i> ${monthNames[selectedMonth]}`;
+        monthButton.innerHTML = `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth - 1]}`;
 
         // Alternar a exibição da lista de meses ao clicar no botão
         monthButton.addEventListener('click', () => {
@@ -345,7 +347,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
 
                 // Atualizar a página com o mês selecionado
                 const url = new URL(window.location.href);
-                url.searchParams.set('month', selectedMonth);
+                url.searchParams.set('month', parseInt(selectedMonth) + 1); // Ajuste para PHP
                 window.location.href = url.toString();
             });
         });

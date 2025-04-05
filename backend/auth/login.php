@@ -33,6 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['id'] = $row['id'];
 
+                // Criar cookie por 1 ano
+                setcookie('user_id', $_SESSION['id'], time() + (86400 * 365), "/");
+                header('Location: ../../pages/dashboard.php');
+                exit;
+
                 header('Location: ../../pages/dashboard.php');
                 exit();
             } else {
