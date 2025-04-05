@@ -66,12 +66,13 @@ $row = $result->fetch_assoc();
                         <h3>Custos e Rendimentos</h3>
                         <div class="form-group">
                             <label for="custo">Custo</label>
-                            <input type="number" id="custo" name="custo" value="<?php echo $row['custo'] ?>" required>
+                            <input type="number" id="custo" name="custo" value="<?php echo $row['custo'] ?>" step="0.01"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="rendimento">Rendimento</label>
                             <input type="number" id="rendimento" name="rendimento"
-                                value="<?php echo $row['rendimento'] ?>" required>
+                                value="<?php echo $row['rendimento'] ?>" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>
@@ -89,8 +90,8 @@ $row = $result->fetch_assoc();
         </div>
     </div>
     <script>
-    const hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('vencimento').value = hoje;
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('vencimento').value = hoje;
     </script>
 </body>
 

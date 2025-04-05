@@ -32,7 +32,7 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
                         </div>
                         <div class="form-group">
                             <label for="valor">Valor</label>
-                            <input type="number" id="valor" name="valor" required>
+                            <input type="number" id="valor" name="valor" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>

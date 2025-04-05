@@ -44,7 +44,8 @@ $row = $result->fetch_assoc();
                         </div>
                         <div class="form-group">
                             <label for="valor">Valor</label>
-                            <input type="number" id="valor" name="valor" value="<?php echo $row['valor'] ?>" required>
+                            <input type="number" id="valor" name="valor" value="<?php echo $row['valor'] ?>" step="0.01"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>

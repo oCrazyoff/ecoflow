@@ -52,11 +52,11 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
                         <h3>Custos e Rendimentos</h3>
                         <div class="form-group">
                             <label for="custo">Custo</label>
-                            <input type="number" id="custo" name="custo" required>
+                            <input type="number" id="custo" name="custo" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="rendimento">Rendimento</label>
-                            <input type="number" id="rendimento" name="rendimento" required>
+                            <input type="number" id="rendimento" name="rendimento" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>
