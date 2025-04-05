@@ -57,12 +57,12 @@ $row = $result->fetch_assoc();
                     <div class="card">
                         <h3>Configuração da Renda</h3>
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="Ativo" <?php echo ($row['tipo'] == 'Ativo') ? 'selected' : ''; ?>>Ativo
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
                                 </option>
-                                <option value="Passivo" <?php echo ($row['tipo'] == 'Passivo') ? 'selected' : ''; ?>>
-                                    Passivo
+                                <option value="Não" <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>
+                                    Não
                                 </option>
                             </select>
                         </div>

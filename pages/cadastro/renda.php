@@ -43,10 +43,10 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
 
                     <div class="card">
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="Ativo">Ativo</option>
-                                <option value="Passivo">Passivo</option>
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
                             </select>
                         </div>
                     </div>

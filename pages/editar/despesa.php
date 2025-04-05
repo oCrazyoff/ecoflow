@@ -67,13 +67,11 @@ $row = $result->fetch_assoc();
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="Obrigatória"
-                                    <?php echo ($row['tipo'] == 'Obrigatória') ? 'selected' : ''; ?>>Obrigatória
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
                                 </option>
-                                <option value="Não Obrigatória"
-                                    <?php echo ($row['tipo'] == 'Não Obrigatória') ? 'selected' : ''; ?>>Não Obrigatória
+                                <option value="Não " <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>Não
                                 </option>
                             </select>
                         </div>

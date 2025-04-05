@@ -4,7 +4,7 @@ require_once("../../includes/valida.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome_investimento'];
-    $rendimento = $_POST['rendimento'];
+    $recorrente = $_POST['recorrente'];
     $tipo_investimento = $_POST['tipo_investimento'];
     $custo = $_POST['custo'];
     $data = $_POST['data']; // Capturar a data enviada pelo formulário
@@ -12,16 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
 
     // Verifica se os campos estão preenchidos
-    if (empty($nome) || empty($rendimento) || empty($tipo_investimento) || empty($custo) || empty($data)) {
+    if (empty($nome) || empty($recorrente) || empty($tipo_investimento) || empty($custo) || empty($data)) {
         $_SESSION['resposta'] = "Preencha todos os campos.";
-        header("Location: ../../../pages/editar/investimento.php?id=$id");
+        header("Location: ../../../pages/investimentos.php");
         exit();
     }
 
     // Atualiza o investimento no banco de dados
-    $sql = "UPDATE investimentos SET nome = ?, rendimento = ?, tipo = ?, custo = ?, data = ? WHERE id = ? AND user_id = ?";
+    $sql = "UPDATE investimentos SET nome = ?, recorrente = ?, tipo = ?, custo = ?, data = ? WHERE id = ? AND user_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sdsssii", $nome, $rendimento, $tipo_investimento, $custo, $data, $id, $user_id);
+    $stmt->bind_param("sssssii", $nome, $recorrente, $tipo_investimento, $custo, $data, $id, $user_id);
 
     if ($stmt->execute()) {
         $_SESSION['resposta'] = "Investimento editado com sucesso.";

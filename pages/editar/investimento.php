@@ -70,9 +70,14 @@ $row = $result->fetch_assoc();
                                 required>
                         </div>
                         <div class="form-group">
-                            <label for="rendimento">Rendimento</label>
-                            <input type="number" id="rendimento" name="rendimento"
-                                value="<?php echo $row['rendimento'] ?>" step="0.01" required>
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
+                                </option>
+                                <option value="Não" <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>
+                                    Não
+                                </option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>

@@ -7,7 +7,7 @@ $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n') - 1;
 $dbMonth = $selectedMonth + 1; // Ajustar para o formato do banco (1-12)
 
 // Atualizar a consulta para filtrar rendas pelo mês selecionado
-$sql = "SELECT * FROM rendas WHERE user_id = ? AND MONTH(data) = ?";
+$sql = "SELECT * FROM rendas WHERE user_id = ? AND (MONTH(data) = ? OR recorrente = 'Sim')";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $_SESSION['id'], $dbMonth);
 $stmt->execute();
@@ -55,8 +55,8 @@ $result = $stmt->get_result();
                     <tr>
                         <th>Descrição</th>
                         <th>Valor</th>
-                        <th>Tipo</th>
-                        <th>Data</th> <!-- Nova coluna -->
+                        <th>Recorrente</th>
+                        <th>Data</th>
                         <th colspan="2">Ações</th>
                     </tr>
                 </thead>
@@ -66,7 +66,7 @@ $result = $stmt->get_result();
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
                         echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                        echo "<td>" . htmlspecialchars($row['tipo']) . "</td>";
+                        echo "<td>" . $row['recorrente'] . "</td>";
                         echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
                         echo "
                         <td>

@@ -7,9 +7,9 @@ $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n') - 1;
 $dbMonth = $selectedMonth + 1;
 
 // Atualizar a consulta para filtrar despesas pelo mês selecionado
-$sql = "SELECT * FROM despesas WHERE user_id = ? AND MONTH(data) = ?";
+$sql = "SELECT * FROM despesas WHERE user_id = ? AND (MONTH(data) = ? OR recorrente = 'Sim')";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $_SESSION['id'], $dbMonth); // Passar a variável $dbMonth
+$stmt->bind_param("ii", $_SESSION['id'], $dbMonth);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -54,7 +54,7 @@ $result = $stmt->get_result();
                 <tr>
                     <th>Descrição</th>
                     <th>Valor</th>
-                    <th>Tipo</th>
+                    <th>Recorrente</th>
                     <th>Status</th>
                     <th>Data</th>
                     <th colspan="2">Ações</th>
@@ -64,7 +64,7 @@ $result = $stmt->get_result();
                     while ($row = $result->fetch_assoc()) {
                         echo "<td>" . $row['descricao'] . "</td>";
                         echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                        echo "<td>" . $row['tipo'] . "</td>";
+                        echo "<td>" . $row['recorrente'] . "</td>";
                         echo "<td>
                                 <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
                                 <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>

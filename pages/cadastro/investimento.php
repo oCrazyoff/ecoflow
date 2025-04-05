@@ -55,8 +55,11 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
                             <input type="number" id="custo" name="custo" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="rendimento">Rendimento</label>
-                            <input type="number" id="rendimento" name="rendimento" step="0.01" required>
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>

@@ -6,18 +6,18 @@ $user_id = $_SESSION['id'];
 $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
 
 // Consulta única para rendas
-$sqlRendas = "
-    SELECT 
-        SUM(valor) AS total,
-        SUM(CASE WHEN tipo = 'Ativo' THEN valor ELSE 0 END) AS ativo,
-        SUM(CASE WHEN tipo = 'Passivo' THEN valor ELSE 0 END) AS passivo
-    FROM rendas
-    WHERE user_id = $user_id AND MONTH(data) = $selectedMonth
-";
-$rendaResult = $conn->query($sqlRendas)->fetch_assoc();
-$rendaTotal = $rendaResult['total'] ?? 0;
-$rendaAtiva = $rendaResult['ativo'] ?? 0;
-$rendaPassiva = $rendaResult['passivo'] ?? 0;
+$sqlRendas = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+$rendaResult = $conn->query($sqlRendas);
+
+$rendas = [];
+$rendaTotal = 0;
+
+if ($rendaResult->num_rows > 0) {
+    while ($row = $rendaResult->fetch_assoc()) {
+        $rendas[] = $row;
+        $rendaTotal += $row['valor'];
+    }
+}
 
 // Consulta única para despesas
 $sqlDespesas = "
@@ -26,19 +26,16 @@ $sqlDespesas = "
         SUM(CASE WHEN status = 'Pago' THEN valor ELSE 0 END) AS pagas,
         SUM(CASE WHEN status = 'Não Pago' THEN valor ELSE 0 END) AS nao_pagas
     FROM despesas
-    WHERE user_id = $user_id AND MONTH(data) = $selectedMonth
+    WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim')
 ";
 $despesasResult = $conn->query($sqlDespesas)->fetch_assoc();
 $despesasTotal = $despesasResult['total'] ?? 0;
 $despesasPagas = $despesasResult['pagas'] ?? 0;
 $despesasNaoPagas = $despesasResult['nao_pagas'] ?? 0;
 
-// Meta de investimento
-$metaInvestimento = $rendaAtiva * 6;
-
 // Consulta de investimentos (limite 4)
 $investimentos = [];
-$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id AND MONTH(data) = $selectedMonth LIMIT 4";
+$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
 $resultadoInvestimentos = $conn->query($sqlInvestimentos);
 if ($resultadoInvestimentos->num_rows > 0) {
     while ($row = $resultadoInvestimentos->fetch_assoc()) {
@@ -77,7 +74,7 @@ $pctFII = $totalInvestimentos > 0 ? ($investimentosFII / $totalInvestimentos) * 
 
 // Obter despesas não pagas diretamente do banco de dados
 $despesasNaoPagas = [];
-$sqlDespesasNaoPagas = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND MONTH(data) = $selectedMonth";
+$sqlDespesasNaoPagas = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim')";
 $resultadoDespesasNaoPagas = $conn->query($sqlDespesasNaoPagas);
 if ($resultadoDespesasNaoPagas->num_rows > 0) {
     while ($row = $resultadoDespesasNaoPagas->fetch_assoc()) {
@@ -138,7 +135,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             <div class="card">
                 <h3>Despesas Pagas</h3>
                 <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND MONTH(data) = $selectedMonth LIMIT 4";
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
                 $resultado = $conn->query($sql);
                 if ($resultado->num_rows > 0) {
                     while ($row = $resultado->fetch_assoc()) {
@@ -164,8 +161,14 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
 
             <div class="card">
                 <h3>Rendas</h3>
-                <p><strong>Ativa:</strong> R$ <?php echo number_format($rendaAtiva, 2, ',', '.') ?></p>
-                <p><strong>Passiva:</strong> R$ <?php echo number_format($rendaPassiva, 2, ',', '.') ?></p>
+                <?php if (empty($rendas)): ?>
+                    <p style="text-align:center;">Nenhuma renda❌</p>
+                <?php else: ?>
+                    <?php foreach ($rendas as $renda): ?>
+                        <p><strong><?php echo $renda['descricao']; ?>:</strong> R$
+                            <?php echo number_format($renda['valor'], 2, ',', '.'); ?></p>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
 
             <div class="card">
