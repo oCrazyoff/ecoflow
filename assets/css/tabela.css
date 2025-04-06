@@ -1,7 +1,5 @@
 .data-container {
-    position: absolute;
-    top: 90%;
-    left: 90%;
+    position: relative;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -19,8 +17,7 @@
 
 #monthList {
     position: absolute;
-    bottom: 100%;
-    right: 10%;
+    top: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-color: #fff;
     border: 2px solid #b6b6b6;
@@ -42,6 +39,11 @@
     align-items: center;
     width: 100%;
     margin-bottom: 1em;
+}
+
+.btn-container {
+    display: flex;
+    gap: 1em;
 }
 
 .titulo h1 {
@@ -135,24 +137,9 @@ td form {
 }
 
 @media screen and (max-width: 768px) {
-    .data-container {
-        position: relative;
-        top: auto;
-        left: auto;
-    }
-
-    #monthList {
-        bottom: auto;
-        top: 100%;
-    }
-
     table {
         width: 100%;
         min-width: 600px;
-    }
-
-    .titulo {
-        margin-top: 2em;
     }
 
     .titulo a {
@@ -165,7 +152,7 @@ td form {
 
     .titulo a::after {
         content: "+";
-        font-size: 30px;
+        font-size: 40px;
         height: 1em;
         width: .5em;
         display: flex;

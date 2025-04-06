@@ -1,3 +1,18 @@
+/* geral */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-inner-spin-button {
+    display: none;
+    appearance: none;
+}
+
+input[type="password"] {
+    -webkit-text-security: disc;
+}
+
+
 .main-content h1 {
     color: #218380;
     font-size: 2em;
@@ -97,6 +112,69 @@ button[type="submit"]:focus {
 
 .botoes i {
     margin-right: 10px;
+}
+
+
+.form-section {
+    margin-bottom: 2em;
+}
+
+.form-section h2 {
+    background-color: #1c6b63;
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    color: #fff;
+    padding: .5em 0;
+    border-radius: .5em;
+}
+
+.form-section h2 i {
+    margin-right: 10px;
+    color: #fff;
+}
+
+/* Senha com ícone dentro */
+.senha-container {
+    position: relative;
+}
+
+.senha-container input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 3em;
+}
+
+.senha-container i {
+    font-size: 1.5em;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+    font-size: 1.2em;
+}
+
+/* Mensagem de sucesso */
+.mensagem-status {
+    margin-top: 1.5em;
+    padding: 1em;
+    border-radius: 5px;
+    background-color: #d4edda;
+    color: #155724;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.oculto {
+    display: none;
 }
 
 @media screen and (max-width: 768px) {

@@ -103,7 +103,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <div class="header">
-            <h2>Saldo Atual: R$ <?php echo number_format($rendaTotal - $despesasTotal, 2, ',', '.') ?></h2>
+            <h2>Saldo: R$ <?php echo number_format($rendaTotal - $despesasTotal, 2, ',', '.') ?></h2>
             <div class="data-container">
                 <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
                 <ul id="monthList" style="display: none;">

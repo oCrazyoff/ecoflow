@@ -30,23 +30,25 @@ $result = $stmt->get_result();
     <div class="main-content">
         <div class="titulo">
             <h2>Rendas</h2>
-            <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
-            <div class="data-container">
-                <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
-                <ul id="monthList" style="display: none;">
-                    <li data-month="0">Janeiro</li>
-                    <li data-month="1">Fevereiro</li>
-                    <li data-month="2">Março</li>
-                    <li data-month="3">Abril</li>
-                    <li data-month="4">Maio</li>
-                    <li data-month="5">Junho</li>
-                    <li data-month="6">Julho</li>
-                    <li data-month="7">Agosto</li>
-                    <li data-month="8">Setembro</li>
-                    <li data-month="9">Outubro</li>
-                    <li data-month="10">Novembro</li>
-                    <li data-month="11">Dezembro</li>
-                </ul>
+            <div class="btn-container">
+                <div class="data-container">
+                    <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
+                    <ul id="monthList" style="display: none;">
+                        <li data-month="0">Janeiro</li>
+                        <li data-month="1">Fevereiro</li>
+                        <li data-month="2">Março</li>
+                        <li data-month="3">Abril</li>
+                        <li data-month="4">Maio</li>
+                        <li data-month="5">Junho</li>
+                        <li data-month="6">Julho</li>
+                        <li data-month="7">Agosto</li>
+                        <li data-month="8">Setembro</li>
+                        <li data-month="9">Outubro</li>
+                        <li data-month="10">Novembro</li>
+                        <li data-month="11">Dezembro</li>
+                    </ul>
+                </div>
+                <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
             </div>
         </div>
         <div class="table-container">
