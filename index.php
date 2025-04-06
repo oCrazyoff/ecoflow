@@ -157,17 +157,6 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
             </div>
         </footer>
     </div>
-    <script defer>
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-
-            if (window.scrollY > 0) {
-                header.classList.add('ativo');
-            } else {
-                header.classList.remove('ativo');
-            }
-        });
-    </script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 session_start();
 
 if (empty($_SESSION['_csrf'])) {
-    $_SESSION['_csrf'] = hash('sha256', random_bytes(32)); // Gera um token CSRF seguro
+    $_SESSION['_csrf'] = hash('sha256', random_bytes(32)); // Gera um token CSRF
 }
 ?>
 <!DOCTYPE html>
