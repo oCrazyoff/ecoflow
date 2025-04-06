@@ -149,14 +149,17 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
 
             <div class="card">
                 <h3>Despesas Não Pagas</h3>
-                <?php if (empty($despesasNaoPagas)): ?>
-                    <p style="text-align:center;">Todas despesas pagas ✅</p>
-                <?php else: ?>
-                    <?php foreach ($despesasNaoPagas as $despesa): ?>
-                        <p><strong><?php echo $despesa['nome']; ?>:</strong> R$
-                            <?php echo number_format($despesa['valor'], 2, ',', '.'); ?></p>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <?php
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+                $resultado = $conn->query($sql);
+                if ($resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                    }
+                } else {
+                    echo "<p style='text-align:center;'>Todas despesas pagas✅</p>";
+                }
+                ?>
             </div>
 
             <div class="card">
