@@ -37,6 +37,11 @@ table {
     text-align: left;
 }
 
+table tr {
+    position: sticky;
+    top: 0;
+}
+
 table th,
 table td {
     padding: 12px 15px;
