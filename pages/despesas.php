@@ -53,21 +53,24 @@ $result = $stmt->get_result();
         </div>
         <div class="table-container">
             <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Valor</th>
-                    <th>Recorrente</th>
-                    <th>Status</th>
-                    <th>Data</th>
-                    <th colspan="2">Ações</th>
-                </tr>
-                <tr>
-                    <?php
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<td>" . $row['descricao'] . "</td>";
-                        echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                        echo "<td>" . $row['recorrente'] . "</td>";
-                        echo "<td>
+                <thead>
+                    <tr id="thead">
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Recorrente</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th colspan="2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <?php
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<td>" . $row['descricao'] . "</td>";
+                            echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
+                            echo "<td>" . $row['recorrente'] . "</td>";
+                            echo "<td>
                                 <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
                                 <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
                                 <input type='hidden' name='id' value='" . $row['id'] . "'>
@@ -75,23 +78,24 @@ $result = $stmt->get_result();
                                 <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
                                 </form>
                             </td>";
-                        echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
-                        echo "
+                            echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
+                            echo "
                     <td>
                         <form action='editar/despesa.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                         </form>
                     </td>";
-                        echo "
+                            echo "
                     <td>
                         <form action='../backend/database/despesas/deletar.php' method='POST'>
                             <input type='hidden' name='id' value='" . $row['id'] . "'>
                             <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                         </form>
                     </td>";
-                        echo "</tr>";
-                    } ?>
+                            echo "</tr>";
+                        } ?>
+                </tbody>
             </table>
         </div>
     </div>

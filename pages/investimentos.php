@@ -55,7 +55,7 @@ $result = $stmt->get_result();
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
+                    <tr id="thead">
                         <th>Tipo</th>
                         <th>Nome</th>
                         <th>Custo</th>

@@ -77,7 +77,7 @@ table {
     text-align: left;
 }
 
-table tr {
+table thead {
     position: sticky;
     top: 0;
 }
