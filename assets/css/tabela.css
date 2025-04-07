@@ -150,8 +150,8 @@ td form {
 
     .titulo a {
         position: absolute;
-        bottom: 5%;
-        right: 5%;
+        bottom: 10%;
+        right: 10%;
         font-size: 0;
         border-radius: 50%;
     }
