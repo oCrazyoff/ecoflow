@@ -22,6 +22,7 @@
     background-color: #fff;
     border: 2px solid #b6b6b6;
     list-style-type: none;
+    z-index: 200;
 }
 
 #monthList li {
