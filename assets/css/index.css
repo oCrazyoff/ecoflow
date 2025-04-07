@@ -1,8 +1,47 @@
+/* geral */
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #fff !important;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.interface {
+    padding: 0 10em;
+}
+
+/* header */
 header {
+    background-color: #246a73;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 5em;
+    padding: 1em 0;
+    z-index: 500;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.ativo {
+    background-color: #145553;
+}
+
+header .interface {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    padding: 0 10em;
 }
 
 header .left,
@@ -18,6 +57,20 @@ header img {
     margin: 0;
 }
 
+header p {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #fff;
+    text-shadow:
+        -2px -2px 0 #2f5054,
+        2px -2px 0 #2f5054,
+        -2px 2px 0 #2f5054,
+        2px 2px 0 #2f5054;
+    margin: 0;
+    font-family: "Bruno Ace SC", sans-serif;
+}
+
 header a {
     text-decoration: none;
     color: #fff;
@@ -25,7 +78,8 @@ header a {
 }
 
 header #btn-cadastro {
-    background-color: #246a73;
+    background-color: #fff;
+    color: #212529;
     border: none;
     border-radius: .5em;
     padding: .5em;
@@ -43,14 +97,20 @@ header #btn-login:hover {
 }
 
 header #btn-cadastro:hover {
-    background-color: #145553;
+    background-color: #aaa;
 }
 
+/* hero */
 #hero {
-    height: 100vh;
+    height: calc(100dvh - 4em);
     display: flex;
     justify-content: space-between;
-    padding: 0 10em;
+}
+
+#hero .interface {
+    height: calc(100dvh - 4em);
+    display: flex;
+    justify-content: space-between;
 }
 
 #hero .left {
@@ -99,14 +159,206 @@ header #btn-cadastro:hover {
     background-color: #145553;
 }
 
-@media screen and (max-width: 768px) {
+/* beneficios */
+#beneficios {
+    width: 100%;
+    background-color: #145553;
+    padding: 2em 0;
+}
 
-    header,
-    #hero {
+#beneficios .interface {
+    width: 100%;
+}
+
+#beneficios .txt-container {
+    color: #fff;
+}
+
+#beneficios .txt-container h2 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#beneficios .txt-container p {
+    margin-top: 1em;
+}
+
+#beneficios .cards-container {
+    margin-top: 1em;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 1em;
+}
+
+#beneficios .card {
+    padding: 1em;
+    width: 20em;
+    height: 20em;
+    background-color: #fff;
+    border-radius: .5em;
+    overflow: hidden;
+}
+
+#beneficios .card .img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50%;
+}
+
+#beneficios .card .img-container img {
+    height: 100%;
+}
+
+#beneficios .card h3 {
+    font-size: 1.5em;
+    margin-top: .5em;
+    color: #246a73;
+}
+
+#beneficios .card p {
+    font-size: 1em;
+}
+
+/* como funciona */
+#como-funciona {
+    width: 100%;
+    padding: 2em 0;
+}
+
+#como-funciona .interface {
+    display: flex;
+    gap: 1em;
+    width: 100%;
+}
+
+#como-funciona .txt-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+}
+
+#como-funciona .txt-container h2 {
+    font-size: 2em;
+    color: #246a73;
+}
+
+#como-funciona .steps {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    width: 60%;
+}
+
+#como-funciona .step {
+    display: flex;
+    border-radius: 1em;
+    overflow: hidden;
+    width: 100%;
+    color: #fff;
+}
+
+#como-funciona .step span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+    font-size: 2.5em;
+    background-color: #246a73;
+    color: #fff;
+}
+
+#como-funciona .step .txt {
+    width: 100%;
+    padding: 1em;
+    background-color: #145553;
+}
+
+footer {
+    color: #fff;
+    background-color: #212529;
+    width: 100%;
+    padding: 40px 0 20px;
+    font-size: 14px;
+}
+
+footer .interface {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.footer-content div {
+    flex: 1 1 250px;
+}
+
+.footer-left h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #318d99;
+    /* ou sua cor de destaque */
+}
+
+.footer-links h4,
+.footer-contact h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #318d99;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+    color: #318d99;
+}
+
+.footer-contact p {
+    margin: 5px 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+
+@media screen and (max-width: 768px) {
+    .interface {
         padding: 0 .5em;
     }
 
-    #hero {
+    #hero .interface {
         width: 100%;
         flex-direction: column-reverse;
         justify-content: center;
@@ -124,6 +376,7 @@ header #btn-cadastro:hover {
     }
 
     #hero p {
+        text-align: justify;
         width: 90%;
         font-size: 1.2em;
     }
@@ -131,5 +384,30 @@ header #btn-cadastro:hover {
     #hero a {
         font-size: 1.2em;
         width: 100%;
+    }
+
+    #beneficios .cards-container {
+        overflow-x: auto;
+    }
+
+    #beneficios .card {
+        width: 15em;
+        flex-shrink: 0;
+    }
+
+    #como-funciona .interface {
+        flex-direction: column;
+    }
+
+    #como-funciona .txt-container {
+        width: 100%;
+    }
+
+    #como-funciona .steps {
+        width: 100%;
+    }
+
+    #como-funciona .step span {
+        height: auto;
     }
 }

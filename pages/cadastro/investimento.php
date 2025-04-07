@@ -1,4 +1,7 @@
 <?php require_once("../../backend/includes/valida.php") ?>
+<?php
+$dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+?>
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -44,31 +47,24 @@
                         </div>
                     </div>
 
-                    <!-- Custos e Rendimentos -->
+                    <!-- Custos, Rendimentos e Data -->
                     <div class="card">
                         <h3>Custos e Rendimentos</h3>
                         <div class="form-group">
                             <label for="custo">Custo</label>
-                            <input type="number" id="custo" name="custo" required>
+                            <input type="number" id="custo" name="custo" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="rendimento">Rendimento</label>
-                            <input type="number" id="rendimento" name="rendimento" required>
-                        </div>
-                    </div>
-
-                    <!-- Frequência de Rendimento -->
-                    <div class="card">
-                        <h3>Frequência de Rendimento</h3>
-                        <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Diário">Diário</option>
-                                <option value="Mensal">Mensal</option>
-                                <option value="Anual">Anual</option>
-                                <option value="Bimestral">Bimestral</option>
-                                <option value="Trimestral">Trimestral</option>
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data" value="<?php echo $dataAtual->format('Y-m-d'); ?>"
+                                required>
                         </div>
                     </div>
                 </div>
@@ -80,10 +76,6 @@
             </form>
         </div>
     </div>
-    <script>
-        const hoje = new Date().toISOString().split('T')[0];
-        document.getElementById('vencimento').value = hoje;
-    </script>
 </body>
 
 </html>

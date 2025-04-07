@@ -61,39 +61,28 @@ $row = $result->fetch_assoc();
                         </div>
                     </div>
 
-                    <!-- Custos e Rendimentos -->
+                    <!-- Custos, Rendimentos e Data -->
                     <div class="card">
                         <h3>Custos e Rendimentos</h3>
                         <div class="form-group">
                             <label for="custo">Custo</label>
-                            <input type="number" id="custo" name="custo" value="<?php echo $row['custo'] ?>" required>
+                            <input type="number" id="custo" name="custo" value="<?php echo $row['custo'] ?>" step="0.01"
+                                required>
                         </div>
                         <div class="form-group">
-                            <label for="rendimento">Rendimento</label>
-                            <input type="number" id="rendimento" name="rendimento"
-                                value="<?php echo $row['rendimento'] ?>" required>
-                        </div>
-                    </div>
-
-                    <!-- Frequência de Rendimento -->
-                    <div class="card">
-                        <h3>Frequência de Rendimento</h3>
-                        <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Diário"
-                                    <?php echo ($row['frequencia'] == 'Diário') ? 'selected' : ''; ?>>Diário</option>
-                                <option value="Mensal"
-                                    <?php echo ($row['frequencia'] == 'Mensal') ? 'selected' : ''; ?>>Mensal</option>
-                                <option value="Anual" <?php echo ($row['frequencia'] == 'Anual') ? 'selected' : ''; ?>>
-                                    Anual</option>
-                                <option value="Bimestral"
-                                    <?php echo ($row['frequencia'] == 'Bimestral') ? 'selected' : ''; ?>>Bimestral
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
                                 </option>
-                                <option value="Trimestral"
-                                    <?php echo ($row['frequencia'] == 'Trimestral') ? 'selected' : ''; ?>>Trimestral
+                                <option value="Não" <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>
+                                    Não
                                 </option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data"
+                                value="<?php echo date('Y-m-d', strtotime($row['data'])); ?>" required>
                         </div>
                     </div>
                 </div>

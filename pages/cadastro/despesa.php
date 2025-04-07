@@ -1,4 +1,7 @@
 <?php require_once("../../backend/includes/valida.php") ?>
+<?php
+$dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+?>
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -30,27 +33,29 @@
                         </div>
                         <div class="form-group">
                             <label for="valor">Valor</label>
-                            <input type="number" id="valor" name="valor" required>
+                            <input type="number" id="valor" name="valor" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data" value="<?php echo $dataAtual->format('Y-m-d'); ?>"
+                                required>
                         </div>
                     </div>
 
                     <div class="card">
                         <h3>Configuração da Despesa</h3>
                         <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Mensal">Mensal</option>
-                                <option value="Diária">Diária</option>
-                                <option value="Anual">Anual</option>
-                                <option value="Trimestral">Trimestral</option>
-                                <option value="Bimestral">Bimestral</option>
+                            <label for="frequencia">Status</label>
+                            <select id="status" name="status" required>
+                                <option value="Não Pago">Não Pago</option>
+                                <option value="Pago">Pago</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="Obrigatória">Obrigatória</option>
-                                <option value="Não Obrigatória">Não Obrigatória</option>
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
                             </select>
                         </div>
                     </div>

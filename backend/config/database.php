@@ -1,13 +1,18 @@
 <?php
-/*$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'ecoflow';*/
+require_once("loadEnv.php");
+loadEnv(__DIR__ . '/../../senhas.env');
 
-$host = 'sql202.infinityfree.com';
-$username = 'if0_38495560';
-$password = 'hblgZUg4FR8y';
-$dbname = 'if0_38495560_ecoflow';
+if ($_SERVER['HTTP_HOST'] == 'localhost') {
+    $host = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'ecoflow';
+} else {
+    $host = $_ENV['DB_HOST'];
+    $username = $_ENV['DB_USER'];
+    $password = $_ENV['DB_PASS'];
+    $dbname = $_ENV['DB_NAME'];
+}
 
 $conn = new mysqli($host, $username, $password, $dbname);
 

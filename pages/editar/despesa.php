@@ -44,37 +44,34 @@ $row = $result->fetch_assoc();
                         </div>
                         <div class="form-group">
                             <label for="valor">Valor</label>
-                            <input type="number" id="valor" name="valor" value="<?php echo $row['valor'] ?>" required>
+                            <input type="number" id="valor" name="valor" value="<?php echo $row['valor'] ?>" step="0.01"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" name="data"
+                                value="<?php echo date('Y-m-d', strtotime($row['data'])); ?>" required>
                         </div>
                     </div>
 
                     <div class="card">
                         <h3>Configuração da Despesa</h3>
                         <div class="form-group">
-                            <label for="frequencia">Frequência</label>
-                            <select id="frequencia" name="frequencia" required>
-                                <option value="Mensal"
-                                    <?php echo ($row['frequencia'] == 'Mensal') ? 'selected' : ''; ?>>Mensal</option>
-                                <option value="Diária"
-                                    <?php echo ($row['frequencia'] == 'Diária') ? 'selected' : ''; ?>>Diária</option>
-                                <option value="Anual" <?php echo ($row['frequencia'] == 'Anual') ? 'selected' : ''; ?>>
-                                    Anual</option>
-                                <option value="Trimestral"
-                                    <?php echo ($row['frequencia'] == 'Trimestral') ? 'selected' : ''; ?>>Trimestral
+                            <label for="frequencia">Status</label>
+                            <select id="status" name="status" required>
+                                <option value="Não Pago" <?php echo ($row['status'] == 'Não Pago') ? 'selected' : '' ?>>
+                                    Não pago
                                 </option>
-                                <option value="Bimestral"
-                                    <?php echo ($row['frequencia'] == 'Bimestral') ? 'selected' : ''; ?>>Bimestral
+                                <option value="Pago" <?php echo ($row['status'] == 'Pago') ? 'selected' : '' ?>> Pago
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="Obrigatória"
-                                    <?php echo ($row['tipo'] == 'Obrigatória') ? 'selected' : ''; ?>>Obrigatória
+                            <label for="recorrente">Recorrente</label>
+                            <select id="recorrente" name="recorrente" required>
+                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
                                 </option>
-                                <option value="Não Obrigatória"
-                                    <?php echo ($row['tipo'] == 'Não Obrigatória') ? 'selected' : ''; ?>>Não Obrigatória
+                                <option value="Não " <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>Não
                                 </option>
                             </select>
                         </div>

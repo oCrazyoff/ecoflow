@@ -10,6 +10,9 @@ if (!defined('BASE_URL')) {
 <link rel="stylesheet" href="<?php echo BASE_URL ?>assets/css/menu.css?v=<?php echo time(); ?>">
 <div class="btn-menu"><i class="bi bi-list"></i></div>
 <div class="overlay"></div>
+<div id="header">
+    <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
+</div>
 <aside class="sidebar">
     <div class="top">
         <div class="logo">
