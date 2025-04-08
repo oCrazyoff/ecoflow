@@ -25,6 +25,7 @@ body {
     position: fixed;
     top: -100%;
     left: 50%;
+    width: max-content;
     background-color: #246a73;
     transform: translate(-50%, -50%);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -33,6 +34,7 @@ body {
     border-radius: 1em;
     border: 2px solid #73d2de;
     animation: sumir 3s;
+    z-index: 750;
 }
 
 @keyframes sumir {
