@@ -117,3 +117,16 @@ button[type="submit"]:hover {
 .login a:hover {
     text-decoration: underline;
 }
+
+@media screen and (max-width: 768px) {
+    .form-container {
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+    .form-container h2 {
+        text-align: left;
+        width: 65%;
+    }
+}
