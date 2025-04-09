@@ -58,8 +58,8 @@ $result = $stmt->get_result();
                     <tr id="thead">
                         <th>Descrição</th>
                         <th>Valor</th>
-                        <th>Recorrente</th>
                         <th>Status</th>
+                        <th>Recorrente</th>
                         <th>Data</th>
                         <th colspan="2">Ações</th>
                     </tr>
@@ -70,15 +70,15 @@ $result = $stmt->get_result();
                         while ($row = $result->fetch_assoc()) {
                             echo "<td>" . $row['descricao'] . "</td>";
                             echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                            echo "<td>" . $row['recorrente'] . "</td>";
                             echo "<td>
-                                <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
-                                <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
-                                <input type='hidden' name='id' value='" . $row['id'] . "'>
-                                <input type='hidden' id='data' name='data' value='" . date('Y-m-d', strtotime($row['data'])) . "' required>
-                                <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
-                                </form>
+                            <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
+                            <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
+                            <input type='hidden' name='id' value='" . $row['id'] . "'>
+                            <input type='hidden' id='data' name='data' value='" . date('Y-m-d', strtotime($row['data'])) . "' required>
+                            <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
+                            </form>
                             </td>";
+                            echo "<td>" . $row['recorrente'] . "</td>";
                             echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
                             echo "
                     <td>

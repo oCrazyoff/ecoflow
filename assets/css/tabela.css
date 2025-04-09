@@ -148,6 +148,10 @@ td form {
         min-width: 600px;
     }
 
+    .btn-status {
+        width: 6em;
+    }
+
     .titulo a {
         position: absolute;
         bottom: 10%;
