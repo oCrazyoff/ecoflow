@@ -90,7 +90,7 @@ button[type="submit"]:hover {
 
 @media screen and (max-width: 768px) {
     #btn-voltar {
-        left: 80%;
+        top: 8%;
     }
 
     h2 {

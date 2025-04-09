@@ -100,6 +100,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
 </head>
 
 <body>
+    <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <div class="header">
@@ -133,7 +134,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             </div>
 
             <div class="card">
-                <h3>Despesas Pagas</h3>
+                <h3>Despesas Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php
                 $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
                 $resultado = $conn->query($sql);
@@ -148,7 +149,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             </div>
 
             <div class="card">
-                <h3>Despesas Não Pagas</h3>
+                <h3>Despesas Não Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php
                 $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
                 $resultado = $conn->query($sql);
@@ -163,7 +164,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             </div>
 
             <div class="card">
-                <h3>Rendas</h3>
+                <h3>Rendas <a href="rendas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php if (empty($rendas)): ?>
                     <p style="text-align:center;">Nenhuma renda❌</p>
                 <?php else: ?>
@@ -175,7 +176,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             </div>
 
             <div class="card">
-                <h3>Investimentos</h3>
+                <h3>Investimentos <a href="investimentos.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php
                 foreach ($investimentos as $investimento) {
                     echo "<p><strong>" . $investimento['nome'] . ":</strong> R$ " . number_format($investimento['custo'], 2, ',', '.') . "</p>";

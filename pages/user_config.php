@@ -22,6 +22,7 @@ $row = $result->fetch_assoc();
 </head>
 
 <body>
+    <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <h1><i class="bi bi-person-gear"></i> Configurações do Usuário</h1>

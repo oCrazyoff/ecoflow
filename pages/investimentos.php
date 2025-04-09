@@ -26,6 +26,7 @@ $result = $stmt->get_result();
 </head>
 
 <body>
+    <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
     <div class="main-content">
         <div class="titulo">

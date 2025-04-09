@@ -67,8 +67,17 @@
 }
 
 .card h3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 10px;
     color: #218380;
+}
+
+.card h3 a {
+    margin-left: 1em;
+    color: #218380;
+    font-size: 1.2em;
 }
 
 #grafico {
