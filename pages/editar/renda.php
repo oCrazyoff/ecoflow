@@ -24,6 +24,7 @@ $row = $result->fetch_assoc();
 </head>
 
 <body>
+    <?php include("../../backend/includes/loading.php") ?>
     <?php include("../../backend/includes/menu.php") ?>
     <div class="main-content">
         <h2><?php echo $row['descricao'] ?></h2>

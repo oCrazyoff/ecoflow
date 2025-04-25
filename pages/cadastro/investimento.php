@@ -15,6 +15,7 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
 </head>
 
 <body>
+    <?php include("../../backend/includes/loading.php") ?>
     <?php include("../../backend/includes/menu.php") ?>
     <div class="main-content">
         <h2>Cadastro de Investimentos</h2>
