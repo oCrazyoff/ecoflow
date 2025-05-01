@@ -1,11 +1,30 @@
 <?php
+session_start();
+include("backend/config/database.php");
+
+if (isset($_SESSION['id'])) {
+    header("Location: pages/dashboard.php");
+    exit;
+}
+
 if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
     $_SESSION['id'] = $_COOKIE['user_id'];
+
+    $sql = "SELECT nome, email FROM usuarios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $_SESSION['id']);
+    $stmt->execute();
+    $stmt->bind_result($nome, $email);
+    $stmt->fetch();
+
+    $_SESSION['nome'] = $nome;
+    $_SESSION['email'] = $email;
 
     header('Location: pages/dashboard.php');
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 

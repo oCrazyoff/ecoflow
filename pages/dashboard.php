@@ -6,7 +6,7 @@ $user_id = $_SESSION['id'];
 $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
 
 // Consulta única para rendas
-$sqlRendas = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+$sqlRendas = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
 $rendaResult = $conn->query($sqlRendas);
 
 $rendas = [];
@@ -21,12 +21,12 @@ if ($rendaResult->num_rows > 0) {
 
 // Consulta única para despesas
 $sqlDespesas = "
-    SELECT 
-        SUM(valor) AS total,
-        SUM(CASE WHEN status = 'Pago' THEN valor ELSE 0 END) AS pagas,
-        SUM(CASE WHEN status = 'Não Pago' THEN valor ELSE 0 END) AS nao_pagas
-    FROM despesas
-    WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim')
+SELECT
+SUM(valor) AS total,
+SUM(CASE WHEN status = 'Pago' THEN valor ELSE 0 END) AS pagas,
+SUM(CASE WHEN status = 'Não Pago' THEN valor ELSE 0 END) AS nao_pagas
+FROM despesas
+WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth)
 ";
 $despesasResult = $conn->query($sqlDespesas)->fetch_assoc();
 $despesasTotal = $despesasResult['total'] ?? 0;
@@ -35,7 +35,8 @@ $despesasNaoPagas = $despesasResult['nao_pagas'] ?? 0;
 
 // Consulta de investimentos (limite 4)
 $investimentos = [];
-$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) =
+$selectedMonth) LIMIT 4";
 $resultadoInvestimentos = $conn->query($sqlInvestimentos);
 if ($resultadoInvestimentos->num_rows > 0) {
     while ($row = $resultadoInvestimentos->fetch_assoc()) {
@@ -74,7 +75,8 @@ $pctFII = $totalInvestimentos > 0 ? ($investimentosFII / $totalInvestimentos) * 
 
 // Obter despesas não pagas diretamente do banco de dados
 $despesasNaoPagas = [];
-$sqlDespesasNaoPagas = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim')";
+$sqlDespesasNaoPagas = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago'
+AND (MONTH(data) = $selectedMonth)";
 $resultadoDespesasNaoPagas = $conn->query($sqlDespesasNaoPagas);
 if ($resultadoDespesasNaoPagas->num_rows > 0) {
     while ($row = $resultadoDespesasNaoPagas->fetch_assoc()) {
@@ -102,6 +104,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
 <body>
     <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
+    <?php include("../backend/includes/alert_anual.php") ?>
     <div class="main-content">
         <div class="header">
             <h2>Saldo: R$ <?php echo number_format($rendaTotal - $despesasTotal, 2, ',', '.') ?></h2>
@@ -136,7 +139,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             <div class="card">
                 <h3>Despesas Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
                 $resultado = $conn->query($sql);
                 if ($resultado->num_rows > 0) {
                     while ($row = $resultado->fetch_assoc()) {
@@ -151,7 +154,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
             <div class="card">
                 <h3>Despesas Não Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
                 <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth OR recorrente = 'Sim') LIMIT 4";
+                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
                 $resultado = $conn->query($sql);
                 if ($resultado->num_rows > 0) {
                     while ($row = $resultado->fetch_assoc()) {
@@ -358,6 +361,15 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagas, 'valor'));
                 window.location.href = url.toString();
             });
         });
+
+        <?php
+        // Verificar se é o ultimo dia do ano para gerar relatório anual
+        $ultimoDiaAno = (date('m-d') === '12-31');
+
+        if ($ultimoDiaAno && isset($_SESSION['rel_anual']) && $_SESSION['rel_anual'] != true) {
+            echo "mostrarAlert()";
+        }
+        ?>
     </script>
 </body>
 

@@ -2,12 +2,44 @@
 require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 
+// Verifica se é o primeiro dia do mês
+if (date('d') === '01') {
+    // Verifica se os invesimentos ja foram cadastrados
+    $sqlVerificar = "SELECT COUNT(*) AS total FROM investimentos WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+    $stmtVerificar = $conn->prepare($sqlVerificar);
+    $mesAtual = date('m');
+    $anoAtual = date('Y');
+    $stmtVerificar->bind_param("sii", $_SESSION['id'], $mesAtual, $anoAtual);
+    $stmtVerificar->execute();
+    $resultadoVerificar = $stmtVerificar->get_result();
+    $rowVerificar = $resultadoVerificar->fetch_assoc();
+
+    if ($rowVerificar['total'] == 0) { //Se não houver investimentos cadastrados
+        $sqlRecorrentes = "SELECT nome, tipo, recorrente FROM investimentos WHERE user_id = ? AND recorrente = 'Sim'";
+        $stmtRecorrentes = $conn->prepare($sqlRecorrentes);
+        $stmtRecorrentes->bind_param("s", $_SESSION['id']);
+        $stmtRecorrentes->execute();
+        $resultadoRecorrentes = $stmtRecorrentes->get_result();
+
+        // Cadastrar os novos investimentos
+        $sqlInserir = "INSERT INTO investimentos (user_id, nome, tipo, recorrente) VALUES (?, ?, ?, 'Sim')";
+        $stmtInserir = $conn->prepare($sqlInserir);
+
+        while ($row = $resultadoRecorrentes->fetch_assoc()) {
+            $nome = $row['nome'];
+            $tipo = $row['tipo'];
+            $stmtInserir->bind_param("sss", $_SESSION['id'], $nome, $tipo);
+            $stmtInserir->execute();
+        }
+    }
+}
+
 // Capturar o mês selecionado na URL ou usar o mês atual como padrão
 $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n') - 1;
 $dbMonth = $selectedMonth + 1; // Ajustar para o formato do banco (1-12)
 
 // Atualizar a consulta para filtrar investimentos pelo mês selecionado
-$sql = "SELECT * FROM investimentos WHERE user_id = ? AND (MONTH(data) = ? OR recorrente = 'Sim')";
+$sql = "SELECT * FROM investimentos WHERE user_id = ? AND (MONTH(data) = ?)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $_SESSION['id'], $dbMonth);
 $stmt->execute();
