@@ -109,3 +109,5 @@ if (isset($_GET['rel_anual']) && $_GET['rel_anual'] === 'true') {
         error_log("Erro ao gerar PDF: " . $e->getMessage());
     }
 }
+
+header("Location: ../dashboard.php");
