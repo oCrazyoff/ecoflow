@@ -17,7 +17,7 @@ if (!defined('BASE_URL')) {
             com
             os dados do ano atual.
         </p>
-        <a href="<?php BASE_URL ?>relatorios/relatorio_anual.php?rel_anual=true">Gerar Relatório</a>
+        <a href="<?php BASE_URL ?>relatorios/relatorio_anual.php?rel_anual=true" target="_blank">Gerar Relatório</a>
     </div>
 </div>
 
