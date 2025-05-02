@@ -225,7 +225,6 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
     <div class="main-content">
         <div class="header">
             <h2>Saldo: R$ <?php echo number_format($rendaTotal - $totalNaoPago, 2, ',', '.') ?></h2>
-            <button onclick="mostrarAlert()">Relatório</button>
             <div class="data-container">
                 <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
                 <ul id="monthList" style="display: none;">
