@@ -2,37 +2,6 @@
 require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 
-// Verifica se é o primeiro dia do mês
-if (date('d') === '01') {
-    // Verifica se as rendas ja foram cadastradas
-    $sqlVerificar = "SELECT COUNT(*) AS total FROM rendas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
-    $stmtVerificar = $conn->prepare($sqlVerificar);
-    $mesAtual = date('m');
-    $anoAtual = date('Y');
-    $stmtVerificar->bind_param("sii", $_SESSION['id'], $mesAtual, $anoAtual);
-    $stmtVerificar->execute();
-    $resultadoVerificar = $stmtVerificar->get_result();
-    $rowVerificar = $resultadoVerificar->fetch_assoc();
-
-    if ($rowVerificar['total'] == 0) { //Se não houver rendas cadastradas
-        $sqlRecorrentes = "SELECT descricao, recorrente FROM rendas WHERE user_id = ? AND recorrente = 'Sim'";
-        $stmtRecorrentes = $conn->prepare($sqlRecorrentes);
-        $stmtRecorrentes->bind_param("s", $_SESSION['id']);
-        $stmtRecorrentes->execute();
-        $resultadoRecorrentes = $stmtRecorrentes->get_result();
-
-        // Cadastrar as novas rendas
-        $sqlInserir = "INSERT INTO rendas (user_id, descricao, valor, recorrente) VALUES (?, ?, 0, 'Sim')";
-        $stmtInserir = $conn->prepare($sqlInserir);
-
-        while ($row = $resultadoRecorrentes->fetch_assoc()) {
-            $descricao = $row['descricao'];
-            $stmtInserir->bind_param("ss", $_SESSION['id'], $descricao);
-            $stmtInserir->execute();
-        }
-    }
-}
-
 // Capturar o mês selecionado na URL ou usar o mês atual como padrão
 $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n') - 1;
 $dbMonth = $selectedMonth + 1; // Ajustar para o formato do banco (1-12)
