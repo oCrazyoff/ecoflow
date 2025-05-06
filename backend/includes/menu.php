@@ -16,8 +16,7 @@ if (!defined('BASE_URL')) {
 <aside class="sidebar">
     <div class="top">
         <div class="logo">
-            <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
-            <h1>Eco Flow</h1>
+            <img src="<?php echo BASE_URL ?>assets/img/logo_ecoflow.png" alt="Logo Eco Flow">
         </div>
         <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
             <p>Dashboard</p>
