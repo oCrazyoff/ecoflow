@@ -139,17 +139,17 @@ header #btn-cadastro:hover {
 }
 
 #hero .right img {
-    width: 30em;
+    width: 70%;
     border-radius: 1em;
 }
 
 #hero h1 {
-    font-size: 3.5em;
+    font-size: 3em;
     color: #fff;
 }
 
 #hero p {
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: #fff;
 }
 
@@ -158,7 +158,7 @@ header #btn-cadastro:hover {
     color: #246a73;
     background-color: #fff;
     padding: .5em;
-    font-size: 1.5em;
+    font-size: 1.2em;
     border-radius: .5em;
     width: fit-content;
     transition: .2s ease all;
@@ -259,12 +259,13 @@ header #btn-cadastro:hover {
     align-items: center;
     justify-content: center;
     gap: 5em;
-    padding: 5em 0;
 }
 
 #vantagens .txt-van {
     display: flex;
+    width: auto;
     flex-direction: column;
+    width: 60%;
     gap: 1em;
 }
 
@@ -294,6 +295,7 @@ header #btn-cadastro:hover {
 #vantagens .container-vantagens .vantagem i {
     font-size: 1.5em;
     color: #017f34;
+    height: min-content;
     background-color: #3199593a;
     padding: .3em;
     border-radius: .5em;
@@ -310,6 +312,7 @@ header #btn-cadastro:hover {
     background-color: transparent;
     padding: 0;
     color: #676767;
+    width: 100%;
     font-size: 1em;
 }
 
@@ -318,6 +321,10 @@ header #btn-cadastro:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #fff;
+    padding: 1.5em .5em;
+    border-radius: .5em;
+    width: 40%;
     gap: 1em;
 }
 
@@ -345,15 +352,13 @@ header #btn-cadastro:hover {
 #vantagens .grafico-van img {
     background-color: #cecece;
     border-radius: .5em;
-    width: 25em;
+    width: 100%;
 }
 
 #vantagens .grafico-van .info-grafico {
     display: flex;
-    background-color: #dfdfdf;
-    padding: 1em;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: .5em;
+    flex-wrap: wrap;
     gap: 1em;
 }
 
@@ -562,10 +567,6 @@ footer .interface {
         text-align: center;
     }
 
-    #vantagens .container-vantagens .vantagem i {
-        height: min-content;
-    }
-
     #vantagens .grafico-van .txt-grafico {
         align-items: center;
         justify-content: center;
@@ -590,6 +591,5 @@ footer .interface {
 
     #vantagens .grafico-van .info-grafico {
         width: 100%;
-        flex-wrap: wrap;
     }
 }

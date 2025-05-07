@@ -15,21 +15,24 @@ if (!defined('BASE_URL')) {
 </div>
 <aside class="sidebar">
     <div class="top">
-        <div class="logo">
-            <img src="<?php echo BASE_URL ?>assets/img/logo_ecoflow.png" alt="Logo Eco Flow">
+        <div class="header">
+            <h3>EcoFlow</h3>
+            <button id="btn-menu" onclick="toggleSidebar()"><i class="bi bi-chevron-left"></i></button>
         </div>
-        <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
-            <p>Dashboard</p>
-        </a>
-        <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
-            <p>Despesas</p>
-        </a>
-        <a href="<?php echo BASE_URL ?>pages/rendas.php"><i class="bi bi-graph-up-arrow"></i>
-            <p>Rendas</p>
-        </a>
-        <a href="<?php echo BASE_URL ?>pages/investimentos.php"><i class="bi bi-bank"></i>
-            <p>Investimentos</p>
-        </a>
+        <nav>
+            <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
+                <p>Dashboard</p>
+            </a>
+            <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
+                <p>Despesas</p>
+            </a>
+            <a href="<?php echo BASE_URL ?>pages/rendas.php"><i class="bi bi-graph-up-arrow"></i>
+                <p>Rendas</p>
+            </a>
+            <a href="<?php echo BASE_URL ?>pages/investimentos.php"><i class="bi bi-bank"></i>
+                <p>Investimentos</p>
+            </a>
+        </nav>
     </div>
     <div class="bottom">
         <a href="<?php echo BASE_URL ?>pages/user_config.php">
@@ -40,20 +43,18 @@ if (!defined('BASE_URL')) {
 </aside>
 
 <script>
-    function toggleSidebar() {
+    function toggleSidebarMobile() {
         document.querySelector('.sidebar').classList.toggle('active');
         document.querySelector('.btn-menu').classList.toggle('active');
-        document.querySelector('.btn-menu i').classList.toggle('bi-list');
-        document.querySelector('.btn-menu i').classList.toggle('bi-x');
         document.querySelector('.overlay').classList.toggle('active');
     }
 
     document.querySelector('.btn-menu').addEventListener('click', () => {
-        toggleSidebar();
+        toggleSidebarMobile();
     });
 
     document.querySelector('.overlay').addEventListener('click', () => {
-        toggleSidebar();
+        toggleSidebarMobile();
     });
 </script>
 
