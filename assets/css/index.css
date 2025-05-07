@@ -7,15 +7,13 @@
 
 body {
     background-color: #fff !important;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 html {
     scroll-behavior: smooth;
-}
-
-.main-content {
-    padding: 0 !important;
-    margin: 0 !important;
 }
 
 .interface {
@@ -29,17 +27,14 @@ header {
     align-items: center;
     justify-content: center;
     background-color: #fff;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 5em;
     padding: 1em 0;
-    z-index: 500;
+    z-index: 700;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.ativo {
-    background-color: #145553;
 }
 
 header .interface {
@@ -116,14 +111,14 @@ header #btn-cadastro:hover {
 
 /* hero */
 #hero {
-    height: calc(100dvh - 4em);
+    height: 100dvh;
     display: flex;
     justify-content: space-between;
     background: linear-gradient(340deg, rgba(36, 106, 115, 1) 35%, rgba(50, 207, 207, 1) 100%);
 }
 
 #hero .interface {
-    height: calc(100dvh - 4em);
+    height: 100dvh;
     display: flex;
     justify-content: space-between;
 }
@@ -144,7 +139,7 @@ header #btn-cadastro:hover {
 }
 
 #hero .right img {
-    width: 40em;
+    width: 30em;
     border-radius: 1em;
 }
 
@@ -176,6 +171,7 @@ header #btn-cadastro:hover {
 /* beneficios */
 #beneficios {
     width: 100%;
+    scroll-margin-top: 4em;
     background-color: #e3e3e3;
     padding: 2em 0;
 }
@@ -218,9 +214,11 @@ header #btn-cadastro:hover {
 #beneficios .card {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: .5em;
     padding: 1.5em;
     width: auto;
+    height: 15em;
     background-color: #fff;
     border-radius: .5em;
     overflow: hidden;
@@ -253,11 +251,15 @@ header #btn-cadastro:hover {
 #vantagens {
     background-color: #e3e3e3;
     width: 100%;
+    scroll-margin-top: 2em;
 }
 
 #vantagens .interface {
     display: flex;
-    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    gap: 5em;
+    padding: 5em 0;
 }
 
 #vantagens .txt-van {
@@ -309,6 +311,56 @@ header #btn-cadastro:hover {
     padding: 0;
     color: #676767;
     font-size: 1em;
+}
+
+#vantagens .grafico-van {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+#vantagens .grafico-van .txt-grafico {
+    display: flex;
+    gap: .5em;
+}
+
+#vantagens .grafico-van .txt-grafico i {
+    color: #318d99;
+    font-size: 3em;
+}
+
+#vantagens .grafico-van .txt-grafico .titulo {
+    font-size: 2em;
+    font-weight: 600;
+    color: #000;
+}
+
+#vantagens .grafico-van .txt-grafico p {
+    color: #676767;
+    font-size: 1.3em;
+}
+
+#vantagens .grafico-van img {
+    background-color: #cecece;
+    border-radius: .5em;
+    width: 25em;
+}
+
+#vantagens .grafico-van .info-grafico {
+    display: flex;
+    background-color: #dfdfdf;
+    padding: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: .5em;
+    gap: 1em;
+}
+
+#vantagens .grafico-van .info-grafico .info {
+    display: flex;
+    width: max-content;
+    gap: .3em;
 }
 
 footer {
@@ -384,61 +436,4 @@ footer .interface {
 }
 
 
-@media screen and (max-width: 768px) {
-    .interface {
-        padding: 0 .5em;
-    }
-
-    #hero .interface {
-        width: 100%;
-        flex-direction: column-reverse;
-        justify-content: center;
-    }
-
-    #hero .left,
-    #hero .right {
-        width: 100%;
-        align-items: center;
-        text-align: center;
-    }
-
-    #hero h1 {
-        font-size: 2.5em;
-    }
-
-    #hero p {
-        text-align: justify;
-        width: 90%;
-        font-size: 1.2em;
-    }
-
-    #hero a {
-        font-size: 1.2em;
-        width: 100%;
-    }
-
-    #beneficios .cards-container {
-        overflow-x: auto;
-    }
-
-    #beneficios .card {
-        width: 15em;
-        flex-shrink: 0;
-    }
-
-    #como-funciona .interface {
-        flex-direction: column;
-    }
-
-    #como-funciona .txt-container {
-        width: 100%;
-    }
-
-    #como-funciona .steps {
-        width: 100%;
-    }
-
-    #como-funciona .step span {
-        height: auto;
-    }
-}
+@media screen and (max-width: 768px) {}
