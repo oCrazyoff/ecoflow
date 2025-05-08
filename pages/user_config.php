@@ -29,7 +29,7 @@ $row = $result->fetch_assoc();
         <form action="../backend/database/usuario/editar.php" method="POST">
             <h2>Informações Pessoais</h2>
             <div class="input-group">
-                <label for="nome">Nome completo</label>
+                <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($row['nome']); ?>" required>
             </div>
             <div class="input-group">
@@ -37,7 +37,7 @@ $row = $result->fetch_assoc();
                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>"
                     required>
             </div>
-            <input type="hidden" name="info-pessoal" value="1">
+            <input type="hidden" name="editar" value="1">
             <div class="container-btn">
                 <button type="submit">Salvar alterações</button>
             </div>
@@ -56,7 +56,7 @@ $row = $result->fetch_assoc();
                 <label for="nova-senha">Confirmar senha</label>
                 <input type="password" id="confirmar-senha" name="confirmar-senha" required>
             </div>
-            <input type="hidden" name="info-senha" value="1">
+            <input type="hidden" name="editar" value="2">
             <div class="container-btn">
                 <button type="submit">Atualizar senha</button>
             </div>
