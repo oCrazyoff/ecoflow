@@ -38,7 +38,9 @@ $row = $result->fetch_assoc();
                     required>
             </div>
             <input type="hidden" name="info-pessoal" value="1">
-            <button type="submit">Salvar alterações</button>
+            <div class="container-btn">
+                <button type="submit">Salvar alterações</button>
+            </div>
         </form>
         <form action="../backend/database/usuario/editar.php" method="POST">
             <h2>Alterar Senha</h2>
@@ -55,7 +57,9 @@ $row = $result->fetch_assoc();
                 <input type="password" id="confirmar-senha" name="confirmar-senha" required>
             </div>
             <input type="hidden" name="info-senha" value="1">
-            <button type="submit">Atualizar senha</button>
+            <div class="container-btn">
+                <button type="submit">Atualizar senha</button>
+            </div>
         </form>
         <div class="container-deslogar">
             <h2>Sair da conta</h2>

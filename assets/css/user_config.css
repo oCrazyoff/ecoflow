@@ -1,4 +1,8 @@
 /* geral */
+* {
+    /* outline: 2px solid red; */
+}
+
 body {
     background-color: #f8f8f8 !important;
 }
@@ -8,12 +12,96 @@ body {
     flex-direction: column;
     gap: 1em;
     align-items: center;
-    justify-content: center;
 }
 
 .main-content h1 {
     font-size: 1.5em;
     width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    padding: 2em;
+    background-color: #fff;
+    border-radius: 1em;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+form h2 {
+    font-size: 1.2em;
+    margin-bottom: .5em;
+}
+
+form .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+}
+
+form .input-group input {
+    padding: 1em .5em;
+    border-radius: 1em;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+form .container-btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+form button {
+    padding: 1em;
+    border-radius: .5em;
+    font-weight: bold;
+    background-color: #218380;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: .3s ease all;
+}
+
+form button:hover {
+    background-color: #1d5856;
+}
+
+.container-deslogar {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    padding: 2em;
+    background-color: #fff;
+    border-radius: 1em;
+    box-shadow: rgba(255, 0, 0, 0.02) 0px 1px 3px 0px, rgba(255, 0, 0, 0.341) 0px 0px 0px 1px;
+}
+
+.container-deslogar h2 {
+    color: #c1121f;
+}
+
+.container-deslogar p {
+    color: #000000ab;
+}
+
+.container-deslogar a {
+    padding: .8em;
+    border-radius: .5em;
+    font-weight: bold;
+    background-color: #c1121f;
+    color: #fff;
+    text-decoration: none;
+    width: max-content;
+    cursor: pointer;
+    transition: .3s ease all;
+}
+
+.container-deslogar a:hover {
+    background-color: #73181e;
 }
 
 @media screen and (max-width: 768px) {}
