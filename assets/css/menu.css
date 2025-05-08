@@ -12,6 +12,20 @@
     transition: .3s ease all;
 }
 
+.sidebar.active {
+    width: auto;
+}
+
+.sidebar.active nav a p,
+.sidebar.active .header h3,
+.sidebar.active .bottom a p {
+    display: none;
+}
+
+.sidebar.active .header button {
+    transform: rotate(180deg);
+}
+
 #header-mobile {
     display: none;
 }
@@ -159,11 +173,22 @@
         z-index: 1000;
     }
 
+    .sidebar.active nav a p,
+    .sidebar.active .header h3,
+    .sidebar.active .bottom a p {
+        display: flex;
+    }
+
+    .sidebar.active .header button {
+        transform: rotate(360deg);
+    }
+
     .overlay.active {
         visibility: visible;
     }
 
     .sidebar.active {
+        width: 80%;
         left: 0;
     }
 
