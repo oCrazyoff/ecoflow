@@ -175,7 +175,7 @@ td form {
     }
 
     .titulo a {
-        position: absolute;
+        position: fixed;
         bottom: 10%;
         right: 10%;
         font-size: 0;
