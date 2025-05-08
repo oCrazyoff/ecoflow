@@ -2,42 +2,6 @@ body {
     background-color: #f8f8f8 !important;
 }
 
-.data-container {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.data-container button {
-    background-color: #218380;
-    color: #fff;
-    padding: 1em;
-    border-radius: 8px;
-    border: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
-
-#monthList {
-    position: absolute;
-    top: 100%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background-color: #fff;
-    border: 2px solid #b6b6b6;
-    list-style-type: none;
-    z-index: 200;
-}
-
-#monthList li {
-    padding: .5em;
-    cursor: pointer;
-}
-
-#monthList li:hover {
-    background-color: #aaaaaa;
-}
-
 .titulo {
     display: flex;
     justify-content: space-between;

@@ -1,0 +1,36 @@
+/* Seletor de data */
+.data-container {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.data-container button {
+    background-color: #218380;
+    color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#monthList {
+    position: absolute;
+    top: 100%;
+    right: 10%;
+    background-color: #fff;
+    border: 2px solid #b6b6b6;
+    list-style-type: none;
+    z-index: 500;
+}
+
+#monthList li {
+    padding: .5em;
+    cursor: pointer;
+}
+
+#monthList li:hover {
+    background-color: #aaaaaa;
+}
