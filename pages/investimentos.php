@@ -53,53 +53,56 @@ $result = $stmt->get_result();
                     Invesimento</a>
             </div>
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr id="thead">
-                        <th>Tipo</th>
-                        <th>Nome</th>
-                        <th>Custo</th>
-                        <th>Recorrente</th>
-                        <th>Data</th> <!-- Nova coluna -->
-                        <th colspan="2">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = $result->fetch_assoc()) {
-                        // Formatar a data
-                        if (empty($row['data'])) {
-                            $data = '-';
-                        } else {
-                            $data = DateTime::createFromFormat('Y-m-d', $row['data'])->format('d/m/Y');
-                        }
+        <div class="container-table">
+            <p>Histórico de Investimentos</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr id="thead">
+                            <th>Tipo</th>
+                            <th>Nome</th>
+                            <th>Custo</th>
+                            <th>Recorrente</th>
+                            <th>Data</th> <!-- Nova coluna -->
+                            <th colspan="2">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        while ($row = $result->fetch_assoc()) {
+                            // Formatar a data
+                            if (empty($row['data'])) {
+                                $data = '-';
+                            } else {
+                                $data = DateTime::createFromFormat('Y-m-d', $row['data'])->format('d/m/Y');
+                            }
 
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['tipo']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
-                        echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
-                        echo "<td>" . $row['recorrente'] . "</td>";
-                        echo "<td>" . $data . "</td>"; // Exibir a data formatada
-                        echo "
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['tipo']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
+                            echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
+                            echo "<td>" . $row['recorrente'] . "</td>";
+                            echo "<td>" . $data . "</td>"; // Exibir a data formatada
+                            echo "
                         <td>
                             <form action='editar/investimento.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>
                         </td>";
-                        echo "
+                            echo "
                         <td>
                             <form action='../backend/database/investimentos/deletar.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                             </form>
                         </td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <?php include("../backend/includes/div_erro.php") ?>

@@ -127,7 +127,7 @@ if ($rendaResult->num_rows > 0) {
     }
 }
 
-// Consulta única para despesas
+// Consulta única para despesas 
 $sqlDespesas = "
 SELECT
 SUM(valor) AS total,
@@ -244,82 +244,86 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
             </div>
         </div>
 
-        <div class="cards">
-            <div class="card">
-                <h3>Resumo Financeiro</h3>
-                <p><strong>Renda Total:</strong> R$ <?php echo number_format($rendaTotal, 2, ',', '.') ?></p>
-                <p><strong>Despesas Totais:</strong> R$ <?php echo number_format($despesasTotal, 2, ',', '.') ?></p>
-                <p><strong>Investimentos Totais:</strong> R$
-                    <?php echo number_format($totalInvestimentos, 2, ',', '.') ?></p>
+        <div class="container-dash">
+            <div class="cards">
+                <div class="card">
+                    <h3>Despesas Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
+                    <?php
+                    $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
+                    $resultado = $conn->query($sql);
+                    if ($resultado->num_rows > 0) {
+                        while ($row = $resultado->fetch_assoc()) {
+                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                        }
+                    } else {
+                        echo "<p style='text-align:center;'>Nenhuma despesa paga ❌</p>";
+                    }
+                    ?>
+                </div>
+
+                <div class="card">
+                    <h3>Despesas Não Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a>
+                    </h3>
+                    <?php
+                    $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
+                    $resultado = $conn->query($sql);
+                    if ($resultado->num_rows > 0) {
+                        while ($row = $resultado->fetch_assoc()) {
+                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                        }
+                    } else {
+                        echo "<p style='text-align:center;'>Todas despesas pagas ✅</p>";
+                    }
+                    ?>
+                </div>
+
+                <div class="card">
+                    <h3>Rendas <a href="rendas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
+                    <?php
+                    $sql = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
+                    $resultado = $conn->query($sql);
+                    if ($resultado->num_rows > 0) {
+                        while ($row = $resultado->fetch_assoc()) {
+                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                        }
+                    } else {
+                        echo "<p style='text-align:center;'>Nenhuma renda cadastrada ❌</p>";
+                    }
+                    ?>
+                </div>
+
+                <div class="card">
+                    <h3>Investimentos <a href="investimentos.php"><i class="bi bi-arrow-up-right-square-fill"></i></a>
+                    </h3>
+                    <?php
+                    $sql = "SELECT nome, custo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
+                    $resultado = $conn->query($sql);
+                    if ($resultado->num_rows > 0) {
+                        while ($row = $resultado->fetch_assoc()) {
+                            echo "<p><strong>" . $row['nome'] . ":</strong> R$ " . number_format($row['custo'], 2, ',', '.') . "</p>";
+                        }
+                    } else {
+                        echo "<p style='text-align:center;'>Nenhum investimento cadastrado ❌</p>";
+                    }
+                    ?>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>Despesas Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                $resultado = $conn->query($sql);
-                if ($resultado->num_rows > 0) {
-                    while ($row = $resultado->fetch_assoc()) {
-                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                    }
-                } else {
-                    echo "<p style='text-align:center;'>Nenhuma despesa paga ❌</p>";
-                }
-                ?>
-            </div>
-
-            <div class="card">
-                <h3>Despesas Não Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                <?php
-                $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                $resultado = $conn->query($sql);
-                if ($resultado->num_rows > 0) {
-                    while ($row = $resultado->fetch_assoc()) {
-                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                    }
-                } else {
-                    echo "<p style='text-align:center;'>Todas despesas pagas ✅</p>";
-                }
-                ?>
-            </div>
-
-            <div class="card">
-                <h3>Rendas <a href="rendas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                <?php
-                $sql = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                $resultado = $conn->query($sql);
-                if ($resultado->num_rows > 0) {
-                    while ($row = $resultado->fetch_assoc()) {
-                        echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                    }
-                } else {
-                    echo "<p style='text-align:center;'>Nenhuma renda cadastrada ❌</p>";
-                }
-                ?>
-            </div>
-
-            <div class="card">
-                <h3>Investimentos <a href="investimentos.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                <?php
-                $sql = "SELECT nome, custo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                $resultado = $conn->query($sql);
-                if ($resultado->num_rows > 0) {
-                    while ($row = $resultado->fetch_assoc()) {
-                        echo "<p><strong>" . $row['nome'] . ":</strong> R$ " . number_format($row['custo'], 2, ',', '.') . "</p>";
-                    }
-                } else {
-                    echo "<p style='text-align:center;'>Nenhum investimento cadastrado ❌</p>";
-                }
-                ?>
+            <div class="container-meio-dash">
+                <div class="card" id="grafico-coluna">
+                    <h3>Análise Financeira</h3>
+                    <canvas id="graficoFinanceiro"></canvas>
+                </div>
+                <div class="card" id="resumo">
+                    <h3>Resumo Financeiro</h3>
+                    <p><strong>Renda Total:</strong> R$ <?php echo number_format($rendaTotal, 2, ',', '.') ?></p>
+                    <p><strong>Despesas Totais:</strong> R$ <?php echo number_format($despesasTotal, 2, ',', '.') ?></p>
+                    <p><strong>Investimentos Totais:</strong> R$
+                        <?php echo number_format($totalInvestimentos, 2, ',', '.') ?></p>
+                </div>
             </div>
 
             <div class="graficos">
-
-                <div class="card" id="grafico-coluna">
-                    <h3>Rendas • Despesas • Investimentos</h3>
-                    <canvas id="graficoFinanceiro"></canvas>
-                </div>
-
                 <div class="card" id="grafico">
                     <h3>Despesas Pagas</h3>
                     <canvas id="graficoDespesasPagas" style="max-width: 400px;"></canvas>
@@ -346,8 +350,7 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
 
     <script>
         const phpSelectedMonth = <?php echo $selectedMonth; ?>; // Passar o mês selecionado do PHP
-    </script>
-    <script>
+
         // Gráfico de Rendas, Despesas e Investimentos
         let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
         new Chart(ctx1, {

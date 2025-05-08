@@ -8,9 +8,9 @@ if (!defined('BASE_URL')) {
 }
 ?>
 <link rel="stylesheet" href="<?php echo BASE_URL ?>assets/css/menu.css?v=<?php echo time(); ?>">
-<div class="btn-menu"><i class="bi bi-list"></i></div>
 <div class="overlay"></div>
-<div id="header">
+<div id="header-mobile">
+    <div class="btn-menu"><i class="bi bi-list"></i></div>
     <img src="<?php echo BASE_URL ?>assets/img/logo.png" alt="Logo Eco Flow">
 </div>
 <aside class="sidebar">
@@ -23,11 +23,11 @@ if (!defined('BASE_URL')) {
             <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
                 <p>Dashboard</p>
             </a>
-            <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
-                <p>Despesas</p>
-            </a>
             <a href="<?php echo BASE_URL ?>pages/rendas.php"><i class="bi bi-graph-up-arrow"></i>
                 <p>Rendas</p>
+            </a>
+            <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
+                <p>Despesas</p>
             </a>
             <a href="<?php echo BASE_URL ?>pages/investimentos.php"><i class="bi bi-bank"></i>
                 <p>Investimentos</p>
@@ -43,22 +43,35 @@ if (!defined('BASE_URL')) {
 </aside>
 
 <script>
-    function toggleSidebarMobile() {
+    // Verificar a URL para marcar item do menu
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname.replace(/\/+$/, '');
+        console.log("Caminho atual:", currentPath);
+
+        document.querySelectorAll('nav a').forEach(link => {
+            const linkPath = new URL(link.href).pathname.replace(/\/+$/, '');
+            console.log("Comparando com:", linkPath);
+
+            if (linkPath === currentPath) {
+                link.classList.add('atual');
+            }
+        });
+    });
+
+    function toggleSidebar() {
         document.querySelector('.sidebar').classList.toggle('active');
         document.querySelector('.btn-menu').classList.toggle('active');
         document.querySelector('.overlay').classList.toggle('active');
     }
 
     document.querySelector('.btn-menu').addEventListener('click', () => {
-        toggleSidebarMobile();
+        toggleSidebar();
     });
 
     document.querySelector('.overlay').addEventListener('click', () => {
-        toggleSidebarMobile();
+        toggleSidebar();
     });
-</script>
 
-<script>
     // Ao clicar em links, exibir o loading novamente
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', (event) => {

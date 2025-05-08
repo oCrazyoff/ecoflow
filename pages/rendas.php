@@ -52,44 +52,47 @@ $result = $stmt->get_result();
                 <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
             </div>
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Recorrente</th>
-                        <th>Data</th>
-                        <th colspan="2">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
-                        echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                        echo "<td>" . $row['recorrente'] . "</td>";
-                        echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
-                        echo "
+        <div class="container-table">
+            <p>Histórico de Rendas</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Recorrente</th>
+                            <th>Data</th>
+                            <th colspan="2">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
+                            echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
+                            echo "<td>" . $row['recorrente'] . "</td>";
+                            echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
+                            echo "
                         <td>
                             <form action='editar/renda.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>
                         </td>";
-                        echo "
+                            echo "
                         <td>
                             <form action='../backend/database/rendas/deletar.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                             </form>
                         </td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <?php include("../backend/includes/div_erro.php") ?>

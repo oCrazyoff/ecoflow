@@ -1,3 +1,7 @@
+body {
+    background-color: #f8f8f8 !important;
+}
+
 .data-container {
     position: relative;
     display: flex;
@@ -62,19 +66,37 @@
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: .5em;
     cursor: pointer;
 }
 
 .table-container {
     overflow-x: auto;
+    border: none;
     width: 100%;
+}
+
+.container-table {
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 1em;
+    border: 1px solid #dddddd;
+    width: 100%;
+}
+
+.container-table p {
+    font-size: 1.5em;
+    margin: .5em 0;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 18px;
+    border-radius: 1em;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    overflow: hidden;
     text-align: left;
 }
 
