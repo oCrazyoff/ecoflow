@@ -46,12 +46,9 @@ if (!defined('BASE_URL')) {
     // Verificar a URL para marcar item do menu
     document.addEventListener('DOMContentLoaded', () => {
         const currentPath = window.location.pathname.replace(/\/+$/, '');
-        console.log("Caminho atual:", currentPath);
 
         document.querySelectorAll('nav a').forEach(link => {
             const linkPath = new URL(link.href).pathname.replace(/\/+$/, '');
-            console.log("Comparando com:", linkPath);
-
             if (linkPath === currentPath) {
                 link.classList.add('atual');
             }

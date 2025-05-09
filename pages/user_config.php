@@ -11,7 +11,7 @@ $row = $result->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">

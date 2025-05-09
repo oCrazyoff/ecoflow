@@ -13,7 +13,7 @@ $result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -76,6 +76,7 @@ $result = $stmt->get_result();
                         <td>
                             <form action='../backend/database/investimentos/deletar.php' method='POST'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                                <input type='hidden' name='nome' value='" . htmlspecialchars($row['nome']) . "'>
                                 <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                             </form>
                         </td>";

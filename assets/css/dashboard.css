@@ -1,4 +1,8 @@
 /* geral */
+* {
+    /* outline: 2px solid red; */
+}
+
 .main-content {
     padding: 0 !important;
     background-color: #f8f8f8 !important;
@@ -102,9 +106,23 @@
     width: 100%;
 }
 
-.container-meio-dash {
+.container-graficos {
     display: flex;
     gap: 1em;
+    justify-content: space-between;
+}
+
+.container-graficos .card {
+    width: 100%;
+    height: max-content;
+}
+
+.container-direita {
+    width: 30%;
+}
+
+.container-esquerda {
+    width: 70%;
 }
 
 /* cards */
@@ -117,8 +135,12 @@
 }
 
 .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
     background: #fff;
-    padding: 1em;
+    padding: 1.5em;
     width: 100%;
     height: 100%;
     border-radius: 8px;
@@ -126,37 +148,100 @@
 
 }
 
+#pendentes {
+    border: 1px solid #ffef93;
+}
+
 .card h3 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
-    color: #218380;
+    font-size: 1em;
+    color: #707070;
 }
 
-.card h3 a {
-    margin-left: 1em;
-    color: #218380;
-    font-size: 1.2em;
+.card span {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    padding: .5em;
+    font-size: 1.5em;
+    border-radius: .8em;
+    font-weight: bold;
+    color: #246a73;
+    background-color: #73d2de42;
 }
 
-/* graficos */
-.graficos {
+.card #valor {
+    font-size: 1.5em;
+    color: #000;
+}
+
+.card p {
+    font-size: .9em;
+    color: #707070;
+}
+
+/* resumo financeiro */
+.container-resumo {
     display: flex;
-    gap: 1em;
-    width: 100%;
+    flex-direction: column;
+    gap: .5em;
 }
 
-#grafico {
-    width: 100%;
+.container-resumo h4 {
+    font-size: 1em;
+    font-weight: 500;
 }
 
-#grafico-coluna {
-    width: 70%;
+.container-resumo article {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 1em;
+    border-radius: 1em;
 }
 
-#resumo {
-    width: 30%;
+#container-data-tag {
+    display: flex;
+    gap: .5em;
+}
+
+.container-resumo article .verde {
+    color: #2dc653;
+    font-size: 1em;
+
+}
+
+.container-resumo article .verde-escuro {
+    color: #40916c;
+    font-size: 1em;
+}
+
+.container-resumo article .vermelho {
+    color: #d90429;
+    font-size: 1em;
+}
+
+.container-resumo article #tag-pago {
+    background-color: #2dc65314;
+    color: #2dc653;
+    border-radius: 1em;
+    padding: 0 .5em;
+    width: max-content;
+    border: 1px solid #2dc653;
+    font-size: 1em;
+}
+
+.container-resumo article #tag-pendente {
+    background-color: #c6ac2d14;
+    color: #ffbe0b;
+    border-radius: 1em;
+    padding: 0 .5em;
+    width: max-content;
+    border: 1px solid #ffbe0b;
+    font-size: 1em;
 }
 
 @media screen and (max-width: 768px) {
@@ -171,15 +256,16 @@
         width: 80vw;
     }
 
-    .container-meio-dash {
+    .container-graficos {
         flex-wrap: wrap;
     }
 
-    .cards {
-        flex-direction: column;
+    .container-esquerda,
+    .container-direita {
+        width: 100%;
     }
 
-    .graficos {
+    .cards {
         flex-direction: column;
     }
 
@@ -187,13 +273,4 @@
         width: 100% !important;
         height: auto;
     }
-
-    #grafico {
-        width: 100%;
-    }
-
-    #grafico-coluna {
-        width: 100%;
-    }
-
 }

@@ -1,6 +1,10 @@
 <?php
 require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
+
+$user_id = $_SESSION['id'];
+$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
+
 // Verifica se é janeiro para deletar informações do ano anterior
 if (date('n') == 1) {
     $anoAnterior = date('Y') - 1;
@@ -24,189 +28,128 @@ if (date('n') == 1) {
     $stmtDeletarInvestimentos->execute();
 }
 
+$mes_anterior = (date('m') == '01' ? 12 : date('m') - 1);
+$mes_atual = date('m');
+$ano_atual = date('Y');
+
+// Verifica se as rendas ja foram cadastradas
+$sql_verificar = "SELECT descricao, valor FROM rendas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$stmt_verificar = $conn->prepare($sql_verificar);
+$stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
+$stmt_verificar->execute();
+$result_verificar = $stmt_verificar->get_result();
+
+while ($row = $result_verificar->fetch_assoc()) {
+    $descricao = $row['descricao'];
+
+    $sql_verifica_atual = "SELECT id FROM rendas WHERE user_id = ? AND descricao = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+    $stmt_verificar_atual = $conn->prepare($sql_verifica_atual);;
+    $stmt_verificar_atual->bind_param("isii", $user_id, $descricao, $mes_atual, $ano_atual);
+    $stmt_verificar_atual->execute();
+    $result_verificar_atual = $stmt_verificar_atual->get_result();
+
+    if ($result_verificar_atual->num_rows == 0) {
+        // Inserir renda recorrente
+        $sql_inserir = "INSERT INTO rendas (user_id, descricao, valor, recorrente) VALUES (?, ?, 0, 'Sim')";
+        $stmt_inserir = $conn->prepare($sql_inserir);
+        $stmt_inserir->bind_param("is", $user_id, $descricao);
+        $stmt_inserir->execute();
+    }
+}
+
 // Verifica se as despesas ja foram cadastradas
-$sqlVerificar = "SELECT COUNT(*) AS total FROM despesas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
-$stmtVerificar = $conn->prepare($sqlVerificar);
-$mesAtual = date('m');
-$anoAtual = date('Y');
-$stmtVerificar->bind_param("sii", $_SESSION['id'], $mesAtual, $anoAtual);
-$stmtVerificar->execute();
-$resultadoVerificar = $stmtVerificar->get_result();
-$rowVerificar = $resultadoVerificar->fetch_assoc();
+$sql_verificar = "SELECT descricao, valor, status FROM despesas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$stmt_verificar = $conn->prepare($sql_verificar);
+$stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
+$stmt_verificar->execute();
+$result_verificar = $stmt_verificar->get_result();
 
-if ($rowVerificar['total'] == 0) { //Se não houver despesas cadastradas
-    $sqlRecorrentes = "SELECT descricao, recorrente FROM despesas WHERE user_id = ? AND recorrente = 'Sim'";
-    $stmtRecorrentes = $conn->prepare($sqlRecorrentes);
-    $stmtRecorrentes->bind_param("s", $_SESSION['id']);
-    $stmtRecorrentes->execute();
-    $resultadoRecorrentes = $stmtRecorrentes->get_result();
+while ($row = $result_verificar->fetch_assoc()) {
+    $descricao = $row['descricao'];
+    $status = $row['status'];
 
-    // Cadastrar as novas despesas
-    $sqlInserir = "INSERT INTO despesas (user_id, descricao, valor, status, recorrente) VALUES (?, ?, 0, 'Não Pago', 'Sim')";
-    $stmtInserir = $conn->prepare($sqlInserir);
+    $sql_verifica_atual = "SELECT id FROM despesas WHERE user_id = ? AND descricao = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+    $stmt_verificar_atual = $conn->prepare($sql_verifica_atual);;
+    $stmt_verificar_atual->bind_param("isii", $user_id, $descricao, $mes_atual, $ano_atual);
+    $stmt_verificar_atual->execute();
+    $result_verificar_atual = $stmt_verificar_atual->get_result();
 
-    while ($row = $resultadoRecorrentes->fetch_assoc()) {
-        $descricao = $row['descricao'];
-        $stmtInserir->bind_param("ss", $_SESSION['id'], $descricao);
-        $stmtInserir->execute();
+    if ($result_verificar_atual->num_rows == 0) {
+        // Inserir despesa recorrente
+        $sql_inserir = "INSERT INTO despesas (user_id, descricao, valor, status, recorrente) VALUES (?, ?, 0, 'Não Pago', 'Sim')";
+        $stmt_inserir = $conn->prepare($sql_inserir);
+        $stmt_inserir->bind_param("is", $user_id, $descricao);
+        $stmt_inserir->execute();
     }
 }
 
 // Verifica se os invesimentos ja foram cadastrados
-$sqlVerificar = "SELECT COUNT(*) AS total FROM investimentos WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
-$stmtVerificar = $conn->prepare($sqlVerificar);
-$mesAtual = date('m');
-$anoAtual = date('Y');
-$stmtVerificar->bind_param("sii", $_SESSION['id'], $mesAtual, $anoAtual);
-$stmtVerificar->execute();
-$resultadoVerificar = $stmtVerificar->get_result();
-$rowVerificar = $resultadoVerificar->fetch_assoc();
+$sql_verificar = "SELECT nome, tipo, custo FROM investimentos WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$stmt_verificar = $conn->prepare($sql_verificar);
+$stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
+$stmt_verificar->execute();
+$result_verificar = $stmt_verificar->get_result();
 
-if ($rowVerificar['total'] == 0) { //Se não houver investimentos cadastrados
-    $sqlRecorrentes = "SELECT nome, tipo, recorrente FROM investimentos WHERE user_id = ? AND recorrente = 'Sim'";
-    $stmtRecorrentes = $conn->prepare($sqlRecorrentes);
-    $stmtRecorrentes->bind_param("s", $_SESSION['id']);
-    $stmtRecorrentes->execute();
-    $resultadoRecorrentes = $stmtRecorrentes->get_result();
+while ($row = $result_verificar->fetch_assoc()) {
+    $nome = $row['nome'];
+    $tipo = $row['tipo'];
+    $custo = $row['custo'];
 
-    // Cadastrar os novos investimentos
-    $sqlInserir = "INSERT INTO investimentos (user_id, nome, tipo, recorrente) VALUES (?, ?, ?, 'Sim')";
-    $stmtInserir = $conn->prepare($sqlInserir);
+    $sql_verifica_atual = "SELECT id FROM investimentos WHERE user_id = ? AND nome = ? AND tipo = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+    $stmt_verificar_atual = $conn->prepare($sql_verifica_atual);;
+    $stmt_verificar_atual->bind_param("issii", $user_id, $nome, $tipo, $mes_atual, $ano_atual);
+    $stmt_verificar_atual->execute();
+    $result_verificar_atual = $stmt_verificar_atual->get_result();
 
-    while ($row = $resultadoRecorrentes->fetch_assoc()) {
-        $nome = $row['nome'];
-        $tipo = $row['tipo'];
-        $stmtInserir->bind_param("sss", $_SESSION['id'], $nome, $tipo);
-        $stmtInserir->execute();
+    if ($result_verificar_atual->num_rows == 0) {
+        // Inserir investimento recorrente
+        $sql_inserir = "INSERT INTO investimentos (user_id, nome, custo, tipo, recorrente) VALUES (?, ?, 0, ?, 'Sim')";
+        $stmt_inserir = $conn->prepare($sql_inserir);
+        $stmt_inserir->bind_param("iss", $user_id, $nome, $tipo);
+        $stmt_inserir->execute();
     }
 }
 
-// Verifica se as rendas ja foram cadastradas
-$sqlVerificar = "SELECT COUNT(*) AS total FROM rendas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
-$stmtVerificar = $conn->prepare($sqlVerificar);
-$mesAtual = date('m');
-$anoAtual = date('Y');
-$stmtVerificar->bind_param("sii", $_SESSION['id'], $mesAtual, $anoAtual);
-$stmtVerificar->execute();
-$resultadoVerificar = $stmtVerificar->get_result();
-$rowVerificar = $resultadoVerificar->fetch_assoc();
+// Renda total
+$sql = "SELECT SUM(valor) FROM rendas WHERE user_id = ? AND (MONTH(data) = $selectedMonth)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($renda_total);
+$stmt->fetch();
+$stmt->close();
 
-if ($rowVerificar['total'] == 0) { //Se não houver rendas cadastradas
-    $sqlRecorrentes = "SELECT descricao, recorrente FROM rendas WHERE user_id = ? AND recorrente = 'Sim'";
-    $stmtRecorrentes = $conn->prepare($sqlRecorrentes);
-    $stmtRecorrentes->bind_param("s", $_SESSION['id']);
-    $stmtRecorrentes->execute();
-    $resultadoRecorrentes = $stmtRecorrentes->get_result();
+// Despesas pagas total
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = 'Pago' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($despesas_pagas_total);
+$stmt->fetch();
+$stmt->close();
 
-    // Cadastrar as novas rendas
-    $sqlInserir = "INSERT INTO rendas (user_id, descricao, valor, recorrente) VALUES (?, ?, 0, 'Sim')";
-    $stmtInserir = $conn->prepare($sqlInserir);
+// Despesas não pagas total
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = 'Não Pago' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($despesas_nao_pagas_total);
+$stmt->fetch();
+$stmt->close();
 
-    while ($row = $resultadoRecorrentes->fetch_assoc()) {
-        $descricao = $row['descricao'];
-        $stmtInserir->bind_param("ss", $_SESSION['id'], $descricao);
-        $stmtInserir->execute();
-    }
-}
-
-$user_id = $_SESSION['id'];
-$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
-
-// Consulta única para rendas
-$sqlRendas = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
-$rendaResult = $conn->query($sqlRendas);
-
-$rendas = [];
-$rendaTotal = 0;
-
-if ($rendaResult->num_rows > 0) {
-    while ($row = $rendaResult->fetch_assoc()) {
-        $rendas[] = $row;
-        $rendaTotal += $row['valor'];
-    }
-}
-
-// Consulta única para despesas 
-$sqlDespesas = "
-SELECT
-SUM(valor) AS total,
-SUM(CASE WHEN status = 'Pago' THEN valor ELSE 0 END) AS pagas,
-SUM(CASE WHEN status = 'Não Pago' THEN valor ELSE 0 END) AS nao_pagas
-FROM despesas
-WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth)
-";
-$despesasResult = $conn->query($sqlDespesas)->fetch_assoc();
-$despesasTotal = $despesasResult['total'] ?? 0;
-$despesasPagas = $despesasResult['pagas'] ?? 0;
-$despesasNaoPagas = $despesasResult['nao_pagas'] ?? 0;
-
-// Consulta de investimentos (limite 4)
-$investimentos = [];
-$sqlInvestimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) =
-$selectedMonth) LIMIT 4";
-$resultadoInvestimentos = $conn->query($sqlInvestimentos);
-if ($resultadoInvestimentos->num_rows > 0) {
-    while ($row = $resultadoInvestimentos->fetch_assoc()) {
-        $investimentos[] = $row;
-    }
-}
-
-// Cálculo de distribuição de investimentos
-$totalInvestimentos = 0;
-$investimentosFixo = $investimentosAcao = $investimentosFII = 0;
-
-foreach ($investimentos as $inv) {
-    $totalInvestimentos += $inv['custo'];
-    switch ($inv['tipo']) {
-        case 'Renda Fixa':
-            $investimentosFixo += $inv['custo'];
-            break;
-        case 'Ação':
-            $investimentosAcao += $inv['custo'];
-            break;
-        case 'FII':
-            $investimentosFII += $inv['custo'];
-            break;
-    }
-}
-
-// Porcentagens dos gráficos
-$totalDistribuicao = $rendaTotal + $despesasPagas + $despesasNaoPagas;
-$pctRendas = $totalDistribuicao > 0 ? ($rendaTotal / $totalDistribuicao) * 100 : 0;
-$pctDespesasPagas = $totalDistribuicao > 0 ? ($despesasPagas / $totalDistribuicao) * 100 : 0;
-$pctDespesasNaoPagas = $totalDistribuicao > 0 ? ($despesasNaoPagas / $totalDistribuicao) * 100 : 0;
-
-$pctFixo = $totalInvestimentos > 0 ? ($investimentosFixo / $totalInvestimentos) * 100 : 0;
-$pctAcao = $totalInvestimentos > 0 ? ($investimentosAcao / $totalInvestimentos) * 100 : 0;
-$pctFII = $totalInvestimentos > 0 ? ($investimentosFII / $totalInvestimentos) * 100 : 0;
-
-// Obter despesas não pagas detalhadas (para exibição)
-$despesasNaoPagasDetalhadas = [];
-$sqlDespesasNaoPagas = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth)";
-$resultadoDespesasNaoPagas = $conn->query($sqlDespesasNaoPagas);
-if ($resultadoDespesasNaoPagas->num_rows > 0) {
-    while ($row = $resultadoDespesasNaoPagas->fetch_assoc()) {
-        $despesasNaoPagasDetalhadas[] = $row;
-    }
-}
-
-// Obter despesas pagas detalhadas (para exibição)
-$despesasPagasDetalhadas = [];
-$sqlDespesasPagasDetalhes = "SELECT descricao AS nome, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth)";
-$resultadoDespesasPagasDetalhes = $conn->query($sqlDespesasPagasDetalhes);
-if ($resultadoDespesasPagasDetalhes->num_rows > 0) {
-    while ($row = $resultadoDespesasPagasDetalhes->fetch_assoc()) {
-        $despesasPagasDetalhadas[] = $row;
-    }
-}
-
-// Calcular o total de despesas não pagas
-$totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
+// Investimentos total
+$sql = "SELECT SUM(custo) FROM investimentos WHERE user_id = ? AND (MONTH(data) = $selectedMonth)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($investimentos_total);
+$stmt->fetch();
+$stmt->close();
 ?>
 
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -223,127 +166,155 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
     <?php include("../backend/includes/alert_anual.php") ?>
     <div class="main-content">
         <div class="header">
-            <h2>Saldo: R$ <?php echo number_format($rendaTotal - $despesasTotal, 2, ',', '.') ?></h2>
+            <h2>Saldo: R$ <?php echo number_format($renda_total - $despesas_pagas_total, 2, ',', '.') ?></h2>
             <?php include("../backend/includes/seletor_data.php") ?>
         </div>
 
         <div class="container-dash">
             <div class="cards">
                 <div class="card">
-                    <h3>Despesas Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                    <?php
-                    $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                    $resultado = $conn->query($sql);
-                    if ($resultado->num_rows > 0) {
-                        while ($row = $resultado->fetch_assoc()) {
-                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                        }
-                    } else {
-                        echo "<p style='text-align:center;'>Nenhuma despesa paga ❌</p>";
-                    }
-                    ?>
+                    <span><i class="bi bi-wallet"></i></span>
+                    <h3>Total de Rendas</h3>
+                    <p id="valor"><strong>R$ <?php echo number_format($renda_total, 2, ',', '.') ?></strong></p>
+                    <p>Neste mês</p>
                 </div>
 
                 <div class="card">
-                    <h3>Despesas Não Pagas <a href="despesas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a>
-                    </h3>
-                    <?php
-                    $sql = "SELECT descricao, valor FROM despesas WHERE user_id = $user_id AND status = 'Não Pago' AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                    $resultado = $conn->query($sql);
-                    if ($resultado->num_rows > 0) {
-                        while ($row = $resultado->fetch_assoc()) {
-                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                        }
-                    } else {
-                        echo "<p style='text-align:center;'>Todas despesas pagas ✅</p>";
-                    }
-                    ?>
-                </div>
-
-                <div class="card">
-                    <h3>Rendas <a href="rendas.php"><i class="bi bi-arrow-up-right-square-fill"></i></a></h3>
-                    <?php
-                    $sql = "SELECT descricao, valor FROM rendas WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                    $resultado = $conn->query($sql);
-                    if ($resultado->num_rows > 0) {
-                        while ($row = $resultado->fetch_assoc()) {
-                            echo "<p><strong>" . $row['descricao'] . ":</strong> R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
-                        }
-                    } else {
-                        echo "<p style='text-align:center;'>Nenhuma renda cadastrada ❌</p>";
-                    }
-                    ?>
-                </div>
-
-                <div class="card">
-                    <h3>Investimentos <a href="investimentos.php"><i class="bi bi-arrow-up-right-square-fill"></i></a>
-                    </h3>
-                    <?php
-                    $sql = "SELECT nome, custo FROM investimentos WHERE user_id = $user_id AND (MONTH(data) = $selectedMonth) LIMIT 4";
-                    $resultado = $conn->query($sql);
-                    if ($resultado->num_rows > 0) {
-                        while ($row = $resultado->fetch_assoc()) {
-                            echo "<p><strong>" . $row['nome'] . ":</strong> R$ " . number_format($row['custo'], 2, ',', '.') . "</p>";
-                        }
-                    } else {
-                        echo "<p style='text-align:center;'>Nenhum investimento cadastrado ❌</p>";
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="container-meio-dash">
-                <div class="card" id="grafico-coluna">
-                    <h3>Análise Financeira</h3>
-                    <canvas id="graficoFinanceiro"></canvas>
-                </div>
-                <div class="card" id="resumo">
-                    <h3>Resumo Financeiro</h3>
-                    <p><strong>Renda Total:</strong> R$ <?php echo number_format($rendaTotal, 2, ',', '.') ?></p>
-                    <p><strong>Despesas Totais:</strong> R$ <?php echo number_format($despesasTotal, 2, ',', '.') ?></p>
-                    <p><strong>Investimentos Totais:</strong> R$
-                        <?php echo number_format($totalInvestimentos, 2, ',', '.') ?></p>
-                </div>
-            </div>
-
-            <div class="graficos">
-                <div class="card" id="grafico">
+                    <span><i class="bi bi-graph-down-arrow"></i></span>
                     <h3>Despesas Pagas</h3>
-                    <canvas id="graficoDespesasPagas" style="max-width: 400px;"></canvas>
-                    <p id="mensagemDespesasPagas" style="text-align:center; display:none;">
-                        Nenhuma despesa foi paga ❌
+                    <p id="valor"><strong>R$ <?php echo number_format($despesas_pagas_total, 2, ',', '.') ?></strong>
                     </p>
+                    <p>Neste mês</p>
                 </div>
 
-                <div class="card" id="grafico">
+                <div class="card" id="pendentes">
+                    <span><i class="bi bi-currency-dollar"></i></span>
                     <h3>Despesas Não Pagas</h3>
-                    <canvas id="graficoDespesasNaoPagas" style="max-width: 400px;"></canvas>
-                    <p id="mensagemDespesasPagas" style="text-align:center; display:none;">
-                        Todas as despesas estão pagas ✅
-                    </p>
+                    <p id="valor"><strong>R$
+                            <?php echo number_format($despesas_nao_pagas_total, 2, ',', '.') ?></strong></p>
+                    <p>Neste mês</p>
                 </div>
 
-                <div class="card" id="grafico">
-                    <h3>Distribuição Financeira</h3>
-                    <canvas id="graficoDistribuicao"></canvas>
+                <div class="card">
+                    <span><i class="bi bi-graph-up-arrow"></i></span>
+                    <h3>Investimentos</h3>
+                    <p id="valor"><strong>R$ <?php echo number_format($investimentos_total, 2, ',', '.') ?></strong></p>
+                    <p>Neste mês</p>
+                </div>
+            </div>
+            <div class="container-graficos">
+                <div class="container-esquerda">
+                    <div class="card" id="grafico-coluna">
+                        <h3>Análise Financeira</h3>
+                        <canvas id="grafico_analise"></canvas>
+                    </div>
+                </div>
+
+                <div class="container-direita">
+                    <div class="card" id="resumo">
+                        <h3>Resumo Financeiro</h3>
+                        <!-- Maiores rendas -->
+                        <?php
+                        $sql_rendas = "SELECT descricao, valor, data FROM rendas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
+                        $stmt_rendas = $conn->prepare($sql_rendas);
+                        $stmt_rendas->bind_param("i", $user_id);
+                        $stmt_rendas->execute();
+                        $result_rendas = $stmt_rendas->get_result();
+
+                        if ($result_rendas->num_rows > 0) {
+                            echo "<div class='container-resumo'>";
+                            echo "<h4>Maiores Rendas</h4>";
+
+                            while ($row = $result_rendas->fetch_assoc()) {
+                                echo "<article>";
+                                echo "<div class='info'>";
+                                echo $row['descricao'];
+                                echo "<br>";
+                                echo "<p>" . date("d/m/Y", strtotime($row['data'])) . "</p>";
+                                echo "</div>";
+                                echo "<p class='verde'>R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                                echo "</article>";
+                            }
+                            echo "</div>";
+                        }
+                        ?>
+
+                        <!-- Maiores despesas -->
+                        <?php
+                        $sql_despesas = "SELECT descricao, valor, status, data FROM despesas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
+                        $stmt_despesas = $conn->prepare($sql_despesas);
+                        $stmt_despesas->bind_param("i", $user_id);
+                        $stmt_despesas->execute();
+                        $result_despesas = $stmt_despesas->get_result();
+
+                        if ($result_despesas->num_rows > 0) {
+                            echo "<div class='container-resumo'>";
+                            echo "<h4>Maiores Despesas</h4>";
+
+                            while ($row = $result_despesas->fetch_assoc()) {
+                                echo "<article>";
+                                echo "<div class='info'>";
+                                echo $row['descricao'];
+                                echo "<br>";
+                                echo "<div id='container-data-tag'>" . date("d/m/Y", strtotime($row['data']));
+                                if ($row['status'] === "Pago") {
+                                    echo "<p id='tag-pago'>Pago</p>";
+                                } else {
+                                    echo "<p id='tag-pendente'>Pendente</p>";
+                                }
+                                echo "</div>";
+                                echo "</div>";
+                                echo "<p class='vermelho'>R$ " . number_format($row['valor'], 2, ',', '.') . "</p>";
+                                echo "</article>";
+                            }
+                            echo "</div>";
+                        }
+                        ?>
+
+                        <!-- Maiores investimentos -->
+                        <?php
+                        $sql_investimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY custo DESC LIMIT 3";
+                        $stmt_investimentos = $conn->prepare($sql_investimentos);
+                        $stmt_investimentos->bind_param("i", $user_id);
+                        $stmt_investimentos->execute();
+                        $result_investimentos = $stmt_investimentos->get_result();
+
+                        if ($result_investimentos->num_rows > 0) {
+                            echo "<div class='container-resumo'>";
+                            echo "<h4>Maiores Investimentos</h4>";
+
+                            while ($row = $result_investimentos->fetch_assoc()) {
+                                echo "<article>";
+                                echo "<div class='info'>";
+                                echo $row['nome'];
+                                echo "<br>";
+                                echo "<p>" . $row['tipo'] . "</p>";
+                                echo "</div>";
+                                echo "<p class='verde-escuro'>R$ " . number_format($row['custo'], 2, ',', '.') . "</p>";
+                                echo "</article>";
+                            }
+                            echo "</div>";
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Gráfico de Rendas, Despesas e Investimentos
-        let ctx1 = document.getElementById('graficoFinanceiro').getContext('2d');
-        new Chart(ctx1, {
+        // Gráfico de analise finceira
+        let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
+        new Chart(grafico_analise, {
             type: 'bar',
             data: {
                 labels: ['Rendas', 'Despesas', 'Investimentos'],
                 datasets: [{
                     label: 'Valores em R$',
                     data: [
-                        <?php echo json_encode($rendaTotal); ?>,
-                        <?php echo json_encode($despesasTotal); ?>,
-                        <?php echo json_encode(array_sum(array_column($investimentos, 'custo'))); ?>
+                        <?php echo json_encode($renda_total); ?>,
+                        <?php echo json_encode($despesas_pagas_total + $despesas_nao_pagas_total); ?>,
+                        <?php echo json_encode($investimentos_total); ?>
                     ],
                     backgroundColor: ['#4c956c', '#d90429', '#219ebc']
                 }]
@@ -364,124 +335,6 @@ $totalNaoPago = array_sum(array_column($despesasNaoPagasDetalhadas, 'valor'));
                     }
                 }
             },
-        });
-
-        // Despesas não pagas
-        const despesasNaoPagas = <?php echo json_encode($despesasNaoPagasDetalhadas); ?>;
-
-        if (despesasNaoPagas.length === 0) {
-            document.getElementById('graficoDespesasNaoPagas').style.display = 'none';
-            document.getElementById('mensagemDespesasPagas').style.display = 'block';
-        } else {
-            const labels = despesasNaoPagas.map(d => d.nome);
-            const valores = despesasNaoPagas.map(d => Number(d.valor));
-
-            new Chart(document.getElementById('graficoDespesasNaoPagas'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: valores,
-                        backgroundColor: [
-                            '#e76f51', '#f4a261', '#2a9d8f', '#e9c46a', '#264653', '#a8dadc', '#ffafcc'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const data = context.dataset.data.map(Number); // força números
-                                    const total = data.reduce((a, b) => a + b, 0);
-                                    const valor = Number(context.parsed);
-                                    const pct = ((valor / total) * 100).toFixed(1);
-                                    return `${context.label}: R$${valor.toFixed(2)} (${pct}%)`;
-                                }
-                            }
-                        }
-                    }
-                },
-            });
-        }
-
-        // Despesas pagas
-        const despesasPagas = <?php echo json_encode($despesasPagasDetalhadas); ?>;
-
-        if (despesasPagas.length === 0) {
-            document.getElementById('graficoDespesasPagas').style.display = 'none';
-            document.getElementById('mensagemDespesasPagas').style.display = 'block';
-        } else {
-            const labels = despesasPagas.map(d => d.nome);
-            const valores = despesasPagas.map(d => Number(d.valor));
-
-            new Chart(document.getElementById('graficoDespesasPagas'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: valores,
-                        backgroundColor: [
-                            '#e76f51', '#f4a261', '#2a9d8f', '#e9c46a', '#264653', '#a8dadc', '#ffafcc'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const data = context.dataset.data.map(Number); // força números
-                                    const total = data.reduce((a, b) => a + b, 0);
-                                    const valor = Number(context.parsed);
-                                    const pct = ((valor / total) * 100).toFixed(1);
-                                    return `${context.label}: R$${valor.toFixed(2)} (${pct}%)`;
-                                }
-                            }
-                        }
-                    }
-                },
-            });
-        }
-
-        // Gráfico de Distribuição
-        let ctxDistribuicao = document.getElementById('graficoDistribuicao').getContext('2d');
-        new Chart(ctxDistribuicao, {
-            type: 'pie',
-            data: {
-                labels: [
-                    `Rendas (${<?php echo json_encode(number_format($pctRendas, 1, '.', '')); ?>}%)`,
-                    `Despesas Pagas (${<?php echo json_encode(number_format($pctDespesasPagas, 1, '.', '')); ?>}%)`,
-                    `Despesas Não Pagas (${<?php echo json_encode(number_format($pctDespesasNaoPagas, 1, '.', '')); ?>}%)`
-                ],
-                datasets: [{
-                    data: [
-                        <?php echo json_encode($pctRendas); ?>,
-                        <?php echo json_encode($pctDespesasPagas); ?>,
-                        <?php echo json_encode($pctDespesasNaoPagas); ?>
-                    ],
-                    backgroundColor: ['#4caf50', '#f44336', '#ff9800']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
-                }
-            }
         });
 
         <?php
