@@ -28,14 +28,17 @@ $row = $result->fetch_assoc();
         <h1>Configurações do Usuário</h1>
         <form action="../backend/database/usuario/editar.php" method="POST">
             <h2>Informações Pessoais</h2>
-            <div class="input-group">
-                <label for="nome">Nome</label>
-                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($row['nome']); ?>" required>
-            </div>
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>"
-                    required>
+            <div class="container-input">
+                <div class="input-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($row['nome']); ?>"
+                        required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>"
+                        required>
+                </div>
             </div>
             <input type="hidden" name="editar" value="1">
             <div class="container-btn">
@@ -48,13 +51,15 @@ $row = $result->fetch_assoc();
                 <label for="senha-atual">Senha atual</label>
                 <input type="password" id="senha-atual" name="senha-atual" required>
             </div>
-            <div class="input-group">
-                <label for="nova-senha">Nova senha</label>
-                <input type="password" id="nova-senha" name="nova-senha" required>
-            </div>
-            <div class="input-group">
-                <label for="nova-senha">Confirmar senha</label>
-                <input type="password" id="confirmar-senha" name="confirmar-senha" required>
+            <div class="container-input">
+                <div class="input-group">
+                    <label for="nova-senha">Nova senha</label>
+                    <input type="password" id="nova-senha" name="nova-senha" required>
+                </div>
+                <div class="input-group">
+                    <label for="nova-senha">Confirmar senha</label>
+                    <input type="password" id="confirmar-senha" name="confirmar-senha" required>
+                </div>
             </div>
             <input type="hidden" name="editar" value="2">
             <div class="container-btn">

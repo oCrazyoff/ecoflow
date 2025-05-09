@@ -307,6 +307,7 @@ $stmt->close();
     <script>
         // Gráfico de analise finceira
         let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
+
         new Chart(grafico_analise, {
             type: 'bar',
             data: {
@@ -336,6 +337,7 @@ $stmt->close();
                 }]
             },
             options: {
+                indexAxis: 'x',
                 responsive: true,
                 plugins: {
                     legend: {
@@ -347,17 +349,20 @@ $stmt->close();
                 },
                 scales: {
                     y: {
+                        beginAtZero: true,
+                    },
+                    x: {
                         beginAtZero: true
                     }
                 }
-            },
+            }
         });
 
         <?php
         // Verificar se é o ultimo dia do ano para gerar relatório anual
-        $ultimoDiaAno = (date('m-d') === '12-31');
+        $ultimo_dia_ano = (date('m-d') === '12-31');
 
-        if ($ultimoDiaAno && isset($_SESSION['rel_anual']) && $_SESSION['rel_anual'] != true) {
+        if ($ultimo_dia_ano && isset($_SESSION['rel_anual']) && $_SESSION['rel_anual'] != true) {
             echo "mostrarAlert()";
         }
         ?>
