@@ -192,14 +192,14 @@ $stmt->close();
                     <h3>Despesas Não Pagas</h3>
                     <p id="valor"><strong>R$
                             <?php echo number_format($despesas_nao_pagas_total, 2, ',', '.') ?></strong></p>
-                    <p>Neste mês</p>
+                    <p>Para este mês</p>
                 </div>
 
                 <div class="card">
                     <span><i class="bi bi-graph-up-arrow"></i></span>
                     <h3>Investimentos</h3>
                     <p id="valor"><strong>R$ <?php echo number_format($investimentos_total, 2, ',', '.') ?></strong></p>
-                    <p>Neste mês</p>
+                    <p>Atualizado hoje</p>
                 </div>
             </div>
             <div class="container-graficos">
@@ -256,7 +256,7 @@ $stmt->close();
                                 echo "<div class='info'>";
                                 echo $row['descricao'];
                                 echo "<br>";
-                                echo "<div id='container-data-tag'>" . date("d/m/Y", strtotime($row['data']));
+                                echo "<div id='container-data-tag'>" . "<p>" . date("d/m/Y", strtotime($row['data'])) . "</p>";
                                 if ($row['status'] === "Pago") {
                                     echo "<p id='tag-pago'>Pago</p>";
                                 } else {
