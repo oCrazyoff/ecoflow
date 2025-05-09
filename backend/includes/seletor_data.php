@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../assets/css/seletor_data.css?v=<?php echo time(); ?>">
 <div class="data-container">
-    <button id="monthButton"><i class="bi bi-caret-down-fill"></i> </button>
-    <ul id="monthList" style="display: none;">
+    <button id="monthButton"></button>
+    <ul id="monthList">
         <li data-month="0">Janeiro</li>
         <li data-month="1">Fevereiro</li>
         <li data-month="2">Março</li>
@@ -33,7 +33,8 @@
     const monthItems = monthList.querySelectorAll('li');
 
     // Exibir o mês selecionado no botão
-    monthButton.innerHTML = `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth - 1]}`;
+    monthButton.innerHTML =
+        `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth - 1]}`;
 
     // Alternar a exibição da lista de meses ao clicar no botão
     monthButton.addEventListener('click', () => {

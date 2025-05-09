@@ -157,7 +157,9 @@ $stmt->close();
     <title>Eco Flow | Dashboard</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css?v=<?php echo time(); ?>">
     <?php include("../backend/includes/head.php") ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.cjs.map"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"
+        integrity="sha512-6HrPqAvK+lZElIZ4mZ64fyxIBTsaX5zAFZg2V/2WT+iKPrFzTzvx6QAsLW2OaLwobhMYBog/+bvmIEEGXi0p1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -308,26 +310,29 @@ $stmt->close();
         new Chart(grafico_analise, {
             type: 'bar',
             data: {
-                labels: ['Rendas', 'Despesas', 'Investimentos'],
+                labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
                 datasets: [{
                     label: 'Valores em R$',
                     data: [
                         <?php echo json_encode($renda_total); ?>,
-                        <?php echo json_encode($despesas_pagas_total + $despesas_nao_pagas_total); ?>,
+                        <?php echo json_encode($despesas_pagas_total); ?>,
+                        <?php echo json_encode($despesas_nao_pagas_total); ?>,
                         <?php echo json_encode($investimentos_total); ?>
                     ],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)'
+                        'rgba(64, 255, 198, 0.2)',
+                        'rgba(255, 204, 64, 0.2)',
+                        'rgba(255, 64, 64, 0.2)',
+                        'rgba(86, 187, 255, 0.2)',
                     ],
                     borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
+                        'rgb(0, 141, 99)',
+                        'rgb(255, 220, 64)',
+                        'rgb(255, 64, 64)',
+                        'rgb(86, 187, 255)',
                     ],
                     borderWidth: 1,
-                    borderRadius: 0.5
+                    borderRadius: 5,
                 }]
             },
             options: {
