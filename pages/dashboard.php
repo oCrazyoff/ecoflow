@@ -376,7 +376,7 @@ $stmt->close();
         // Gráfico de despesas pagas
         let despesas_pagas_sem_info = false;
         <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -437,7 +437,7 @@ $stmt->close();
         // Gráfico de despesas pendentes
         let despesas_pendentes_sem_info = false;
         <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
