@@ -206,9 +206,17 @@ $stmt->close();
             </div>
             <div class="container-graficos">
                 <div class="container-esquerda">
-                    <div class="card" id="grafico-coluna">
+                    <div class="card">
                         <h3>Análise Financeira</h3>
                         <canvas id="grafico_analise"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Distribuição de Despesas</h3>
+                        <div class="container-graficos-despesas">
+                            <canvas id="grafico-despesas-pagas"></canvas>
+                            <canvas id="grafico-despesas-pendentes"></canvas>
+                            <span id="span-sem-despesas">Sem despesas ✅</span>
+                        </div>
                     </div>
                 </div>
 
@@ -308,12 +316,21 @@ $stmt->close();
         // Gráfico de analise finceira
         let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
 
+        let origem;
+
+        if (window.innerWidth <= 768) {
+            origem = 'y';
+        } else {
+            origem = 'x';
+        }
+
+
         new Chart(grafico_analise, {
             type: 'bar',
             data: {
                 labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
                 datasets: [{
-                    label: 'Valores em R$',
+                    label: 'R$',
                     data: [
                         <?php echo json_encode($renda_total); ?>,
                         <?php echo json_encode($despesas_pagas_total); ?>,
@@ -337,7 +354,7 @@ $stmt->close();
                 }]
             },
             options: {
-                indexAxis: 'x',
+                indexAxis: origem,
                 responsive: true,
                 plugins: {
                     legend: {
@@ -354,6 +371,122 @@ $stmt->close();
                     x: {
                         beginAtZero: true
                     }
+                }
+            }
+        });
+
+        // Gráfico de despesas pagas
+        <?php
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $labels = [];
+        $valores = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $labels[] = $row['descricao'] ?? 'Sem despesa';
+            $valores[] = $row['valor'] ?? 0;
+        }
+        ?>
+        let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
+        new Chart(grafico_despesas_pagas, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: [{
+                    label: 'R$ ',
+                    data: [
+                        <?php echo json_encode($valores); ?>
+                    ],
+                    backgroundColor: [
+                        'rgb(165, 99, 204)',
+                        'rgb(82, 183, 136)',
+                        'rgb(251, 134, 0)',
+                        'rgb(0, 118, 182)',
+                        'rgb(255, 93, 144)',
+                    ],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '✔️ Despesas Pagas',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    },
+                }
+            }
+        });
+
+        // Gráfico de despesas pendentes
+        <?php
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $labels = [];
+        $valores = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $labels[] = $row['descricao'] ?? 'Sem despesa';
+            $valores[] = $row['valor'] ?? 0;
+        }
+        ?>
+        let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
+        new Chart(grafico_despesas_pendentes, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: [{
+                    label: 'R$ ',
+                    data: [
+                        <?php echo json_encode($valores); ?>
+                    ],
+                    backgroundColor: [
+                        'rgb(165, 99, 204)',
+                        'rgb(82, 183, 136)',
+                        'rgb(251, 134, 0)',
+                        'rgb(0, 118, 182)',
+                        'rgb(255, 93, 144)',
+                    ],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '❌ Despesas Pendentes',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    },
                 }
             }
         });
