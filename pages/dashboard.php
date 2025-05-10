@@ -169,6 +169,7 @@ $stmt->close();
     <div class="main-content">
         <div class="header">
             <h2>Saldo: R$ <?php echo number_format($renda_total - $despesas_pagas_total, 2, ',', '.') ?></h2>
+            <button onclick="mostrarAlert()">Relatório</button>
             <?php include("../backend/includes/seletor_data.php") ?>
         </div>
 
@@ -209,6 +210,7 @@ $stmt->close();
                     <div class="card">
                         <h3>Análise Financeira</h3>
                         <canvas id="grafico_analise"></canvas>
+                        <span id="span-sem-info-analise">Sem informações</span>
                     </div>
                     <div class="card">
                         <h3>Distribuição de Despesas</h3>
@@ -225,6 +227,8 @@ $stmt->close();
                         <h3>Resumo Financeiro</h3>
                         <!-- Maiores rendas -->
                         <?php
+                        $sem_info_renda = false;
+
                         $sql_rendas = "SELECT descricao, valor, data FROM rendas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
                         $stmt_rendas = $conn->prepare($sql_rendas);
                         $stmt_rendas->bind_param("i", $user_id);
@@ -246,11 +250,15 @@ $stmt->close();
                                 echo "</article>";
                             }
                             echo "</div>";
+                        } else {
+                            $sem_info_renda = true;
                         }
                         ?>
 
                         <!-- Maiores despesas -->
                         <?php
+                        $sem_info_despesa = false;
+
                         $sql_despesas = "SELECT descricao, valor, status, data FROM despesas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
                         $stmt_despesas = $conn->prepare($sql_despesas);
                         $stmt_despesas->bind_param("i", $user_id);
@@ -278,11 +286,15 @@ $stmt->close();
                                 echo "</article>";
                             }
                             echo "</div>";
+                        } else {
+                            $sem_info_despesa = true;
                         }
                         ?>
 
                         <!-- Maiores investimentos -->
                         <?php
+                        $sem_info_investimento = false;
+
                         $sql_investimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY custo DESC LIMIT 3";
                         $stmt_investimentos = $conn->prepare($sql_investimentos);
                         $stmt_investimentos->bind_param("i", $user_id);
@@ -304,6 +316,13 @@ $stmt->close();
                                 echo "</article>";
                             }
                             echo "</div>";
+                        } else {
+                            $sem_info_investimento = true;
+                        }
+                        ?>
+                        <?php
+                        if ($sem_info_renda == true && $sem_info_despesa == true && $sem_info_investimento == true) {
+                            echo "<span id='span-sem-info-resumo'>Sem Informações</span>";
                         }
                         ?>
                     </div>
@@ -314,6 +333,14 @@ $stmt->close();
 
     <script>
         // Gráfico de analise finceira
+        let analise_sem_info = false;
+
+        <?php
+        if (empty($renda_total) || empty($despesas_pagas_total) || empty($despesas_nao_pagas_total) || empty($investimentos_total)) {
+            echo "analise_sem_info = true";
+        }
+        ?>
+
         let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
         let origem;
 
@@ -495,12 +522,19 @@ $stmt->close();
             }
         });
 
-        // Escondendo os graficos caso não tenha informações e mostrando o span
+        // Escondendo os graficos de despesas caso não tenha informações e mostrando o span
         if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
             document.getElementById("grafico-despesas-pagas").style.display = "none";
             document.getElementById("grafico-despesas-pendentes").style.display = "none";
 
             document.getElementById("span-sem-despesas").style.display = "flex";
+        }
+
+        // Escondendo o grafico de analise caso não tenho informações e mostrando o span
+        if (analise_sem_info == true) {
+            document.getElementById("grafico_analise").style.display = "none";
+
+            document.getElementById("span-sem-info-analise").style.display = "flex";
         }
 
         <?php

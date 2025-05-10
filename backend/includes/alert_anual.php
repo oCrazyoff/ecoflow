@@ -8,16 +8,20 @@ if (!defined('BASE_URL')) {
 }
 ?>
 
+<link rel="stylesheet" href="../assets/css/alert_anual.css">
+
 <div class="overlay-alert" onclick="fecharAlert()">
     <div id="alert-anual">
-        <button id="btn-fechar-alert" onclick="fecharAlert()"><i class="bi bi-x-circle"></i></button>
         <h1>Atenção!</h1>
         <p>
             Todas as informações dos anos anteriores serão deletadas no próximo ano. Você pode gerar um relatório em PDF
             com
             os dados do ano atual.
         </p>
-        <a href="<?php BASE_URL ?>relatorios/relatorio_anual.php?rel_anual=true" target="_blank">Gerar Relatório</a>
+        <div class="btn-container">
+            <button id="btn-fechar-alert" onclick="fecharAlert()">Cancelar</button>
+            <a href="<?php BASE_URL ?>relatorios/relatorio_anual.php?rel_anual=true" target="_blank">Gerar Relatório</a>
+        </div>
     </div>
 </div>
 

@@ -1,0 +1,78 @@
+/* Alerta do relatório anual */
+#alert-anual {
+    display: none;
+    flex-direction: column;
+    gap: 1em;
+    border-radius: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 2em;
+    width: 50em;
+    z-index: 1000;
+}
+
+#alert-anual h1 {
+    font-size: 2em;
+}
+
+#alert-anual p {
+    font-size: 1.5em;
+    color: #575757;
+    text-align: justify;
+}
+
+#alert-anual .btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5em;
+    width: 100%;
+}
+
+#alert-anual a {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    background-color: #247883;
+    color: #fff;
+    font-size: 1.5em;
+    border-radius: .5em;
+    padding: .6em;
+    cursor: pointer;
+    transition: .3s ease all;
+}
+
+#alert-anual a:hover {
+    background-color: #2f5054;
+}
+
+#alert-anual #btn-fechar-alert {
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    color: #575757;
+    background-color: #fff;
+    padding: .6em;
+    border-radius: .5em;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: .3s ease all;
+}
+
+#alert-anual #btn-fechar-alert:hover {
+    background-color: #d1d1d1;
+}
+
+.overlay-alert {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000ce;
+    z-index: 500;
+}
