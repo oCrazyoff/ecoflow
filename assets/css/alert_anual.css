@@ -79,10 +79,16 @@
 
 @media screen and (max-width: 768px) {
     #alert-anual {
-        width: 80vw;
+        width: 85vw;
+        padding: 1.5em;
     }
 
     #alert-anual h1 {
         text-align: center;
+    }
+
+    #alert-anual a,
+    #alert-anual #btn-fechar-alert {
+        width: 50%;
     }
 }
