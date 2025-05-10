@@ -401,9 +401,7 @@ $stmt->close();
                 labels: <?php echo json_encode($labels); ?>,
                 datasets: [{
                     label: 'R$ ',
-                    data: [
-                        <?php echo json_encode($valores); ?>
-                    ],
+                    data: <?php echo json_encode($valores); ?>,
                     backgroundColor: [
                         'rgb(165, 99, 204)',
                         'rgb(82, 183, 136)',
@@ -464,9 +462,7 @@ $stmt->close();
                 labels: <?php echo json_encode($labels); ?>,
                 datasets: [{
                     label: 'R$ ',
-                    data: [
-                        <?php echo json_encode($valores); ?>
-                    ],
+                    data: <?php echo json_encode($valores); ?>,
                     backgroundColor: [
                         'rgb(165, 99, 204)',
                         'rgb(82, 183, 136)',
