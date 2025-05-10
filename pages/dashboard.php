@@ -315,7 +315,6 @@ $stmt->close();
     <script>
         // Gráfico de analise finceira
         let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
-
         let origem;
 
         if (window.innerWidth <= 768) {
@@ -323,7 +322,6 @@ $stmt->close();
         } else {
             origem = 'x';
         }
-
 
         new Chart(grafico_analise, {
             type: 'bar',
@@ -376,6 +374,7 @@ $stmt->close();
         });
 
         // Gráfico de despesas pagas
+        let despesas_pagas_sem_info = false;
         <?php
         $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
         $stmt = $conn->prepare($sql);
@@ -387,8 +386,12 @@ $stmt->close();
         $valores = [];
 
         while ($row = $result->fetch_assoc()) {
-            $labels[] = $row['descricao'] ?? 'Sem despesa';
-            $valores[] = $row['valor'] ?? 0;
+            $labels[] = $row['descricao'];
+            $valores[] = $row['valor'];
+        }
+
+        if ($result->num_rows === 0) {
+            echo "despesas_pagas_sem_info = true;";
         }
         ?>
         let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
@@ -434,6 +437,7 @@ $stmt->close();
         });
 
         // Gráfico de despesas pendentes
+        let despesas_pendentes_sem_info = false;
         <?php
         $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth LIMIT 5";
         $stmt = $conn->prepare($sql);
@@ -445,8 +449,12 @@ $stmt->close();
         $valores = [];
 
         while ($row = $result->fetch_assoc()) {
-            $labels[] = $row['descricao'] ?? 'Sem despesa';
-            $valores[] = $row['valor'] ?? 0;
+            $labels[] = $row['descricao'];
+            $valores[] = $row['valor'];
+        }
+
+        if ($result->num_rows === 0) {
+            echo "despesas_pendentes_sem_info = true;";
         }
         ?>
         let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
@@ -490,6 +498,14 @@ $stmt->close();
                 }
             }
         });
+
+        // Escondendo os graficos caso não tenha informações e mostrando o span
+        if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
+            document.getElementById("grafico-despesas-pagas").style.display = "none";
+            document.getElementById("grafico-despesas-pendentes").style.display = "none";
+
+            document.getElementById("span-sem-despesas").style.display = "flex";
+        }
 
         <?php
         // Verificar se é o ultimo dia do ano para gerar relatório anual

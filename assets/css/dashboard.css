@@ -255,7 +255,8 @@
 /* graficos despesas */
 .container-graficos-despesas {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     gap: 1em;
 }
@@ -267,6 +268,8 @@
 
 #span-sem-despesas {
     display: none;
+    position: relative;
+    font-size: 1em;
 }
 
 @media screen and (max-width: 768px) {
