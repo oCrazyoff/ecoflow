@@ -3,7 +3,7 @@ require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 
 $user_id = $_SESSION['id'];
-$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
+$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
 
 // Verifica se é janeiro para deletar informações do ano anterior
 if (date('n') == 1) {
@@ -175,35 +175,45 @@ $stmt->close();
 
         <div class="container-dash">
             <div class="cards">
-                <div class="card">
-                    <span><i class="bi bi-wallet"></i></span>
-                    <h3>Total de Rendas</h3>
-                    <p id="valor"><strong>R$ <?php echo number_format($renda_total, 2, ',', '.') ?></strong></p>
-                    <p>Neste mês</p>
-                </div>
+                <a href="rendas.php">
+                    <div class="card">
+                        <span><i class="bi bi-wallet"></i></span>
+                        <h3>Total de Rendas</h3>
+                        <p id="valor"><strong>R$ <?php echo number_format($renda_total, 2, ',', '.') ?></strong></p>
+                        <p>Neste mês</p>
+                    </div>
+                </a>
 
-                <div class="card">
-                    <span><i class="bi bi-graph-down-arrow"></i></span>
-                    <h3>Despesas Pagas</h3>
-                    <p id="valor"><strong>R$ <?php echo number_format($despesas_pagas_total, 2, ',', '.') ?></strong>
-                    </p>
-                    <p>Neste mês</p>
-                </div>
+                <a href="despesas.php">
+                    <div class="card">
+                        <span><i class="bi bi-graph-down-arrow"></i></span>
+                        <h3>Despesas Pagas</h3>
+                        <p id="valor"><strong>R$
+                                <?php echo number_format($despesas_pagas_total, 2, ',', '.') ?></strong>
+                        </p>
+                        <p>Neste mês</p>
+                    </div>
+                </a>
 
-                <div class="card" id="pendentes">
-                    <span><i class="bi bi-currency-dollar"></i></span>
-                    <h3>Despesas Não Pagas</h3>
-                    <p id="valor"><strong>R$
-                            <?php echo number_format($despesas_nao_pagas_total, 2, ',', '.') ?></strong></p>
-                    <p>Para este mês</p>
-                </div>
+                <a href="despesas.php">
+                    <div class="card" id="pendentes">
+                        <span><i class="bi bi-currency-dollar"></i></span>
+                        <h3>Despesas Não Pagas</h3>
+                        <p id="valor"><strong>R$
+                                <?php echo number_format($despesas_nao_pagas_total, 2, ',', '.') ?></strong></p>
+                        <p>Para este mês</p>
+                    </div>
+                </a>
 
-                <div class="card">
-                    <span><i class="bi bi-graph-up-arrow"></i></span>
-                    <h3>Investimentos</h3>
-                    <p id="valor"><strong>R$ <?php echo number_format($investimentos_total, 2, ',', '.') ?></strong></p>
-                    <p>Atualizado hoje</p>
-                </div>
+                <a href="investimentos.php">
+                    <div class="card">
+                        <span><i class="bi bi-graph-up-arrow"></i></span>
+                        <h3>Investimentos</h3>
+                        <p id="valor"><strong>R$ <?php echo number_format($investimentos_total, 2, ',', '.') ?></strong>
+                        </p>
+                        <p>Atualizado hoje</p>
+                    </div>
+                </a>
             </div>
             <div class="container-graficos">
                 <div class="container-esquerda">
@@ -528,6 +538,10 @@ $stmt->close();
             document.getElementById("grafico-despesas-pendentes").style.display = "none";
 
             document.getElementById("span-sem-despesas").style.display = "flex";
+        } else if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == false) {
+            document.getElementById("grafico-despesas-pagas").style.display = "none";
+        } else if (despesas_pagas_sem_info == false && despesas_pendentes_sem_info == true) {
+            document.getElementById("grafico-despesas-pendentes").style.display = "none";
         }
 
         // Escondendo o grafico de analise caso não tenho informações e mostrando o span

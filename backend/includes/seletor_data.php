@@ -2,22 +2,51 @@
 <div class="data-container">
     <button id="monthButton"></button>
     <ul id="monthList">
-        <li data-month="0">Janeiro</li>
-        <li data-month="1">Fevereiro</li>
-        <li data-month="2">Março</li>
-        <li data-month="3">Abril</li>
-        <li data-month="4">Maio</li>
-        <li data-month="5">Junho</li>
-        <li data-month="6">Julho</li>
-        <li data-month="7">Agosto</li>
-        <li data-month="8">Setembro</li>
-        <li data-month="9">Outubro</li>
-        <li data-month="10">Novembro</li>
-        <li data-month="11">Dezembro</li>
+        <?php
+
+        $meses = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
+        ];
+
+        $sql_meses = "SELECT DISTINCT mes FROM (
+                        SELECT MONTH(data) - 1 AS mes FROM rendas
+                        UNION
+                        SELECT MONTH(data) - 1 AS mes FROM despesas
+                        UNION
+                        SELECT MONTH(data) - 1 AS mes FROM investimentos
+                    ) AS todos_os_meses
+                    ORDER BY mes;
+                    ";
+
+        $result_meses = $conn->query($sql_meses);
+
+        // Verifica e exibe os meses encontrados
+        if ($result_meses && $result_meses->num_rows > 0) {
+            while ($row_meses = $result_meses->fetch_assoc()) {
+                $mes = (int)$row_meses['mes'];
+                $classe = ($mes === $selectedMonth - 1) ? ' class="selected"' : '';
+                echo "<li data-month=\"$mes\"$classe>{$meses[$mes]}</li>";
+            }
+        } else {
+            echo "<li style='color: gray;'>Nenhum mês encontrado</li>";
+        }
+        ?>
     </ul>
+
 </div>
 <script defer>
-    const phpSelectedMonth = <?php echo $selectedMonth; ?>;
+    const phpSelectedMonth = <?php echo $selectedMonth - 1; ?>;
     // Obter o mês atual
     const monthNames = [
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -34,7 +63,8 @@
 
     // Exibir o mês selecionado no botão
     monthButton.innerHTML =
-        `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth - 1]}`;
+        `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth]}`;
+
 
     // Alternar a exibição da lista de meses ao clicar no botão
     monthButton.addEventListener('click', () => {

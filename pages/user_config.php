@@ -57,7 +57,7 @@ $row = $result->fetch_assoc();
                     <input type="password" id="nova-senha" name="nova-senha" required>
                 </div>
                 <div class="input-group">
-                    <label for="nova-senha">Confirmar senha</label>
+                    <label for="confirmar-senha">Confirmar senha</label>
                     <input type="password" id="confirmar-senha" name="confirmar-senha" required>
                 </div>
             </div>

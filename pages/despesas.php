@@ -2,7 +2,7 @@
 require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 // Capturar o mês selecionado na URL ou usar o mês atual como padrão
-$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
+$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
 
 // Atualizar a consulta para filtrar despesas pelo mês selecionado
 $sql = "SELECT * FROM despesas WHERE user_id = ? AND (MONTH(data) = ?)";
@@ -55,32 +55,33 @@ $result = $stmt->get_result();
                                 echo "<td>" . $row['descricao'] . "</td>";
                                 echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
                                 echo "<td>
-                            <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
-                            <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
-                            <input type='hidden' name='id' value='" . $row['id'] . "'>
-                            <input type='hidden' id='data' name='data' value='" . date('Y-m-d', strtotime($row['data'])) . "' required>
-                            <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
-                            </form>
-                            </td>";
+                                                <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
+                                                <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
+                                                <input type='hidden' name='id' value='" . $row['id'] . "'>
+                                                <input type='hidden' id='data' name='data' value='" . date('Y-m-d', strtotime($row['data'])) . "' required>
+                                                <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
+                                                </form>
+                                                </td>";
                                 echo "<td>" . $row['recorrente'] . "</td>";
                                 echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
                                 echo "
-                    <td>
-                        <form action='editar/despesa.php' method='POST'>
-                            <input type='hidden' name='id' value='" . $row['id'] . "'>
-                            <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
-                        </form>
-                    </td>";
+                                        <td>
+                                            <form action='editar/despesa.php' method='POST'>
+                                                <input type='hidden' name='id' value='" . $row['id'] . "'>
+                                                <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
+                                            </form>
+                                        </td>";
                                 echo "
-                    <td>
-                        <form action='../backend/database/despesas/deletar.php' method='POST'>
-                            <input type='hidden' name='id' value='" . $row['id'] . "'>
-                            <input type='hidden' name='descricao' value='" . htmlspecialchars($row['descricao']) . "'>
-                            <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
-                        </form>
-                    </td>";
+                                        <td>
+                                            <form action='../backend/database/despesas/deletar.php' method='POST'>
+                                                <input type='hidden' name='id' value='" . $row['id'] . "'>
+                                                <input type='hidden' name='descricao' value='" . htmlspecialchars($row['descricao']) . "'>
+                                                <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
+                                            </form>
+                                        </td>";
                                 echo "</tr>";
-                            } ?>
+                            }
+                            ?>
                     </tbody>
                 </table>
             </div>
