@@ -342,77 +342,82 @@ $stmt->close();
     </div>
 
     <script>
-        // Gráfico de analise finceira
-        let analise_sem_info = false;
+    // Gráfico de analise finceira
+    let analise_sem_info = false;
 
-        <?php
-        if (empty($renda_total) || empty($despesas_pagas_total) || empty($despesas_nao_pagas_total) || empty($investimentos_total)) {
+    <?php
+        if (
+            ($renda_total ?? null) == 0 &&
+            ($despesas_pagas_total ?? null) == 0 &&
+            ($despesas_nao_pagas_total ?? null) == 0 &&
+            ($investimentos_total ?? null) == 0
+        ) {
             echo "analise_sem_info = true";
         }
         ?>
 
-        let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
-        let origem;
+    let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
+    let origem;
 
-        if (window.innerWidth <= 768) {
-            origem = 'y';
-        } else {
-            origem = 'x';
-        }
+    if (window.innerWidth <= 768) {
+        origem = 'y';
+    } else {
+        origem = 'x';
+    }
 
-        new Chart(grafico_analise, {
-            type: 'bar',
-            data: {
-                labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
-                datasets: [{
-                    label: 'R$',
-                    data: [
-                        <?php echo json_encode($renda_total); ?>,
-                        <?php echo json_encode($despesas_pagas_total); ?>,
-                        <?php echo json_encode($despesas_nao_pagas_total); ?>,
-                        <?php echo json_encode($investimentos_total); ?>
-                    ],
-                    backgroundColor: [
-                        'rgba(64, 255, 198, 0.2)',
-                        'rgba(255, 204, 64, 0.2)',
-                        'rgba(255, 64, 64, 0.2)',
-                        'rgba(86, 187, 255, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgb(0, 141, 99)',
-                        'rgb(255, 220, 64)',
-                        'rgb(255, 64, 64)',
-                        'rgb(86, 187, 255)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 5,
-                }]
-            },
-            options: {
-                indexAxis: origem,
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
+    new Chart(grafico_analise, {
+        type: 'bar',
+        data: {
+            labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
+            datasets: [{
+                label: 'R$',
+                data: [
+                    <?php echo json_encode($renda_total); ?>,
+                    <?php echo json_encode($despesas_pagas_total); ?>,
+                    <?php echo json_encode($despesas_nao_pagas_total); ?>,
+                    <?php echo json_encode($investimentos_total); ?>
+                ],
+                backgroundColor: [
+                    'rgba(64, 255, 198, 0.2)',
+                    'rgba(255, 204, 64, 0.2)',
+                    'rgba(255, 64, 64, 0.2)',
+                    'rgba(86, 187, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgb(0, 141, 99)',
+                    'rgb(255, 220, 64)',
+                    'rgb(255, 64, 64)',
+                    'rgb(86, 187, 255)',
+                ],
+                borderWidth: 1,
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            indexAxis: origem,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                    x: {
-                        beginAtZero: true
-                    }
+                tooltip: {
+                    enabled: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+                x: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        // Gráfico de despesas pagas
-        let despesas_pagas_sem_info = false;
-        <?php
+    // Gráfico de despesas pagas
+    let despesas_pagas_sem_info = false;
+    <?php
         $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
@@ -431,49 +436,49 @@ $stmt->close();
             echo "despesas_pagas_sem_info = true;";
         }
         ?>
-        let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
-        new Chart(grafico_despesas_pagas, {
-            type: 'doughnut',
-            data: {
-                labels: <?php echo json_encode($labels); ?>,
-                datasets: [{
-                    label: 'R$ ',
-                    data: <?php echo json_encode($valores); ?>,
-                    backgroundColor: [
-                        'rgb(165, 99, 204)',
-                        'rgb(82, 183, 136)',
-                        'rgb(251, 134, 0)',
-                        'rgb(0, 118, 182)',
-                        'rgb(255, 93, 144)',
-                    ],
-                    borderRadius: 5,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '✔️ Despesas Pagas',
-                        font: {
-                            size: 18,
-                            weight: 'bold',
-                        },
-                        padding: {
-                            top: 10,
-                            bottom: 30
-                        }
+    let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
+    new Chart(grafico_despesas_pagas, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($labels); ?>,
+            datasets: [{
+                label: 'R$ ',
+                data: <?php echo json_encode($valores); ?>,
+                backgroundColor: [
+                    'rgb(165, 99, 204)',
+                    'rgb(82, 183, 136)',
+                    'rgb(251, 134, 0)',
+                    'rgb(0, 118, 182)',
+                    'rgb(255, 93, 144)',
+                ],
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '✔️ Despesas Pagas',
+                    font: {
+                        size: 18,
+                        weight: 'bold',
                     },
-                    legend: {
-                        position: 'bottom',
-                    },
-                }
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                },
             }
-        });
+        }
+    });
 
-        // Gráfico de despesas pendentes
-        let despesas_pendentes_sem_info = false;
-        <?php
+    // Gráfico de despesas pendentes
+    let despesas_pendentes_sem_info = false;
+    <?php
         $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
@@ -492,66 +497,66 @@ $stmt->close();
             echo "despesas_pendentes_sem_info = true;";
         }
         ?>
-        let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
-        new Chart(grafico_despesas_pendentes, {
-            type: 'doughnut',
-            data: {
-                labels: <?php echo json_encode($labels); ?>,
-                datasets: [{
-                    label: 'R$ ',
-                    data: <?php echo json_encode($valores); ?>,
-                    backgroundColor: [
-                        'rgb(165, 99, 204)',
-                        'rgb(82, 183, 136)',
-                        'rgb(251, 134, 0)',
-                        'rgb(0, 118, 182)',
-                        'rgb(255, 93, 144)',
-                    ],
-                    borderRadius: 5,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '❌ Despesas Pendentes',
-                        font: {
-                            size: 18,
-                            weight: 'bold',
-                        },
-                        padding: {
-                            top: 10,
-                            bottom: 30
-                        }
+    let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
+    new Chart(grafico_despesas_pendentes, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($labels); ?>,
+            datasets: [{
+                label: 'R$ ',
+                data: <?php echo json_encode($valores); ?>,
+                backgroundColor: [
+                    'rgb(165, 99, 204)',
+                    'rgb(82, 183, 136)',
+                    'rgb(251, 134, 0)',
+                    'rgb(0, 118, 182)',
+                    'rgb(255, 93, 144)',
+                ],
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '❌ Despesas Pendentes',
+                    font: {
+                        size: 18,
+                        weight: 'bold',
                     },
-                    legend: {
-                        position: 'bottom',
-                    },
-                }
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                },
             }
-        });
-
-        // Escondendo os graficos de despesas caso não tenha informações e mostrando o span
-        if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
-            document.getElementById("grafico-despesas-pagas").style.display = "none";
-            document.getElementById("grafico-despesas-pendentes").style.display = "none";
-
-            document.getElementById("span-sem-despesas").style.display = "flex";
-        } else if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == false) {
-            document.getElementById("grafico-despesas-pagas").style.display = "none";
-        } else if (despesas_pagas_sem_info == false && despesas_pendentes_sem_info == true) {
-            document.getElementById("grafico-despesas-pendentes").style.display = "none";
         }
+    });
 
-        // Escondendo o grafico de analise caso não tenho informações e mostrando o span
-        if (analise_sem_info == true) {
-            document.getElementById("grafico_analise").style.display = "none";
+    // Escondendo os graficos de despesas caso não tenha informações e mostrando o span
+    if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
+        document.getElementById("grafico-despesas-pagas").style.display = "none";
+        document.getElementById("grafico-despesas-pendentes").style.display = "none";
 
-            document.getElementById("span-sem-info-analise").style.display = "flex";
-        }
+        document.getElementById("span-sem-despesas").style.display = "flex";
+    } else if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == false) {
+        document.getElementById("grafico-despesas-pagas").style.display = "none";
+    } else if (despesas_pagas_sem_info == false && despesas_pendentes_sem_info == true) {
+        document.getElementById("grafico-despesas-pendentes").style.display = "none";
+    }
 
-        <?php
+    // Escondendo o grafico de analise caso não tenho informações e mostrando o span
+    if (analise_sem_info == true) {
+        document.getElementById("grafico_analise").style.display = "none";
+
+        document.getElementById("span-sem-info-analise").style.display = "flex";
+    }
+
+    <?php
         // Verificar se é o ultimo dia do ano para gerar relatório anual
         $ultimo_dia_ano = (date('m-d') === '12-31');
 
@@ -559,6 +564,27 @@ $stmt->close();
             echo "mostrarAlert()";
         }
         ?>
+
+    // Ao clicar em links, exibir o loading novamente
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (event) => {
+            const href = link.getAttribute('href');
+
+            // Ignorar links sem destino ou com atributos especiais
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+                return;
+            }
+
+            event.preventDefault(); // Previne a navegação imediata
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.style.display = 'flex';
+
+            // Aguarda um curto período antes de redirecionar
+            setTimeout(() => {
+                window.location.href = href;
+            }, 100);
+        });
+    });
     </script>
 </body>
 
