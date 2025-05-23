@@ -204,8 +204,8 @@
 }
 
 .container-graficos-despesas canvas {
-    max-width: 50%;
-    max-height: max-content;
+    width: 50% !important;
+    height: auto !important;
 }
 
 #span-sem-despesas,
@@ -253,6 +253,6 @@
     }
 
     .container-graficos-despesas canvas {
-        max-width: 100%;
+        width: 100% !important;
     }
 }
