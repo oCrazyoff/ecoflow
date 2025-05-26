@@ -73,9 +73,9 @@ $row = $result->fetch_assoc();
                         <div class="form-group">
                             <label for="recorrente">Recorrente</label>
                             <select id="recorrente" name="recorrente" required>
-                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
+                                <option value="Sim" <?php echo ($row['recorrente'] == '1' ? 'selected' : '') ?>>Sim
                                 </option>
-                                <option value="Não" <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>
+                                <option value="Não" <?php echo ($row['recorrente'] == '0' ? 'selected' : '') ?>>
                                     Não
                                 </option>
                             </select>

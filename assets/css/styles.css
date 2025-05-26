@@ -21,37 +21,36 @@ body {
     position: relative;
 }
 
+/* div erro */
 #erro {
     position: fixed;
-    top: -100%;
-    left: 50%;
+    bottom: -100%;
+    right: 0%;
     width: max-content;
-    background-color: #246a73;
+    background-color: #fff;
     transform: translate(-50%, -50%);
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     padding: 1em;
-    border-radius: 1em;
-    border: 2px solid #73d2de;
-    animation: sumir 3s;
+    border-radius: .5em;
+    animation: sumir 5s;
     z-index: 750;
 }
 
 @keyframes sumir {
     0% {
-        top: -100%;
+        bottom: -100%;
     }
 
     10% {
-        top: 10%;
+        bottom: 0;
     }
 
-    90% {
-        top: 10%;
+    50% {
+        bottom: 0%;
     }
 
     100% {
-        top: -100%;
+        bottom: -100%;
     }
 }
 
@@ -91,5 +90,10 @@ body {
 @media screen and (max-width: 768px) {
     .main-content {
         padding-top: 5em;
+    }
+
+    /* div erro */
+    #erro {
+        right: -25%;
     }
 }

@@ -60,19 +60,17 @@ $row = $result->fetch_assoc();
                         <div class="form-group">
                             <label for="frequencia">Status</label>
                             <select id="status" name="status" required>
-                                <option value="Não Pago" <?php echo ($row['status'] == 'Não Pago') ? 'selected' : '' ?>>
-                                    Não pago
+                                <option value="0" <?php echo ($row['status'] == 0 ? 'selected' : '') ?>>Pendente
                                 </option>
-                                <option value="Pago" <?php echo ($row['status'] == 'Pago') ? 'selected' : '' ?>> Pago
-                                </option>
+                                <option value="1" <?php echo ($row['status'] == 1 ? 'selected' : '') ?>> Pago</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="recorrente">Recorrente</label>
                             <select id="recorrente" name="recorrente" required>
-                                <option value="Sim" <?php echo ($row['recorrente'] == 'Sim') ? 'selected' : ''; ?>>Sim
+                                <option value="1" <?php echo ($row['recorrente'] == '1' ? 'selected' : '') ?>>Sim
                                 </option>
-                                <option value="Não " <?php echo ($row['recorrente'] == 'Não') ? 'selected' : ''; ?>>Não
+                                <option value="0" <?php echo ($row['recorrente'] == '0' ? 'selected' : '') ?>>Não
                                 </option>
                             </select>
                         </div>

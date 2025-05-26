@@ -11,9 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_SESSION['id'];
 
     // Verifica se os campos estão preenchidos
-    if (empty($nome) || empty($recorrente) || empty($tipo_investimento) || empty($custo) || empty($data)) {
-        $_SESSION['resposta'] = "Preencha todos os campos.";
-        header("Location: ../../../pages/cadastro/investimento.php");
+    if (
+        trim($nome) === '' ||
+        trim($recorrente) === '' ||
+        trim($tipo_investimento) === '' ||
+        trim($data) === ''
+    ) {
+        $_SESSION['resposta'] = "Preencha todos os campos obrigatórios.";
+        header("Location: ../../../pages/investimentos.php");
         exit();
     }
 

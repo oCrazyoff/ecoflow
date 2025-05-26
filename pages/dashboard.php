@@ -33,7 +33,7 @@ $mes_atual = date('m');
 $ano_atual = date('Y');
 
 // Verifica se as rendas ja foram cadastradas
-$sql_verificar = "SELECT descricao, valor FROM rendas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$sql_verificar = "SELECT descricao, valor FROM rendas WHERE user_id = ? AND recorrente = '1' AND MONTH(data) = ? AND YEAR(data) = ?";
 $stmt_verificar = $conn->prepare($sql_verificar);
 $stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
 $stmt_verificar->execute();
@@ -50,7 +50,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 
     if ($result_verificar_atual->num_rows == 0) {
         // Inserir renda recorrente
-        $sql_inserir = "INSERT INTO rendas (user_id, descricao, valor, recorrente) VALUES (?, ?, 0, 'Sim')";
+        $sql_inserir = "INSERT INTO rendas (user_id, descricao, valor, recorrente) VALUES (?, ?, 0, '1')";
         $stmt_inserir = $conn->prepare($sql_inserir);
         $stmt_inserir->bind_param("is", $user_id, $descricao);
         $stmt_inserir->execute();
@@ -58,7 +58,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 }
 
 // Verifica se as despesas ja foram cadastradas
-$sql_verificar = "SELECT descricao, valor, status FROM despesas WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$sql_verificar = "SELECT descricao, valor, status FROM despesas WHERE user_id = ? AND recorrente = '1' AND MONTH(data) = ? AND YEAR(data) = ?";
 $stmt_verificar = $conn->prepare($sql_verificar);
 $stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
 $stmt_verificar->execute();
@@ -76,7 +76,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 
     if ($result_verificar_atual->num_rows == 0) {
         // Inserir despesa recorrente
-        $sql_inserir = "INSERT INTO despesas (user_id, descricao, valor, status, recorrente) VALUES (?, ?, 0, 'Não Pago', 'Sim')";
+        $sql_inserir = "INSERT INTO despesas (user_id, descricao, valor, status, recorrente) VALUES (?, ?, 0, '0', '1')";
         $stmt_inserir = $conn->prepare($sql_inserir);
         $stmt_inserir->bind_param("is", $user_id, $descricao);
         $stmt_inserir->execute();
@@ -84,7 +84,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 }
 
 // Verifica se os invesimentos ja foram cadastrados
-$sql_verificar = "SELECT nome, tipo, custo FROM investimentos WHERE user_id = ? AND recorrente = 'Sim' AND MONTH(data) = ? AND YEAR(data) = ?";
+$sql_verificar = "SELECT nome, tipo, custo FROM investimentos WHERE user_id = ? AND recorrente = '1' AND MONTH(data) = ? AND YEAR(data) = ?";
 $stmt_verificar = $conn->prepare($sql_verificar);
 $stmt_verificar->bind_param("iii", $user_id, $mes_anterior, $ano_atual);
 $stmt_verificar->execute();
@@ -103,7 +103,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 
     if ($result_verificar_atual->num_rows == 0) {
         // Inserir investimento recorrente
-        $sql_inserir = "INSERT INTO investimentos (user_id, nome, custo, tipo, recorrente) VALUES (?, ?, 0, ?, 'Sim')";
+        $sql_inserir = "INSERT INTO investimentos (user_id, nome, custo, tipo, recorrente) VALUES (?, ?, 0, ?, '1')";
         $stmt_inserir = $conn->prepare($sql_inserir);
         $stmt_inserir->bind_param("iss", $user_id, $nome, $tipo);
         $stmt_inserir->execute();
@@ -120,7 +120,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Despesas pagas total
-$sql = "SELECT SUM(valor) FROM despesas WHERE status = 'Pago' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = '1' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -129,7 +129,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Despesas não pagas total
-$sql = "SELECT SUM(valor) FROM despesas WHERE status = 'Não Pago' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = '0' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -285,7 +285,7 @@ $stmt->close();
                                 echo $row['descricao'];
                                 echo "<br>";
                                 echo "<div id='container-data-tag'>" . "<p>" . date("d/m/Y", strtotime($row['data'])) . "</p>";
-                                if ($row['status'] === "Pago") {
+                                if ($row['status'] === "1") {
                                     echo "<p id='tag-pago'>Pago</p>";
                                 } else {
                                     echo "<p id='tag-pendente'>Pendente</p>";
@@ -342,10 +342,10 @@ $stmt->close();
     </div>
 
     <script>
-    // Gráfico de analise finceira
-    let analise_sem_info = false;
+        // Gráfico de analise finceira
+        let analise_sem_info = false;
 
-    <?php
+        <?php
         if (
             ($renda_total ?? null) == 0 &&
             ($despesas_pagas_total ?? null) == 0 &&
@@ -356,69 +356,69 @@ $stmt->close();
         }
         ?>
 
-    let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
-    let origem;
+        let grafico_analise = document.getElementById('grafico_analise').getContext('2d');
+        let origem;
 
-    if (window.innerWidth <= 768) {
-        origem = 'y';
-    } else {
-        origem = 'x';
-    }
+        if (window.innerWidth <= 768) {
+            origem = 'y';
+        } else {
+            origem = 'x';
+        }
 
-    new Chart(grafico_analise, {
-        type: 'bar',
-        data: {
-            labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
-            datasets: [{
-                label: 'R$',
-                data: [
-                    <?php echo json_encode($renda_total); ?>,
-                    <?php echo json_encode($despesas_pagas_total); ?>,
-                    <?php echo json_encode($despesas_nao_pagas_total); ?>,
-                    <?php echo json_encode($investimentos_total); ?>
-                ],
-                backgroundColor: [
-                    'rgba(64, 255, 198, 0.2)',
-                    'rgba(255, 204, 64, 0.2)',
-                    'rgba(255, 64, 64, 0.2)',
-                    'rgba(86, 187, 255, 0.2)',
-                ],
-                borderColor: [
-                    'rgb(0, 141, 99)',
-                    'rgb(255, 220, 64)',
-                    'rgb(255, 64, 64)',
-                    'rgb(86, 187, 255)',
-                ],
-                borderWidth: 1,
-                borderRadius: 5,
-            }]
-        },
-        options: {
-            indexAxis: origem,
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: true
-                }
+        new Chart(grafico_analise, {
+            type: 'bar',
+            data: {
+                labels: ['Rendas', 'Despesas Pagas', 'Despesas Não Pagas', 'Investimentos'],
+                datasets: [{
+                    label: 'R$',
+                    data: [
+                        <?php echo json_encode($renda_total); ?>,
+                        <?php echo json_encode($despesas_pagas_total); ?>,
+                        <?php echo json_encode($despesas_nao_pagas_total); ?>,
+                        <?php echo json_encode($investimentos_total); ?>
+                    ],
+                    backgroundColor: [
+                        'rgba(64, 255, 198, 0.2)',
+                        'rgba(255, 204, 64, 0.2)',
+                        'rgba(255, 64, 64, 0.2)',
+                        'rgba(86, 187, 255, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgb(0, 141, 99)',
+                        'rgb(255, 220, 64)',
+                        'rgb(255, 64, 64)',
+                        'rgb(86, 187, 255)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5,
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
+            options: {
+                indexAxis: origem,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
                 },
-                x: {
-                    beginAtZero: true
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                    x: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Gráfico de despesas pagas
-    let despesas_pagas_sem_info = false;
-    <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
+        // Gráfico de despesas pagas
+        let despesas_pagas_sem_info = false;
+        <?php
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '1' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -436,50 +436,50 @@ $stmt->close();
             echo "despesas_pagas_sem_info = true;";
         }
         ?>
-    let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
-    new Chart(grafico_despesas_pagas, {
-        type: 'doughnut',
-        data: {
-            labels: <?php echo json_encode($labels); ?>,
-            datasets: [{
-                label: 'R$ ',
-                data: <?php echo json_encode($valores); ?>,
-                backgroundColor: [
-                    'rgb(165, 99, 204)',
-                    'rgb(82, 183, 136)',
-                    'rgb(251, 134, 0)',
-                    'rgb(0, 118, 182)',
-                    'rgb(255, 93, 144)',
-                ],
-                borderRadius: 5,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: '✔️ Despesas Pagas',
-                    font: {
-                        size: 18,
-                        weight: 'bold',
+        let grafico_despesas_pagas = document.getElementById('grafico-despesas-pagas').getContext('2d');
+        new Chart(grafico_despesas_pagas, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: [{
+                    label: 'R$ ',
+                    data: <?php echo json_encode($valores); ?>,
+                    backgroundColor: [
+                        'rgb(165, 99, 204)',
+                        'rgb(82, 183, 136)',
+                        'rgb(251, 134, 0)',
+                        'rgb(0, 118, 182)',
+                        'rgb(255, 93, 144)',
+                    ],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '✔️ Despesas Pagas',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
                     },
-                    padding: {
-                        top: 10,
-                        bottom: 30
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                },
+                    legend: {
+                        position: 'bottom',
+                    },
+                }
             }
-        }
-    });
+        });
 
-    // Gráfico de despesas pendentes
-    let despesas_pendentes_sem_info = false;
-    <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = 'Não Pago' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
+        // Gráfico de despesas pendentes
+        let despesas_pendentes_sem_info = false;
+        <?php
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '0' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -497,66 +497,66 @@ $stmt->close();
             echo "despesas_pendentes_sem_info = true;";
         }
         ?>
-    let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
-    new Chart(grafico_despesas_pendentes, {
-        type: 'doughnut',
-        data: {
-            labels: <?php echo json_encode($labels); ?>,
-            datasets: [{
-                label: 'R$ ',
-                data: <?php echo json_encode($valores); ?>,
-                backgroundColor: [
-                    'rgb(165, 99, 204)',
-                    'rgb(82, 183, 136)',
-                    'rgb(251, 134, 0)',
-                    'rgb(0, 118, 182)',
-                    'rgb(255, 93, 144)',
-                ],
-                borderRadius: 5,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: '❌ Despesas Pendentes',
-                    font: {
-                        size: 18,
-                        weight: 'bold',
+        let grafico_despesas_pendentes = document.getElementById('grafico-despesas-pendentes').getContext('2d');
+        new Chart(grafico_despesas_pendentes, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: [{
+                    label: 'R$ ',
+                    data: <?php echo json_encode($valores); ?>,
+                    backgroundColor: [
+                        'rgb(165, 99, 204)',
+                        'rgb(82, 183, 136)',
+                        'rgb(251, 134, 0)',
+                        'rgb(0, 118, 182)',
+                        'rgb(255, 93, 144)',
+                    ],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '❌ Despesas Pendentes',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
                     },
-                    padding: {
-                        top: 10,
-                        bottom: 30
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                },
+                    legend: {
+                        position: 'bottom',
+                    },
+                }
             }
+        });
+
+        // Escondendo os graficos de despesas caso não tenha informações e mostrando o span
+        if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
+            document.getElementById("grafico-despesas-pagas").style.display = "none";
+            document.getElementById("grafico-despesas-pendentes").style.display = "none";
+
+            document.getElementById("span-sem-despesas").style.display = "flex";
+        } else if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == false) {
+            document.getElementById("grafico-despesas-pagas").style.display = "none";
+        } else if (despesas_pagas_sem_info == false && despesas_pendentes_sem_info == true) {
+            document.getElementById("grafico-despesas-pendentes").style.display = "none";
         }
-    });
 
-    // Escondendo os graficos de despesas caso não tenha informações e mostrando o span
-    if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == true) {
-        document.getElementById("grafico-despesas-pagas").style.display = "none";
-        document.getElementById("grafico-despesas-pendentes").style.display = "none";
+        // Escondendo o grafico de analise caso não tenho informações e mostrando o span
+        if (analise_sem_info == true) {
+            document.getElementById("grafico_analise").style.display = "none";
 
-        document.getElementById("span-sem-despesas").style.display = "flex";
-    } else if (despesas_pagas_sem_info == true && despesas_pendentes_sem_info == false) {
-        document.getElementById("grafico-despesas-pagas").style.display = "none";
-    } else if (despesas_pagas_sem_info == false && despesas_pendentes_sem_info == true) {
-        document.getElementById("grafico-despesas-pendentes").style.display = "none";
-    }
+            document.getElementById("span-sem-info-analise").style.display = "flex";
+        }
 
-    // Escondendo o grafico de analise caso não tenho informações e mostrando o span
-    if (analise_sem_info == true) {
-        document.getElementById("grafico_analise").style.display = "none";
-
-        document.getElementById("span-sem-info-analise").style.display = "flex";
-    }
-
-    <?php
+        <?php
         // Verificar se é o ultimo dia do ano para gerar relatório anual
         $ultimo_dia_ano = (date('m-d') === '12-31');
 
@@ -565,26 +565,26 @@ $stmt->close();
         }
         ?>
 
-    // Ao clicar em links, exibir o loading novamente
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (event) => {
-            const href = link.getAttribute('href');
+        // Ao clicar em links, exibir o loading novamente
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (event) => {
+                const href = link.getAttribute('href');
 
-            // Ignorar links sem destino ou com atributos especiais
-            if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
-                return;
-            }
+                // Ignorar links sem destino ou com atributos especiais
+                if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+                    return;
+                }
 
-            event.preventDefault(); // Previne a navegação imediata
-            const loadingScreen = document.getElementById('loading-screen');
-            loadingScreen.style.display = 'flex';
+                event.preventDefault(); // Previne a navegação imediata
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.display = 'flex';
 
-            // Aguarda um curto período antes de redirecionar
-            setTimeout(() => {
-                window.location.href = href;
-            }, 100);
+                // Aguarda um curto período antes de redirecionar
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 100);
+            });
         });
-    });
     </script>
 </body>
 

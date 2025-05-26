@@ -48,15 +48,15 @@ $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
                         <div class="form-group">
                             <label for="frequencia">Status</label>
                             <select id="status" name="status" required>
-                                <option value="Não Pago">Não Pago</option>
-                                <option value="Pago">Pago</option>
+                                <option value="0">Pendente</option>
+                                <option value="1">Pago</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="recorrente">Recorrente</label>
                             <select id="recorrente" name="recorrente" required>
-                                <option value="Sim">Sim</option>
-                                <option value="Não">Não</option>
+                                <option value="1">Sim</option>
+                                <option value="0">Não</option>
                             </select>
                         </div>
                     </div>

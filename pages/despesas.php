@@ -56,14 +56,14 @@ $result = $stmt->get_result();
                                 echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
                                 echo "<td>
                                                 <form action='../backend/database/despesas/atualizar_status.php' method='POST'>
-                                                <input type='hidden' name='status' value='" . ($row['status'] === 'Pago' ? "Não Pago" : "Pago") . "'>
+                                                <input type='hidden' name='status' value='" . ($row['status'] == 1 ? 0 : 1) . "'>
                                                 <input type='hidden' name='id' value='" . $row['id'] . "'>
                                                 <input type='hidden' id='data' name='data' value='" . date('Y-m-d', strtotime($row['data'])) . "' required>
-                                                <button type='submit' class='btn-status' " . ($row['status'] === 'Pago' ? " id='pago'" : "") . ">" . $row['status'] . "</button>
+                                                <button type='submit' class='btn-status' " . ($row['status'] == 1 ? " id='pago'" : "") . ">" . ($row['status'] == 1 ? 'Pago' : 'Pendente') . "</button>
                                                 </form>
                                                 </td>";
-                                echo "<td>" . $row['recorrente'] . "</td>";
-                                echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
+                                echo "<td>" . ($row['recorrente'] == 1 ? 'Sim' : 'Não') . "</td>";
+                                echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>";
                                 echo "
                                         <td>
                                             <form action='editar/despesa.php' method='POST'>

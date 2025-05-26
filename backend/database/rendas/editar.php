@@ -6,14 +6,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $descricao = $_POST['descricao'];
     $valor = $_POST['valor'];
     $recorrente = $_POST['recorrente'];
-    $data = $_POST['data']; // Capturar a data enviada pelo formulário
+    $data = $_POST['data'];
     $user_id = $_SESSION['id'];
     $id = $_POST['id'];
 
     // Verifica se os campos estão preenchidos
-    if (empty($descricao) || empty($valor) || empty($recorrente) || empty($data)) {
+    if (
+        trim($descricao) === '' ||
+        trim($recorrente) === '' ||
+        trim($data) === ''
+    ) {
         $_SESSION['resposta'] = "Preencha todos os campos obrigatórios.";
-        header("Location: ../../../pages/editar/renda.php?id=$user_id");
+        header("Location: ../../../pages/rendas.php");
         exit();
     }
 

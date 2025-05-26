@@ -97,17 +97,20 @@ td form {
 
 .btn-status {
     padding: .5em;
-    background-color: rgb(151, 14, 14);
-    color: #fff;
-    border: none;
-    border-radius: 1em;
+    background-color: #fff6cc;
+    border: 2px solid #fdc500;
+    color: #fdc500;
+    border-radius: 1.5em;
     text-align: center;
+    font-weight: bold;
     width: 100%;
     cursor: pointer;
 }
 
 #pago {
-    background-color: green;
+    background-color: #b7e4c7;
+    border: 2px solid #52b788;
+    color: #52b788;
 }
 
 .btn-edit,

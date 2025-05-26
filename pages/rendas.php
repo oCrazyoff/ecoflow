@@ -53,7 +53,7 @@ $result = $stmt->get_result();
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
                             echo "<td>R$ " . number_format($row['valor'], 2, ',', '.') . "</td>";
-                            echo "<td>" . $row['recorrente'] . "</td>";
+                            echo "<td>" . ($row['recorrente'] == 1 ? 'Sim' : 'Não') . "</td>";
                             echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
                             echo "
                         <td>

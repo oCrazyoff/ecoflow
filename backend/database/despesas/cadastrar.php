@@ -11,9 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_SESSION['id'];
 
     // Verifica se os campos estão preenchidos
-    if (empty($descricao) || empty($valor) || empty($status) || empty($recorrente) || empty($data)) {
+    if (
+        trim($descricao) === '' ||
+        trim($status) === '' ||
+        trim($recorrente) === '' ||
+        trim($data) === ''
+    ) {
         $_SESSION['resposta'] = "Preencha todos os campos obrigatórios.";
-        header("Location: ../../../pages/cadastro/despesa.php");
+        header("Location: ../../../pages/despesas.php");
         exit();
     }
 

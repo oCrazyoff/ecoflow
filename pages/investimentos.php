@@ -63,7 +63,7 @@ $result = $stmt->get_result();
                             echo "<td>" . htmlspecialchars($row['tipo']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
                             echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
-                            echo "<td>" . $row['recorrente'] . "</td>";
+                            echo "<td>" . ($row['recorrente'] == 1 ? 'Sim' : 'Não') . "</td>";
                             echo "<td>" . $data . "</td>"; // Exibir a data formatada
                             echo "
                         <td>

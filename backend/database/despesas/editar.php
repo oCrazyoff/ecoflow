@@ -11,12 +11,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_id = $_SESSION['id'];
     $id = $_POST['id'];
 
+    // var_dump($descricao, $valor, $status, $recorrente, $data, $user_id, $id);
+    // die;
+
     // Verifica se os campos estão preenchidos
-    if (empty($descricao) || empty($valor) || empty($status) || empty($recorrente) || empty($data)) {
+    if (
+        trim($descricao) === '' ||
+        trim($status) === '' ||
+        trim($recorrente) === '' ||
+        trim($data) === ''
+    ) {
         $_SESSION['resposta'] = "Preencha todos os campos obrigatórios.";
-        header("Location: ../../../pages/editar/despesa.php?id=$id");
+        header("Location: ../../../pages/despesas.php");
         exit();
     }
+
 
     // Atualiza a despesa no banco de dados
     $sql = "UPDATE despesas SET descricao = ?, valor = ?, status = ?, recorrente = ?, data = ? WHERE id = ? AND user_id = ?";
