@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
+    /* outline: 1px solid red; */
 }
 
 html {
@@ -13,6 +14,16 @@ body {
     display: flex;
     height: 100vh;
     background-color: #f8f8f8;
+}
+
+:root {
+    --padding-menor: .5rem;
+    --padding-padrao: 1rem;
+    --padding-maior: 2rem;
+    --font-size-padrao: 1.5rem;
+    --font-size-titulo: 2rem;
+    --border-radius-padrao: 1rem;
+    --border-radius-maior: 2rem;
 }
 
 .main-content {

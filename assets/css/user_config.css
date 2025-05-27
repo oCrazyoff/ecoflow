@@ -5,7 +5,7 @@
     align-items: center;
 
     & h1 {
-        font-size: 2rem;
+        font-size: var(--font-size-titulo);
         width: 100%;
     }
 }
@@ -15,13 +15,13 @@ form {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    padding: 2rem;
+    padding: var(--padding-maior);
     background-color: #fff;
-    border-radius: 1rem;
+    border-radius: var(--border-radius-padrao);
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 
     & h2 {
-        font-size: 1.5rem;
+        font-size: var(--font-size-padrao);
         margin-bottom: .5rem;
     }
 
@@ -38,12 +38,12 @@ form {
     & .input-group {
         display: flex;
         flex-direction: column;
-        font-size: 1.5rem;
+        font-size: var(--font-size-padrao);
         gap: .5rem;
 
         & input {
-            padding: 1rem;
-            border-radius: 1rem;
+            padding: var(--padding-padrao);
+            border-radius: var(--border-radius-padrao);
             border: none;
             box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         }
@@ -56,13 +56,14 @@ form {
     }
 
     & button {
-        padding: 1rem;
-        border-radius: .5rem;
+        padding: var(--padding-padrao);
+        border-radius: var(--border-radius-padrao);
         font-weight: bold;
         background-color: #218380;
         color: #fff;
         border: none;
         cursor: pointer;
+        font-size: var(--font-size-padrao);
         transition: .3s ease all;
 
         &:hover {
@@ -76,28 +77,31 @@ form {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    padding: 2rem;
+    padding: var(--padding-maior);
     background-color: #fff;
-    border-radius: 1rem;
-    font-size: 1.5rem;
+    border-radius: var(--border-radius-padrao);
+    font-size: var(--font-size-padrao);
     box-shadow: rgba(255, 0, 0, 0.02) 0px 1px 3px 0px, rgba(255, 0, 0, 0.341) 0px 0px 0px 1px;
 
     & h2 {
+        font-size: var(--font-size-titulo);
         color: #c1121f;
     }
 
     & p {
         color: #000000ab;
+        font-size: var(--font-size-padrao);
     }
 
     & a {
-        padding: .8rem;
-        border-radius: .5rem;
+        padding: var(--padding-padrao);
+        border-radius: var(--border-radius-padrao);
         font-weight: bold;
         background-color: #c1121f;
         color: #fff;
         text-decoration: none;
         width: max-content;
+        font-size: var(--font-size-padrao);
         cursor: pointer;
         transition: .3s ease all;
 
