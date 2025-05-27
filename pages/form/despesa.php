@@ -33,14 +33,14 @@ if (isset($_GET['editar']) && isset($_GET['id'])) {
 }
 ?>
 
-<div id="overlay"></div>
+<div id="overlay" onclick="window.location.href = window.location.pathname"></div>
 <div class="form-container" id="form-alert">
     <h2><?php echo htmlspecialchars($botao) ?> Despesa</h2>
     <p>Preencha os dados abaixo para <?php echo strtolower(htmlspecialchars($botao)) ?> uma despesa.</p>
 
     <form action="../backend/database/despesas/<?php echo $action ?>" method="POST">
         <?php if ($id_editar): ?>
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($id_editar) ?>">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($id_editar) ?>">
         <?php endif; ?>
         <div class="top-form">
             <div class="form-group">
@@ -82,21 +82,21 @@ if (isset($_GET['editar']) && isset($_GET['id'])) {
 </div>
 
 <script>
-function abrirForm() {
-    const form = document.getElementById('form-alert');
-    const overlay = document.getElementById('overlay');
-    form.style.display = 'block';
-    overlay.style.display = 'block';
-}
+    function abrirForm() {
+        const form = document.getElementById('form-alert');
+        const overlay = document.getElementById('overlay');
+        form.style.display = 'block';
+        overlay.style.display = 'block';
+    }
 
-function fecharForm() {
-    const form = document.getElementById('form-alert');
-    const overlay = document.getElementById('overlay');
-    form.style.display = 'none';
-    overlay.style.display = 'none';
-}
+    function fecharForm() {
+        const form = document.getElementById('form-alert');
+        const overlay = document.getElementById('overlay');
+        form.style.display = 'none';
+        overlay.style.display = 'none';
+    }
 
-<?php
+    <?php
     if (isset($_GET['editar']) && isset($_GET['id'])) {
         echo 'abrirForm();';
     }

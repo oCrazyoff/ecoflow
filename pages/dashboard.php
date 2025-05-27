@@ -215,6 +215,7 @@ $stmt->close();
                     </div>
                 </a>
             </div>
+
             <div class="container-graficos">
                 <div class="container-esquerda">
                     <div class="card">
@@ -225,8 +226,12 @@ $stmt->close();
                     <div class="card">
                         <h3>Distribuição de Despesas</h3>
                         <div class="container-graficos-despesas">
-                            <canvas id="grafico-despesas-pagas"></canvas>
-                            <canvas id="grafico-despesas-pendentes"></canvas>
+                            <div class="pagas">
+                                <canvas id="grafico-despesas-pagas"></canvas>
+                            </div>
+                            <div class="pendentes">
+                                <canvas id="grafico-despesas-pendentes"></canvas>
+                            </div>
                             <span id="span-sem-despesas">Sem despesas ✅</span>
                         </div>
                     </div>
