@@ -20,19 +20,20 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Investimentos</title>
     <link rel="stylesheet" href="../assets/css/tabela.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/form.css?v=<?php echo time(); ?>">
     <?php include("../backend/includes/head.php") ?>
 </head>
 
 <body>
     <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
+    <?php include("form/investimento.php") ?>
     <div class="main-content">
         <div class="titulo">
             <h2>Investimentos</h2>
             <div class="btn-container">
                 <?php include("../backend/includes/seletor_data.php") ?>
-                <a href="cadastro/investimento.php" class="btn"><i class="bi bi-plus-circle"></i> Novo
-                    Invesimento</a>
+                <a onclick="abrirForm()" class="btn"><i class="bi bi-plus-circle"></i> Novo Invesimento</a>
             </div>
         </div>
         <div class="container-table">
@@ -45,7 +46,7 @@ $result = $stmt->get_result();
                             <th>Nome</th>
                             <th>Custo</th>
                             <th>Recorrente</th>
-                            <th>Data</th> <!-- Nova coluna -->
+                            <th>Data</th>
                             <th colspan="2">Ações</th>
                         </tr>
                     </thead>
@@ -64,10 +65,11 @@ $result = $stmt->get_result();
                             echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
                             echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
                             echo "<td>" . ($row['recorrente'] == 1 ? 'Sim' : 'Não') . "</td>";
-                            echo "<td>" . $data . "</td>"; // Exibir a data formatada
+                            echo "<td>" . $data . "</td>";
                             echo "
                         <td>
-                            <form action='editar/investimento.php' method='POST'>
+                            <form method='GET'>
+                                <input type='hidden' name='editar' value='1'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>

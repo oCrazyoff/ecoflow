@@ -1,100 +1,86 @@
-h2 {
-    color: #218380;
-    margin-bottom: 1em;
-    font-size: 3em;
-    text-align: center;
-}
-
-#btn-voltar {
-    padding: .2em .5em;
-    background-color: #218380;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: .2s ease all;
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    font-size: 1.5em;
-}
-
-#btn-voltar:hover {
-    background-color: #1c6b63;
+#overlay {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #000000b4;
+    z-index: 850;
 }
 
 .form-container {
-    margin: 0 auto;
-    width: 100%;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35em;
+    z-index: 900;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    padding: 1.5em;
+    border-radius: 1em;
+}
+
+.form-container p {
+    color: #333;
 }
 
 .form-container .top-form {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     gap: 1em;
+    margin-top: 1em;
 }
 
-.card {
-    width: 100%;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
-    color: #218380;
-    margin-bottom: 1em;
-}
-
-.form-group {
-    margin-bottom: 1.5em;
-}
-
-.form-group label {
-    display: block;
+.form-container .form-group label {
     margin-bottom: 0.5em;
     color: #333;
 }
 
-.form-group input,
-.form-group select {
+.form-container .form-group input,
+.form-container .form-group select {
     width: 100%;
-    padding: 0.8em;
+    padding: 0.5em;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
 }
 
-.container-btn {
+.form-container .container-btn {
     display: flex;
     justify-content: right;
     margin-top: 1em;
+    gap: .5em;
 }
 
-button[type="submit"] {
+.form-container button[type="submit"],
+#btn-cancelar {
     padding: .5em 1em;
     background-color: #218380;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: .5em;
     cursor: pointer;
-    font-size: 1.2em;
+    font-size: 1em;
     transition: 0.3s ease all;
 }
 
-button[type="submit"]:hover {
+.form-container button[type="submit"]:hover {
     background-color: #1c6b63;
 }
 
-@media screen and (max-width: 768px) {
-    #btn-voltar {
-        top: 8%;
-    }
+#btn-cancelar {
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    color: #000;
+}
 
-    h2 {
-        font-size: 2em;
-        margin-top: 1.5em;
+#btn-cancelar:hover {
+    background-color: #cfcfcf;
+}
+
+@media screen and (max-width: 768px) {
+    .form-container {
+        width: 90%;
     }
 }

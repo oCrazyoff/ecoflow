@@ -20,18 +20,20 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Flow | Rendas</title>
     <link rel="stylesheet" href="../assets/css/tabela.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/form.css?v=<?php echo time(); ?>">
     <?php include("../backend/includes/head.php") ?>
 </head>
 
 <body>
     <?php include("../backend/includes/loading.php") ?>
     <?php include("../backend/includes/menu.php") ?>
+    <?php include("form/renda.php") ?>
     <div class="main-content">
         <div class="titulo">
             <h2>Rendas</h2>
             <div class="btn-container">
                 <?php include("../backend/includes/seletor_data.php") ?>
-                <a href="cadastro/renda.php" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
+                <a onclick="abrirForm()" class="btn"><i class="bi bi-plus-circle"></i> Nova Renda</a>
             </div>
         </div>
         <div class="container-table">
@@ -57,7 +59,8 @@ $result = $stmt->get_result();
                             echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>"; // Exibir a data formatada
                             echo "
                         <td>
-                            <form action='editar/renda.php' method='POST'>
+                            <form method='GET'>
+                                <input type='hidden' name='editar' value='1'>
                                 <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
                                 <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>
