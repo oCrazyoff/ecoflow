@@ -25,7 +25,7 @@ body {
 #erro {
     position: fixed;
     bottom: -100%;
-    right: 0%;
+    left: 80%;
     width: max-content;
     background-color: #fff;
     transform: translate(-50%, -50%);
@@ -94,6 +94,6 @@ body {
 
     /* div erro */
     #erro {
-        right: -25%;
+        left: 50%;
     }
 }
