@@ -26,7 +26,7 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">

@@ -476,6 +476,10 @@ $stmt->close();
                     },
                     legend: {
                         position: 'bottom',
+                        labels: {
+                            boxWidth: 10,
+                            boxHeight: 10,
+                        }
                     },
                 }
             }
@@ -537,6 +541,10 @@ $stmt->close();
                     },
                     legend: {
                         position: 'bottom',
+                        labels: {
+                            boxWidth: 10,
+                            boxHeight: 10,
+                        }
                     },
                 }
             }
