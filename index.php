@@ -147,7 +147,8 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
                         <p>Visão geral de maio 2024</p>
                     </div>
                 </div>
-                <img src="assets/img/grafico.png" alt="Gráfico">
+                <!-- Substitua a imagem pelo canvas do gráfico -->
+                <canvas id="graficoDespesas" width="300" height="300"></canvas>
                 <div class="info-grafico">
                     <div class="info"><i class="bi bi-circle-fill" style="color: #0077b6;"></i>Rendas</div>
                     <div class="info"><i class="bi bi-circle-fill" style="color: #d00000;"></i>Despesas</div>
@@ -183,6 +184,31 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['user_id'])) {
             </div>
         </div>
     </footer>
+    <script>
+        const ctx = document.getElementById('graficoDespesas').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Rendas', 'Despesas', 'Investimentos'],
+                datasets: [{
+                    data: [40, 45, 15], // Exemplo de valores
+                    backgroundColor: [
+                        '#0077b6',
+                        '#d00000',
+                        '#ffba08'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false // Esconde a legenda padrão
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

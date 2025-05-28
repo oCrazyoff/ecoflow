@@ -34,7 +34,6 @@ header {
     left: 0;
     width: 100%;
     height: 5rem;
-    padding: 1rem 0;
     z-index: 700;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
@@ -58,7 +57,7 @@ header {
 
     & p {
         text-align: center;
-        font-size: 1.5rem;
+        font-size: var(--font-size-padrao);
         font-weight: bold;
         color: #318d99;
         font-family: "Bruno Ace SC", sans-serif;
@@ -90,7 +89,7 @@ header {
         color: #fff;
         border: 2px solid #318d99;
         border-radius: .5rem;
-        padding: .5rem;
+        padding: var(--padding-padrao);
 
         &:hover {
             background-color: #246a73;
@@ -102,7 +101,7 @@ header {
         background-color: #fff;
         color: #000;
         border-radius: .5rem;
-        padding: .5rem;
+        padding: var(--padding-padrao);
 
         &:hover {
             background-color: #cecece;
@@ -144,12 +143,12 @@ header {
     }
 
     & h1 {
-        font-size: 3rem;
+        font-size: var(--font-size-titulo);
         color: #fff;
     }
 
     & p {
-        font-size: 1.2rem;
+        font-size: var(--font-size-padrao);
         color: #fff;
     }
 
@@ -157,8 +156,8 @@ header {
         text-decoration: none;
         color: #246a73;
         background-color: #fff;
-        padding: .5rem;
-        font-size: 1.2rem;
+        padding: var(--padding-padrao);
+        font-size: var(--font-size-padrao);
         border-radius: .5rem;
         width: fit-content;
         transition: .2s ease all;
@@ -189,14 +188,14 @@ header {
 
         & h2 {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: var(--font-size-titulo);
             font-weight: bold;
         }
 
         & p {
             text-align: center;
             color: #252525;
-            font-size: 1.5rem;
+            font-size: var(--font-size-padrao);
             width: 65%;
             margin-top: 1rem;
         }
@@ -216,7 +215,7 @@ header {
         flex-direction: column;
         justify-content: center;
         gap: .5rem;
-        padding: 1.5rem;
+        padding: var(--padding-maior);
         width: auto;
         height: 15rem;
         background-color: #fff;
@@ -224,11 +223,11 @@ header {
         overflow: hidden;
 
         & i {
-            font-size: 1.5rem;
+            font-size: var(--font-size-padrao);
             width: min-content;
             color: #145553;
             background-color: #318d993a;
-            padding: .5rem;
+            padding: var(--padding-padrao);
             border-radius: .5rem;
         }
 
@@ -239,13 +238,13 @@ header {
         }
 
         & h3 {
-            font-size: 1.5rem;
+            font-size: var(--font-size-padrao);
             margin-top: .5rem;
             color: #246a73;
         }
 
         & p {
-            font-size: 1rem;
+            font-size: var(--font-size-padrao);
         }
     }
 }
@@ -274,12 +273,12 @@ header {
             color: #145553;
             width: max-content;
             background-color: #318d993a;
-            padding: .5rem;
+            padding: var(--padding-padrao);
             border-radius: .5rem;
         }
 
         & h3 {
-            font-size: 2rem;
+            font-size: var(--font-size-titulo);
         }
     }
 
@@ -293,11 +292,11 @@ header {
             gap: .5rem;
 
             & i {
-                font-size: 1.5rem;
+                font-size: var(--font-size-padrao);
                 color: #017f34;
                 height: min-content;
                 background-color: #3199593a;
-                padding: .3rem;
+                padding: var(--padding-padrao);
                 border-radius: .5rem;
             }
 
@@ -305,7 +304,7 @@ header {
                 background-color: transparent;
                 padding: 0;
                 color: #000;
-                font-size: 1.3rem;
+                font-size: var(--font-size-padrao);
             }
 
             & p {
@@ -313,7 +312,7 @@ header {
                 padding: 0;
                 color: #676767;
                 width: 100%;
-                font-size: 1rem;
+                font-size: var(--font-size-padrao);
             }
         }
     }
@@ -324,7 +323,7 @@ header {
         justify-content: center;
         align-items: center;
         background-color: #fff;
-        padding: 1.5rem .5rem;
+        padding: var(--padding-maior);
         border-radius: .5rem;
         width: 40%;
         gap: 1rem;
@@ -335,18 +334,18 @@ header {
 
             & i {
                 color: #318d99;
-                font-size: 3rem;
+                font-size: var(--font-size-titulo);
             }
 
             & .titulo {
-                font-size: 2rem;
+                font-size: var(--font-size-titulo);
                 font-weight: 600;
                 color: #000;
             }
 
             & p {
                 color: #676767;
-                font-size: 1.3rem;
+                font-size: var(--font-size-padrao);
             }
         }
 
@@ -376,8 +375,8 @@ footer {
     color: #fff;
     background-color: #212529;
     width: 100%;
-    padding: 4rem 0 2rem;
-    font-size: 1.4rem;
+    padding: var(--padding-maior) 0;
+    font-size: var(--font-size-padrao);
 
     & .footer-content {
         display: flex;
@@ -392,7 +391,7 @@ footer {
 
         & .footer-left {
             & h3 {
-                font-size: 2.4rem;
+                font-size: var(--font-size-titulo);
                 margin-bottom: 1rem;
                 color: #318d99;
             }
@@ -400,7 +399,7 @@ footer {
 
         & .footer-links h4,
         .footer-contact h4 {
-            font-size: 1.8rem;
+            font-size: var(--font-size-titulo);
             margin-bottom: 1rem;
             color: #318d99;
         }
@@ -437,8 +436,8 @@ footer {
     & .footer-bottom {
         text-align: center;
         border-top: 1px solid #444;
-        padding-top: 15px;
-        font-size: 13px;
+        padding-top: var(--padding-padrao);
+        font-size: var(--font-size-padrao);
         color: #aaa;
     }
 }
@@ -456,7 +455,7 @@ footer {
     /* header */
     header {
         width: 100%;
-        padding: .8rem 1rem;
+        padding: var(--padding-padrao) 0;
         height: auto;
 
         & .interface {
@@ -465,7 +464,7 @@ footer {
         }
 
         & p {
-            font-size: 1rem;
+            font-size: var(--font-size-padrao);
         }
 
         & img {
@@ -475,7 +474,7 @@ footer {
 
         & #btn-login,
         #btn-cadastro {
-            font-size: .7rem;
+            font-size: var(--font-size-padrao);
         }
 
         & nav {
@@ -500,19 +499,19 @@ footer {
         }
 
         & h1 {
-            font-size: 2rem;
+            font-size: var(--font-size-titulo);
             text-align: center;
         }
 
         & p {
-            font-size: 1rem;
+            font-size: var(--font-size-padrao);
             text-align: center;
         }
 
         & a {
             width: 100%;
             text-align: center;
-            font-size: 1rem;
+            font-size: var(--font-size-padrao);
         }
 
         & .left,
@@ -532,11 +531,11 @@ footer {
     #beneficios {
         & .txt-container {
             & h2 {
-                font-size: 2rem;
+                font-size: var(--font-size-titulo);
             }
 
             & p {
-                font-size: 1rem;
+                font-size: var(--font-size-padrao);
                 width: 100%;
             }
         }
@@ -584,7 +583,7 @@ footer {
             }
 
             & h3 {
-                font-size: 1.5rem;
+                font-size: var(--font-size-titulo);
                 text-align: center;
             }
         }
@@ -598,16 +597,16 @@ footer {
                 justify-content: center;
 
                 & .titulo {
-                    font-size: 1.3rem;
+                    font-size: var(--font-size-titulo);
                     font-weight: 600;
                 }
 
                 & p {
-                    font-size: 1rem;
+                    font-size: var(--font-size-padrao);
                 }
 
                 & i {
-                    font-size: 2rem;
+                    font-size: var(--font-size-titulo);
                 }
             }
 
