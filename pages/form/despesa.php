@@ -42,6 +42,7 @@ if (isset($_GET['editar']) && isset($_GET['id'])) {
         <?php if ($id_editar): ?>
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($id_editar) ?>">
         <?php endif; ?>
+        <input type="hidden" name="mes" value="<?= htmlspecialchars($_GET['mes']) ?>">
         <div class="top-form">
             <div class="form-group">
                 <label for="descricao">Descrição</label>

@@ -3,7 +3,7 @@ require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 
 $user_id = $_SESSION['id'];
-$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
+$mes_selecionado = isset($_GET['mes']) ? (int)$_GET['mes'] : (int)date('n');
 
 // Verifica se é janeiro para deletar informações do ano anterior
 if (date('n') == 1) {
@@ -111,7 +111,7 @@ while ($row = $result_verificar->fetch_assoc()) {
 }
 
 // Renda total
-$sql = "SELECT SUM(valor) FROM rendas WHERE user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(valor) FROM rendas WHERE user_id = ? AND (MONTH(data) = $mes_selecionado)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -120,7 +120,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Despesas pagas total
-$sql = "SELECT SUM(valor) FROM despesas WHERE status = '1' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = '1' AND user_id = ? AND (MONTH(data) = $mes_selecionado)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -129,7 +129,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Despesas não pagas total
-$sql = "SELECT SUM(valor) FROM despesas WHERE status = '0' AND user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(valor) FROM despesas WHERE status = '0' AND user_id = ? AND (MONTH(data) = $mes_selecionado)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -138,7 +138,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Investimentos total
-$sql = "SELECT SUM(custo) FROM investimentos WHERE user_id = ? AND (MONTH(data) = $selectedMonth)";
+$sql = "SELECT SUM(custo) FROM investimentos WHERE user_id = ? AND (MONTH(data) = $mes_selecionado)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -175,7 +175,7 @@ $stmt->close();
 
         <div class="container-dash">
             <div class="cards">
-                <a href="rendas.php">
+                <a href="rendas.php?mes=<?= htmlspecialchars($mes_selecionado) ?>">
                     <div class="card">
                         <span><i class="bi bi-wallet"></i></span>
                         <h3>Total de Rendas</h3>
@@ -184,7 +184,7 @@ $stmt->close();
                     </div>
                 </a>
 
-                <a href="despesas.php">
+                <a href="despesas.php?mes=<?= htmlspecialchars($mes_selecionado) ?>">
                     <div class="card">
                         <span><i class="bi bi-graph-down-arrow"></i></span>
                         <h3>Despesas Pagas</h3>
@@ -195,7 +195,7 @@ $stmt->close();
                     </div>
                 </a>
 
-                <a href="despesas.php">
+                <a href="despesas.php?mes=<?= htmlspecialchars($mes_selecionado) ?>">
                     <div class="card" id="pendentes">
                         <span><i class="bi bi-currency-dollar"></i></span>
                         <h3>Despesas Não Pagas</h3>
@@ -205,7 +205,7 @@ $stmt->close();
                     </div>
                 </a>
 
-                <a href="investimentos.php">
+                <a href="investimentos.php?mes=<?= htmlspecialchars($mes_selecionado) ?>">
                     <div class="card">
                         <span><i class="bi bi-graph-up-arrow"></i></span>
                         <h3>Investimentos</h3>
@@ -244,7 +244,7 @@ $stmt->close();
                         <?php
                         $sem_info_renda = false;
 
-                        $sql_rendas = "SELECT descricao, valor, data FROM rendas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
+                        $sql_rendas = "SELECT descricao, valor, data FROM rendas WHERE user_id = ? AND (MONTH(data) = $mes_selecionado) ORDER BY valor DESC LIMIT 3";
                         $stmt_rendas = $conn->prepare($sql_rendas);
                         $stmt_rendas->bind_param("i", $user_id);
                         $stmt_rendas->execute();
@@ -274,7 +274,7 @@ $stmt->close();
                         <?php
                         $sem_info_despesa = false;
 
-                        $sql_despesas = "SELECT descricao, valor, status, data FROM despesas WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY valor DESC LIMIT 3";
+                        $sql_despesas = "SELECT descricao, valor, status, data FROM despesas WHERE user_id = ? AND (MONTH(data) = $mes_selecionado) ORDER BY valor DESC LIMIT 3";
                         $stmt_despesas = $conn->prepare($sql_despesas);
                         $stmt_despesas->bind_param("i", $user_id);
                         $stmt_despesas->execute();
@@ -310,7 +310,7 @@ $stmt->close();
                         <?php
                         $sem_info_investimento = false;
 
-                        $sql_investimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = ? AND (MONTH(data) = $selectedMonth) ORDER BY custo DESC LIMIT 3";
+                        $sql_investimentos = "SELECT nome, custo, tipo FROM investimentos WHERE user_id = ? AND (MONTH(data) = $mes_selecionado) ORDER BY custo DESC LIMIT 3";
                         $stmt_investimentos = $conn->prepare($sql_investimentos);
                         $stmt_investimentos->bind_param("i", $user_id);
                         $stmt_investimentos->execute();
@@ -423,7 +423,7 @@ $stmt->close();
         // Gráfico de despesas pagas
         let despesas_pagas_sem_info = false;
         <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '1' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '1' AND MONTH(data) = $mes_selecionado ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
@@ -488,7 +488,7 @@ $stmt->close();
         // Gráfico de despesas pendentes
         let despesas_pendentes_sem_info = false;
         <?php
-        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '0' AND MONTH(data) = $selectedMonth ORDER BY valor DESC LIMIT 5";
+        $sql = "SELECT descricao, valor FROM despesas WHERE user_id = ? AND status = '0' AND MONTH(data) = $mes_selecionado ORDER BY valor DESC LIMIT 5";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();

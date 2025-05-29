@@ -6,6 +6,8 @@ if (!defined('BASE_URL')) {
         define('BASE_URL', '/');
     }
 }
+
+$mes_selecionado = isset($_GET['mes']) ? (int)$_GET['mes'] : (int)date('n');
 ?>
 <link rel="stylesheet" href="<?php echo BASE_URL ?>assets/css/menu.css?v=<?php echo time(); ?>">
 <div class="overlay"></div>
@@ -20,16 +22,20 @@ if (!defined('BASE_URL')) {
             <button id="btn-menu" onclick="toggleSidebar()"><i class="bi bi-chevron-left"></i></button>
         </div>
         <nav>
-            <a href="<?php echo BASE_URL ?>pages/dashboard.php"><i class="bi-grid"></i>
+            <a href="<?php echo BASE_URL ?>pages/dashboard.php?mes=<?= htmlspecialchars($mes_selecionado) ?>"><i
+                    class="bi-grid"></i>
                 <p>Dashboard</p>
             </a>
-            <a href="<?php echo BASE_URL ?>pages/rendas.php"><i class="bi bi-graph-up-arrow"></i>
+            <a href="<?php echo BASE_URL ?>pages/rendas.php?mes=<?= htmlspecialchars($mes_selecionado) ?>"><i
+                    class="bi bi-graph-up-arrow"></i>
                 <p>Rendas</p>
             </a>
-            <a href="<?php echo BASE_URL ?>pages/despesas.php"><i class="bi bi-cash-stack"></i>
+            <a href="<?php echo BASE_URL ?>pages/despesas.php?mes=<?= htmlspecialchars($mes_selecionado) ?>"><i
+                    class="bi bi-cash-stack"></i>
                 <p>Despesas</p>
             </a>
-            <a href="<?php echo BASE_URL ?>pages/investimentos.php"><i class="bi bi-bank"></i>
+            <a href="<?php echo BASE_URL ?>pages/investimentos.php?mes=<?= htmlspecialchars($mes_selecionado) ?>"><i
+                    class="bi bi-bank"></i>
                 <p>Investimentos</p>
             </a>
         </nav>

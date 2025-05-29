@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../assets/css/seletor_data.css?v=<?php echo time(); ?>">
 <div class="data-container">
-    <button id="monthButton"></button>
-    <ul id="monthList">
+    <button id="botao_mes"></button>
+    <ul id="lista_meses">
         <?php
 
         $meses = [
@@ -29,14 +29,14 @@
                     ORDER BY mes;
                     ";
 
-        $result_meses = $conn->query($sql_meses);
+        $resultado_meses = $conn->query($sql_meses);
 
         // Verifica e exibe os meses encontrados
-        if ($result_meses && $result_meses->num_rows > 0) {
-            while ($row_meses = $result_meses->fetch_assoc()) {
-                $mes = (int)$row_meses['mes'];
-                $classe = ($mes === $selectedMonth - 1) ? ' class="selected"' : '';
-                echo "<li data-month=\"$mes\"$classe>{$meses[$mes]}</li>";
+        if ($resultado_meses && $resultado_meses->num_rows > 0) {
+            while ($linha_meses = $resultado_meses->fetch_assoc()) {
+                $mes = (int)$linha_meses['mes'];
+                $classe = ($mes === $mes_selecionado - 1) ? ' class="selecionado"' : '';
+                echo "<li data-mes=\"$mes\"$classe>{$meses[$mes]}</li>";
             }
         } else {
             echo "<li style='color: gray;'>Nenhum mês encontrado</li>";
@@ -46,49 +46,41 @@
 
 </div>
 <script defer>
-    const phpSelectedMonth = <?php echo $selectedMonth - 1; ?>;
-    // Obter o mês atual
-    const monthNames = [
+    const mes_selecionado_php = <?php echo $mes_selecionado - 1; ?>;
+    const nomes_meses = [
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     ];
 
-    // Verificar se o parâmetro 'month' está presente na URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedMonth = urlParams.has('month') ? parseInt(urlParams.get('month')) : phpSelectedMonth;
+    const parametros_url = new URLSearchParams(window.location.search);
+    const mes_selecionado = parametros_url.has('mes') ? parseInt(parametros_url.get('mes')) : mes_selecionado_php;
 
-    const monthButton = document.getElementById('monthButton');
-    const monthList = document.getElementById('monthList');
-    const monthItems = monthList.querySelectorAll('li');
+    const botao_mes = document.getElementById('botao_mes');
+    const lista_meses = document.getElementById('lista_meses');
+    const itens_meses = lista_meses.querySelectorAll('li');
 
-    // Exibir o mês selecionado no botão
-    monthButton.innerHTML =
-        `<i class="bi bi-caret-down-fill"></i> ${monthNames[phpSelectedMonth]}`;
+    botao_mes.innerHTML =
+        `<i class="bi bi-caret-down-fill"></i> ${nomes_meses[mes_selecionado_php]}`;
 
-
-    // Alternar a exibição da lista de meses ao clicar no botão
-    monthButton.addEventListener('click', () => {
-        monthList.style.display = monthList.style.display === 'none' ? 'block' : 'none';
+    botao_mes.addEventListener('click', () => {
+        lista_meses.style.display = lista_meses.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Fechar a lista ao clicar fora dela
-    document.addEventListener('click', (event) => {
-        if (!monthButton.contains(event.target) && !monthList.contains(event.target)) {
-            monthList.style.display = 'none';
+    document.addEventListener('click', (evento) => {
+        if (!botao_mes.contains(evento.target) && !lista_meses.contains(evento.target)) {
+            lista_meses.style.display = 'none';
         }
     });
 
-    // Tornar os itens da lista clicáveis e enviar o mês selecionado ao backend
-    monthItems.forEach((item) => {
+    itens_meses.forEach((item) => {
         item.addEventListener('click', () => {
-            const selectedMonth = item.getAttribute('data-month');
-            monthButton.innerHTML =
-                `<i class="bi bi-caret-down-fill"></i> ${monthNames[selectedMonth]}`;
-            monthList.style.display = 'none';
+            const mes_selecionado = item.getAttribute('data-mes');
+            botao_mes.innerHTML =
+                `<i class="bi bi-caret-down-fill"></i> ${nomes_meses[mes_selecionado]}`;
+            lista_meses.style.display = 'none';
 
-            // Atualizar a página com o mês selecionado
             const url = new URL(window.location.href);
-            url.searchParams.set('month', parseInt(selectedMonth) + 1); // Ajuste para PHP
+            url.searchParams.set('mes', parseInt(mes_selecionado) + 1);
             window.location.href = url.toString();
         });
     });

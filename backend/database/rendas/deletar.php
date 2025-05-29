@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
     $descricao = $_POST['descricao'];
     $user_id = $_SESSION['id'];
+    $mes = $_POST['mes'];
 
     $mes_anterior = (date('m') == '01' ? 12 : date('m') - 1);
 
@@ -39,4 +40,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['resposta'] = "Método de requisição inválido.";
 }
 
-header("Location: ../../../pages/rendas.php");
+header("Location: ../../../pages/rendas.php?mes=$mes");

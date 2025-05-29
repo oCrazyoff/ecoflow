@@ -2,12 +2,12 @@
 require_once("../backend/includes/valida.php");
 require_once("../backend/config/database.php");
 // Capturar o mês selecionado na URL ou usar o mês atual como padrão
-$selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
+$mes_selecionado = isset($_GET['mes']) ? (int)$_GET['mes'] : (int)date('n');
 
 // Atualizar a consulta para filtrar investimentos pelo mês selecionado
 $sql = "SELECT * FROM investimentos WHERE user_id = ? AND (MONTH(data) = ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $_SESSION['id'], $selectedMonth);
+$stmt->bind_param("ii", $_SESSION['id'], $mes_selecionado);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -53,32 +53,27 @@ $result = $stmt->get_result();
                     <tbody>
                         <?php
                         while ($row = $result->fetch_assoc()) {
-                            // Formatar a data
-                            if (empty($row['data'])) {
-                                $data = '-';
-                            } else {
-                                $data = DateTime::createFromFormat('Y-m-d', $row['data'])->format('d/m/Y');
-                            }
-
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row['tipo']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
                             echo "<td>R$ " . number_format($row['custo'], 2, ',', '.') . "</td>";
                             echo "<td>" . ($row['recorrente'] == 1 ? 'Sim' : 'Não') . "</td>";
-                            echo "<td>" . $data . "</td>";
+                            echo "<td>" . date('d/m/Y', strtotime($row['data'])) . "</td>";
                             echo "
                         <td>
                             <form method='GET'>
                                 <input type='hidden' name='editar' value='1'>
-                                <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                                <input type='hidden' name='id' value='" . $row['id'] . "'>
+                                <input type='hidden' name='mes' value='" . $mes_selecionado . "'>
                                 <button type='submit' class='btn-edit'><i class='bi bi-pencil'></i></button>
                             </form>
                         </td>";
                             echo "
                         <td>
                             <form action='../backend/database/investimentos/deletar.php' method='POST'>
-                                <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
-                                <input type='hidden' name='nome' value='" . htmlspecialchars($row['nome']) . "'>
+                                <input type='hidden' name='id' value='" . $row['id'] . "'>
+                                <input type='hidden' name='mes' value='" . $mes_selecionado . "'>
+                                <input type='hidden' name='nome' value='" . $row['nome'] . "'>
                                 <button type='submit' class='btn-delete'><i class='bi bi-trash'></i></button>
                             </form>
                         </td>";

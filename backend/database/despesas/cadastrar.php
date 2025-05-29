@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $recorrente = $_POST['recorrente'];
     $data = $_POST['data'];
     $id = $_SESSION['id'];
+    $mes = $_POST['mes'];
 
     // Verifica se os campos estão preenchidos
     if (
@@ -36,4 +37,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['resposta'] = "Método de requisição inválido.";
 }
 
-header("Location: ../../../pages/despesas.php");
+header("Location: ../../../pages/despesas.php?mes=$mes");

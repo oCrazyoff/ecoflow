@@ -10,11 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = $_POST['data'];
     $user_id = $_SESSION['id'];
     $id = $_POST['id'];
+    $mes = $_POST['mes'];
 
-    // var_dump($descricao, $valor, $status, $recorrente, $data, $user_id, $id);
-    // die;
-
-    // Verifica se os campos estão preenchidos
     if (
         trim($descricao) === '' ||
         trim($status) === '' ||
@@ -41,4 +38,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['resposta'] = "Método de requisição inválido.";
 }
 
-header("Location: ../../../pages/despesas.php");
+header("Location: ../../../pages/despesas.php?mes=$mes");
