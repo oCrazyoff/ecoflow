@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt_recorrente->get_result();
     $row = $result->fetch_assoc();
 
-    if ($row && $row['recorrente'] === "Sim") {
+    if ($row && $row['recorrente'] == '1') {
         // Atualiza o valor do mês passado para não recorrente
-        $sql_atualizar_recorrente = "UPDATE investimentos SET recorrente = 'Não' WHERE nome = ? AND user_id = ? AND MONTH(data) = ?";
+        $sql_atualizar_recorrente = "UPDATE investimentos SET recorrente = '0' WHERE nome = ? AND user_id = ? AND MONTH(data) = ?";
         $stmt_atualizar_recorrente = $conn->prepare($sql_atualizar_recorrente);
         $stmt_atualizar_recorrente->bind_param("sis", $nome, $user_id, $mes_anterior);
         $stmt_atualizar_recorrente->execute();
