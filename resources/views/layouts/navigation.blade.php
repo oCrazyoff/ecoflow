@@ -19,7 +19,7 @@
                     Dashboard
                 </div>
             </a>
-            <a class="link-menu" href="#"><x-heroicon-o-wallet class="w-6 h-6" />
+            <a class="link-menu" href="{{ route('rendas.index') }}"><x-heroicon-o-wallet class="w-6 h-6" />
                 <div x-show="menuAberto">
                     Rendas
                 </div>
