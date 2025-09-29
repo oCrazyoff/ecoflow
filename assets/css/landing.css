@@ -1,0 +1,13 @@
+@layer components {
+    .interface {
+        @apply mx-auto max-w-[1280px] w-full px-3 lg:px-5 py-2;
+    }
+
+    .btn-header {
+        @apply text-verde py-1 px-3 text-lg rounded-lg bg-white;
+
+        &:hover {
+            @apply bg-verde outline-2 outline-white text-white;
+        }
+    }
+}

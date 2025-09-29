@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "./landing.css";
+@import "./form_index.css";
+@import "./div_erro.css";
+
+/* variaveis */
+@theme {
+    --color-verde: #218380;
+    --color-verde-hover: #20605d;
+    --color-texto-opaco: #656565;
+    --color-borda: #cfcfcf;
+}
+
+@layer base {
+    * {
+        transition: background-color 0.3s ease,
+        color 0.1s ease,
+        opacity 0.3s ease,
+        scale 0.2s ease,
+        box-shadow 0.3s ease;
+        /*outline: 1px solid red;*/
+    }
+}
+
+@layer components {
+    .logo {
+        @apply text-2xl font-bold text-white;
+
+        & span {
+            @apply text-verde;
+        }
+    }
+}

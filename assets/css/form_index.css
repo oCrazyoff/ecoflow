@@ -1,132 +1,43 @@
-.main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-
-    & .btn-voltar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        text-decoration: none;
-        color: #000;
-        font-size: var(--font-size-padrao);
-
-        & i {
-            color: #218380;
-            transition: .2s ease all;
-        }
-
-        &:hover i {
-            transform: scale(1.4);
-        }
-    }
-
-    & .form-container {
-        padding: 5rem 4rem;
-        border: 2px solid #218380;
-        border-radius: var(--border-radius-padrao);
-        background-color: #ffffff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 100%;
-
-        & h2 {
-            font-size: var(--font-size-titulo);
-            color: #218380;
-            text-align: center;
-            padding-bottom: .2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #218380;
-        }
+@layer components {
+    .container-form-index {
+        @apply flex items-center justify-center h-dvh w-full;
 
         & form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            @apply flex flex-col gap-5 items-center justify-center p-5 py-8 border rounded-lg border-borda w-1/3;
 
-            & .form-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
+            & h1 {
+                @apply text-3xl font-bold text-verde;
+            }
 
-                & label {
-                    font-weight: bold;
-                    color: #333;
-                    font-size: var(--font-size-padrao);
-                }
+            & h2 {
+                @apply text-2xl font-bold;
+            }
+
+            & .input-group {
+                @apply flex flex-col gap-2 w-full;
 
                 & input {
-                    padding: var(--padding-padrao);
-                    border: 1px solid #ccc;
-                    border-radius: var(--border-radius-padrao);
-                    font-size: var(--font-size-padrao);
-                    transition: border-color 0.3s ease;
+                    @apply border border-borda py-2 px-3 rounded-lg;
 
-                    &:focus {
-                        border-color: #218380;
-                        outline: none;
-                        box-shadow: 0 0 5px rgba(33, 131, 128, 0.5);
+                    &:placeholder {
+                        @apply text-texto-opaco;
                     }
                 }
             }
 
-            & button[type='submit'] {
-                padding: var(--padding-padrao);
-                background-color: #218380;
-                color: white;
-                border: none;
-                border-radius: var(--border-radius-padrao);
-                cursor: pointer;
-                font-size: var(--font-size-padrao);
-                font-weight: bold;
-                transition: background-color 0.3s ease, transform 0.2s ease;
+            & button {
+                @apply w-full p-2 text-white bg-verde rounded-lg cursor-pointer;
 
                 &:hover {
-                    background-color: #1c6b63;
+                    @apply bg-verde-hover;
                 }
             }
-        }
-
-        & .login {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            font-size: var(--font-size-padrao);
 
             & p {
-                color: #333;
-            }
-
-            & a {
-                color: #218380;
-                font-weight: bold;
-                text-decoration: none;
-
-                &:hover {
-                    text-decoration: underline;
+                & a {
+                    @apply text-verde border-b;
                 }
             }
         }
-    }
-}
-
-@media screen and (max-width: 768px) {
-
-    .main-content .form-container {
-        padding: 0;
-        border: none;
-        box-shadow: none;
-        max-width: 100%;
-    }
-
-    h2 {
-        text-align: left;
-        width: max-content;
     }
 }
