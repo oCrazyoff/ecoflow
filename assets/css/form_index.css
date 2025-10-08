@@ -19,7 +19,7 @@
                 & input {
                     @apply border border-borda py-2 px-3 rounded-lg;
 
-                    &:placeholder {
+                    &::placeholder {
                         @apply text-texto-opaco;
                     }
                 }

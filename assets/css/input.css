@@ -2,13 +2,17 @@
 @import "./landing.css";
 @import "./form_index.css";
 @import "./div_erro.css";
+@import "./menu.css";
+@import "./tabela.css";
 
 /* variaveis */
 @theme {
     --color-verde: #218380;
     --color-verde-hover: #20605d;
+    --color-verde-opaco: rgba(62, 182, 178, 0.15);
     --color-texto-opaco: #656565;
-    --color-borda: #cfcfcf;
+    --color-borda: rgba(202, 202, 202, 0.64);
+    --color-cinza-claro: #F9FAFB;
 }
 
 @layer base {
@@ -20,6 +24,14 @@
         box-shadow 0.3s ease;
         /*outline: 1px solid red;*/
     }
+
+    body {
+        @apply flex h-dvh;
+
+        & main {
+            @apply w-[80%] h-full overflow-auto bg-cinza-claro;
+        }
+    }
 }
 
 @layer components {
@@ -29,5 +41,9 @@
         & span {
             @apply text-verde;
         }
+    }
+
+    .seletor-mes {
+        @apply flex items-center justify-center px-2 py-2 rounded-lg border border-borda cursor-pointer;
     }
 }

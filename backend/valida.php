@@ -13,7 +13,10 @@ if (!isset($_SESSION["cargo"]) || $_SESSION["cargo"] == 0) {
     // rotas que o usuario comum pode acessar
     if ($rota != "login" &&
         $rota != "" &&
-        $rota != "dashboard"
+        $rota != "dashboard" &&
+        $rota != "rendas" &&
+        $rota != "despesas" &&
+        $rota != "perfil"
     ) {
         $_SESSION['resposta'] = "Acesso negado!";
         header("Location: " . BASE_URL);

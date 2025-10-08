@@ -21,7 +21,7 @@ if (isset($n_valida) && $n_valida == true) {
         <link href="<?= BASE_URL ?>assets/css/output.css?v=<?= time() ?>" rel="stylesheet">
         <title><?= htmlspecialchars((isset($titulo) ? $titulo . " • EcoFlow" : 'EcoFlow')) ?></title>
     </head>
-    <body>
+<body <?= (isset($n_valida) && $n_valida == true) ? "class='flex-col h-auto'" : "" ?>>
 <?php
 // removendo o menu das paginas de eventos e o formulario de login
 if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login') {

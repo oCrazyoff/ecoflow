@@ -1,0 +1,41 @@
+@layer components {
+    .main-tabela {
+        @apply flex flex-col gap-5 p-10;
+    }
+
+    .header-tabela {
+        @apply flex items-center justify-between w-full;
+
+        & h2 {
+            @apply text-2xl font-bold;
+        }
+
+        & .container-btn-tabela {
+            @apply flex items-center justify-center gap-3;
+
+            & button {
+                @apply flex items-center justify-center gap-2 px-5 py-2 rounded-lg bg-verde text-white cursor-pointer;
+
+                &:hover {
+                    @apply bg-verde-hover;
+                }
+            }
+        }
+    }
+
+    .conteudo-tabela {
+        @apply bg-white rounded-lg border border-borda p-5;
+
+        & h3 {
+            @apply text-xl;
+        }
+
+        & .container-table {
+            @apply max-w-full max-h-full overflow-auto border border-borda;
+
+            & table {
+                @apply table-condensed;
+            }
+        }
+    }
+}

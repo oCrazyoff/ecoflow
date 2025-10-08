@@ -7,7 +7,7 @@ require_once "includes/inicio.php"
         <h1 class="logo">Eco<span class="text-white">Flow</span></h1>
         <nav class="flex gap-3 items-center justify-center">
             <a class="btn-header" href="login">Login</a>
-            <a class="btn-header" href="#">Cadastre-se</a>
+            <a class="btn-header" href="cadastro">Cadastre-se</a>
         </nav>
     </div>
 </header>
@@ -22,7 +22,7 @@ require_once "includes/inicio.php"
                 Com a EcoFlow, visualizar suas finanças nunca foi tão simples e intuitivo. Rendas, despesas e metas,
                 tudo em um só lugar.
             </p>
-            <a href="#" class="text-white py-3 px-10 text-2xl rounded-lg bg-verde hover:bg-verde-hover">
+            <a href="cadastro" class="text-white py-3 px-10 text-2xl rounded-lg bg-verde hover:bg-verde-hover">
                 Comece Agora - É Grátis
             </a>
         </div>

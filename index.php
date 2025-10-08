@@ -9,9 +9,14 @@ $routes = [
     // autenticação
     'login' => 'pages/login_form.php',
     'fazer_login' => 'backend/auth/login.php',
+    'cadastro' => 'pages/cadastro_form.php',
+    'fazer_cadastro' => 'backend/auth/cadastro.php',
 
     // paginas do usuario
     'dashboard' => 'pages/dashboard.php',
+    'rendas' => 'pages/rendas.php',
+    'despesas' => 'pages/despesas.php',
+    'perfil' => 'pages/perfil.php',
 ];
 
 if (array_key_exists($url, $routes)) {

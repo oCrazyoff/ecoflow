@@ -1,0 +1,53 @@
+@layer components {
+    .menu {
+        @apply flex flex-col items-center justify-between min-w-[20%] border-r border-borda;
+
+        & .topo-logo, nav, .baixo-menu {
+            @apply p-4;
+        }
+
+        & .topo-menu {
+            @apply flex flex-col w-full;
+
+            & .topo-logo {
+                @apply flex items-center justify-between border-b border-borda;
+
+                & button {
+                    @apply cursor-pointer;
+                }
+            }
+
+            & nav {
+                @apply flex flex-col gap-3 items-center justify-between;
+
+                & a {
+                    @apply flex items-center justify-start gap-3 px-3 py-2 w-full rounded-xl;
+
+                    &:hover {
+                        @apply bg-verde-opaco text-verde;
+                    }
+
+                    &.atual {
+                        @apply text-verde font-bold bg-verde-opaco;
+                    }
+                }
+            }
+        }
+
+        .baixo-menu {
+            @apply flex items-center justify-center w-full border-t border-borda;
+
+            & a {
+                @apply flex items-center justify-center gap-3 px-3 py-2 w-full rounded-xl;
+
+                &:hover {
+                    @apply bg-verde-opaco text-verde;
+                }
+
+                &.atual {
+                    @apply text-verde font-bold bg-verde-opaco;
+                }
+            }
+        }
+    }
+}
