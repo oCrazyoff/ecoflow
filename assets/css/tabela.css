@@ -27,14 +27,50 @@
         @apply bg-white rounded-lg border border-borda p-5;
 
         & h3 {
-            @apply text-xl;
+            @apply text-xl mb-3 font-bold;
         }
 
         & .container-table {
-            @apply max-w-full max-h-full overflow-auto border border-borda;
+            @apply max-w-full max-h-[75dvh] overflow-auto border border-borda rounded-lg;
 
             & table {
-                @apply table-condensed;
+                @apply w-full text-center;
+
+                & thead th, tbody td {
+                    @apply p-3;
+                }
+
+                & thead {
+                    @apply sticky top-0 bg-cinza-claro text-texto-opaco;
+                }
+
+                & tbody tr {
+                    @apply border-t border-borda;
+                }
+
+                & thead tr {
+                    @apply border-b border-borda;
+                }
+
+                & .acoes {
+                    @apply flex items-center justify-center gap-10 text-xl;
+
+                    & .btn-edita, .btn-deleta {
+                        @apply w-10 h-10 rounded-lg cursor-pointer;
+
+                        &:hover {
+                            @apply bg-gray-200;
+                        }
+                    }
+
+                    & .btn-edita {
+                        @apply text-blue-500;
+                    }
+
+                    & .btn-deleta {
+                        @apply text-red-500;
+                    }
+                }
             }
         }
     }

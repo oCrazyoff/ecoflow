@@ -1,0 +1,45 @@
+@layer components {
+    #modal {
+        @apply fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
+
+        & #form-container {
+            @apply bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw];
+
+            & #modal-form {
+                @apply max-h-[80dvh] overflow-auto px-1;
+
+                & label {
+                    @apply inline-block mt-3;
+                }
+
+                & button {
+                    @apply text-white px-4 py-2 cursor-pointer rounded-lg;
+                }
+
+                & .btn-submit {
+                    @apply bg-verde;
+
+                    &:hover {
+                        @apply bg-verde-hover;
+                    }
+                }
+
+                & .btn-cancelar {
+                    @apply bg-white text-black border border-borda;
+
+                    &:hover {
+                        @apply bg-gray-200;
+                    }
+                }
+            }
+
+            & .input-modal {
+                @apply w-full border border-borda p-2 rounded-lg;
+            }
+
+            & textarea.input-modal {
+                @apply min-h-15;
+            }
+        }
+    }
+}

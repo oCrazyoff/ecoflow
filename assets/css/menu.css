@@ -1,6 +1,6 @@
 @layer components {
     .menu {
-        @apply flex flex-col items-center justify-between min-w-[20%] border-r border-borda;
+        @apply flex flex-col items-center justify-between min-w-[15%] border-r border-borda;
 
         & .topo-logo, nav, .baixo-menu {
             @apply p-4;
@@ -47,6 +47,26 @@
                 &.atual {
                     @apply text-verde font-bold bg-verde-opaco;
                 }
+            }
+        }
+
+        &.retraido {
+            @apply min-w-auto;
+
+            & .topo-logo {
+                @apply flex items-center justify-center w-full;
+
+                & button {
+                    @apply rotate-180;
+                }
+
+                & h1 {
+                    @apply hidden;
+                }
+            }
+
+            & .topo-menu nav a span, .baixo-menu a span {
+                @apply hidden;
             }
         }
     }

@@ -1,0 +1,81 @@
+@layer components {
+    .header-dashboard {
+        @apply flex items-center justify-between bg-white border-b border-borda p-4;
+
+        & .txt-header h2 {
+            @apply text-2xl font-bold;
+        }
+
+        & .txt-header p {
+            @apply text-texto-opaco;
+        }
+
+        & .opt-header {
+            @apply flex items-center justify-center gap-5;
+
+            & #btn-relatorio {
+                @apply flex items-center justify-center gap-3 px-2 py-2 bg-white rounded-lg border border-borda
+                cursor-pointer;
+            }
+        }
+    }
+
+    .container-cards {
+        @apply grid grid-cols-3 gap-5 p-5;
+
+        & .card {
+            @apply relative bg-white rounded-xl border border-borda p-[1.5rem];
+
+            & p {
+                @apply text-texto-opaco;
+            }
+
+            & h3 {
+                @apply text-2xl font-bold;
+            }
+
+            & i {
+                @apply absolute flex items-center justify-center right-[1.5rem] top-[1.5rem] text-2xl
+                text-verde bg-verde/10 rounded-lg w-10 h-10;
+            }
+        }
+    }
+
+    .meio-dashboard {
+        @apply grid grid-cols-4 gap-5 px-5 pb-5;
+
+        & .card {
+            @apply bg-white rounded-xl border border-borda p-[1.5rem] max-h-max;
+
+            & h3 {
+                @apply text-xl font-bold mb-5;
+            }
+
+            & .titulo-resumo {
+                @apply font-bold text-texto-opaco;
+            }
+
+            & .item-resumo {
+                @apply flex items-center justify-between px-3 py-2 rounded-xl gap-3 bg-gray-200 my-3;
+
+                & .txt-resumo {
+                    & h5 {
+                        @apply font-bold;
+
+                        & span {
+                            @apply text-sm font-normal px-2 rounded-full text-white;
+                        }
+                    }
+
+                    & p {
+                        @apply font-normal text-sm text-texto-opaco;
+                    }
+                }
+
+                & p {
+                    @apply font-bold;
+                }
+            }
+        }
+    }
+}

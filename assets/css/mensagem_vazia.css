@@ -1,0 +1,21 @@
+@layer components {
+    .container-mensagem {
+        @apply flex flex-col gap-2 items-center justify-center w-full;
+
+        & .icone {
+            @apply flex items-center justify-center text-5xl w-20 h-20 text-verde bg-verde/20 rounded-full;
+        }
+
+        & .titulo {
+            @apply !text-2xl font-bold text-center !mb-0;
+        }
+
+        & .paragrafo {
+            @apply text-xl text-texto-opaco w-1/2 text-center;
+        }
+
+        & .btn {
+            @apply px-5 py-2 bg-verde rounded-lg text-white cursor-pointer hover:bg-verde-hover;
+        }
+    }
+}

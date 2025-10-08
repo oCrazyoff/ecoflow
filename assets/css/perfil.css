@@ -1,0 +1,61 @@
+@layer components {
+    .card-perfil {
+        @apply bg-white rounded-xl border border-borda p-[1.5rem] my-5;
+
+        & h3 {
+            @apply text-xl font-bold text-texto-opaco mb-5;
+        }
+
+        & form {
+            @apply flex flex-col items-center justify-center gap-5;
+
+            & .input-group {
+                @apply flex flex-col gap-2 w-full;
+
+                & input {
+                    @apply border border-borda py-2 px-3 rounded-lg;
+
+                    &::placeholder {
+                        @apply text-texto-opaco;
+                    }
+                }
+            }
+
+            & .container-btn {
+                @apply w-full flex items-center justify-end;
+
+                & button {
+                    @apply p-2 text-white bg-verde rounded-lg cursor-pointer;
+
+                    &:hover {
+                        @apply bg-verde-hover;
+                    }
+                }
+            }
+
+            & .side-input {
+                @apply flex items-center justify-center gap-5 w-full;
+            }
+        }
+
+        &.deslogar {
+            @apply border-red-500/30;
+
+            & h3 {
+                @apply text-red-500 m-0;
+            }
+
+            & p {
+                @apply text-texto-opaco my-5;
+            }
+
+            & a {
+                @apply p-2 text-white bg-red-500 rounded-lg cursor-pointer;
+
+                &:hover {
+                    @apply bg-red-600;
+                }
+            }
+        }
+    }
+}

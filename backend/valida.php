@@ -6,24 +6,6 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-// verificando se tem cargo e caso não for adm impedindo as rotas de adm
-if (!isset($_SESSION["cargo"]) || $_SESSION["cargo"] == 0) {
-    $rota = $_GET['url'] ?? ''; // rota atual
-
-    // rotas que o usuario comum pode acessar
-    if ($rota != "login" &&
-        $rota != "" &&
-        $rota != "dashboard" &&
-        $rota != "rendas" &&
-        $rota != "despesas" &&
-        $rota != "perfil"
-    ) {
-        $_SESSION['resposta'] = "Acesso negado!";
-        header("Location: " . BASE_URL);
-        exit();
-    }
-}
-
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();
     session_destroy();
