@@ -11,12 +11,17 @@ $routes = [
     'fazer_login' => 'backend/auth/login.php',
     'cadastro' => 'pages/cadastro_form.php',
     'fazer_cadastro' => 'backend/auth/cadastro.php',
+    'deslogar' => 'backend/auth/deslogar.php',
 
     // paginas do usuario
     'dashboard' => 'pages/dashboard.php',
     'rendas' => 'pages/rendas.php',
     'despesas' => 'pages/despesas.php',
     'perfil' => 'pages/perfil.php',
+
+    // rotas do perfil
+    'alterar_senha_perfil' => 'backend/editar/senha_perfil.php',
+    'alterar_info_perfil' => 'backend/editar/info_perfil.php',
 
     // rotas de busca
     'buscar_rendas' => 'backend/buscar/rendas.php',

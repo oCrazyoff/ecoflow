@@ -2,9 +2,7 @@
 $titulo = "Rendas";
 require_once "includes/inicio.php";
 
-// puxando todas as rendas do mês
-$m = $_GET['m'] ?? NULL;
-
+//puxando todas as rendas do mês
 if (isset($m) && $m > 0 && $m < 13) {
     $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = ?";
     $stmt = $conexao->prepare($sql);

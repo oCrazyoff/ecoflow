@@ -7,6 +7,9 @@ require_once "includes/inicio.php"
     <div class="card-perfil">
         <h3>Informações Pessoais</h3>
         <form action="alterar_info_perfil" method="POST">
+            <!--csrf-->
+            <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+
             <div class="side-input">
                 <div class="input-group">
                     <label for="nome">Nome</label>
@@ -27,6 +30,9 @@ require_once "includes/inicio.php"
     <div class="card-perfil">
         <h3>Alterar Senha</h3>
         <form action="alterar_senha_perfil" method="POST">
+            <!--csrf-->
+            <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+
             <div class="input-group">
                 <label for="senha-atual">Senha Atual</label>
                 <input type="password" name="senha-atual" id="senha-atual" placeholder="•••••••">

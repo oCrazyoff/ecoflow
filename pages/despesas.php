@@ -3,8 +3,6 @@ $titulo = "Despesas";
 require_once "includes/inicio.php";
 
 // puxando todas as despesas do mês
-$m = $_GET['m'] ?? NULL;
-
 if (isset($m) && $m > 0 && $m < 13) {
     $sql = "SELECT id, descricao, valor, status, recorrente, categoria, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = ?";
     $stmt = $conexao->prepare($sql);

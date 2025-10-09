@@ -1,21 +1,22 @@
 <?php
-function validarNome($nome)
+function validarNome(string $nome): string
 {
-    // Remove espaços no início/fim
-    $nome = trim($nome);
+    $nomeLimpo = trim($nome);
+    $nomeLimpo = preg_replace('/\s+/', ' ', $nomeLimpo);
 
-    // Remove tudo que não for letra ou espaço
-    $nome = preg_replace('/[^\\p{L} ]/u', '', $nome);
-
-    // Se após a limpeza não sobrar nada válido
-    if (mb_strlen($nome) < 3 || mb_strlen($nome) > 50) {
-        return false;
+    if (
+        empty($nomeLimpo) ||
+        mb_strlen($nomeLimpo, 'UTF-8') < 3 ||
+        mb_strlen($nomeLimpo, 'UTF-8') > 100 ||
+        !preg_match("/^[a-zA-ZÀ-ú\s'-]+$/u", $nomeLimpo)
+    ) {
+        // Se qualquer validação falhar, retorna o valor padrão.
+        return "Usuário";
     }
 
-    // Formata para primeira letra maiúscula em cada palavra
-    $nome = mb_convert_case($nome, MB_CASE_TITLE, "UTF-8");
+    $nomeFormatado = mb_convert_case($nomeLimpo, MB_CASE_TITLE, 'UTF-8');
 
-    return $nome;
+    return $nomeFormatado;
 }
 
 function validarEmail($email)

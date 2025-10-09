@@ -10,11 +10,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $recorrente = trim(strip_tags($_POST['recorrente']));
     $data = trim(strip_tags($_POST['data']));
 
+    // lógica de redirecionamento
+    if (isset($_SESSION['m'])) {
+        $redirecionamento = "Location: " . BASE_URL . "rendas?m=" . $_SESSION['m'];
+    } else {
+        $redirecionamento = "Location: " . BASE_URL . "rendas";
+    }
+
     // validar a descrição
     $descricao = validarDescricao($descricao);
     if ($descricao == false) {
         $_SESSION['resposta'] = "Descrição inválida!";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 
@@ -22,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $valor = validarValor($valor);
     if ($valor == false) {
         $_SESSION['resposta'] = "Valor inválido!";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 
@@ -30,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
         $_SESSION['resposta'] = "Token Inválido";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 
@@ -41,12 +48,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             $_SESSION['resposta'] = "Renda cadastrada com sucesso!";
-            header("Location: " . BASE_URL . "rendas");
+            header($redirecionamento);
             $stmt->close();
             exit;
         } else {
             $_SESSION['resposta'] = "Ocorreu um erro!";
-            header("Location: " . BASE_URL . "rendas");
+            header($redirecionamento);
             $stmt->close();
             exit;
         }
@@ -55,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         switch ($erro->getCode()) {
             default:
                 $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
-                header("Location: " . BASE_URL . "rendas");
+                header($redirecionamento);
                 exit;
         }
     }

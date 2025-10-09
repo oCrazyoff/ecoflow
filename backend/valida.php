@@ -9,7 +9,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();
     session_destroy();
-    header("Location: " . BASE_URL);
+    header("Location: " . BASE_URL . "login");
     exit();
 } else {
     $id = $_SESSION["id"];
@@ -24,7 +24,7 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
         if (($nome === null) || ($email === null) || ($cargo === null)) {
             session_unset();
             session_destroy();
-            header("Location: " . BASE_URL);
+            header("Location: " . BASE_URL . "login");
             exit();
         } else {
             $_SESSION["nome"] = $nome;
@@ -33,7 +33,7 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
         }
     } else {
         $_SESSION['resposta'] = "Erro inesperado!";
-        header("Location: " . BASE_URL);
+        header("Location: " . BASE_URL . "login");
         exit();
     }
 }

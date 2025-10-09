@@ -1,3 +1,9 @@
+<?php
+// caso tenha mês selecionado ele é inserido nos inputs data
+$ano = date('Y');
+$mes = $m ?? date('m');
+$dia = date('d');
+?>
 <!--modal-->
 <div id="modal" class="hidden">
     <div id="form-container">
@@ -17,14 +23,16 @@
                            placeholder="Ex: Conta de Luz"
                            required>
                     <label for="valor">Valor</label>
-                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01" min="0">
+                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01"
+                           min="0">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
                         <option value="1">Sim</option>
                     </select>
                     <label for="data">Data</label>
-                    <input class="input-modal" type="date" name="data" id="data" value="<?= date('Y-m-d') ?>">
+                    <input class="input-modal" type="date" name="data" id="data"
+                           value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
 
                 <?php elseif
 
@@ -42,7 +50,8 @@
                         <option value="1">Pago</option>
                     </select>
                     <label for="valor">Valor</label>
-                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01" min="0">
+                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01"
+                           min="0">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
@@ -62,8 +71,8 @@
                         <option value="0" <?= ($categoria_selecionada == 0) ? 'selected' : '' ?>>Outro</option>
                     </select>
                     <label for="data">Data</label>
-                    <input class="input-modal" type="date" name="data" id="data" value="<?= date('Y-m-d') ?>">
-
+                    <input class="input-modal" type="date" name="data" id="data"
+                           value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
                 <?php endif; ?>
             <?php endif; ?>
             <div class="grid grid-cols-2 gap-2 mt-5">

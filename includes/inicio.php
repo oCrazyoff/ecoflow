@@ -9,6 +9,15 @@ if (isset($n_valida) && $n_valida == true) {
 } else {
     require_once __DIR__ . "/../backend/valida.php";
 }
+
+// pegando o valor mes da URL
+if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
+    $m = date('n');
+    $_SESSION['m'] = $m;
+} else {
+    $m = $_GET['m'];
+    $_SESSION['m'] = $m;
+}
 ?>
     <!doctype html>
     <html lang="pt-br">
@@ -31,7 +40,7 @@ if (isset($n_valida) && $n_valida == true) {
 // removendo menu das paginas sem rota
 if (array_key_exists($rota, $routes)) {
     // removendo o menu das paginas que não tem menu
-    if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login') {
+    if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login' && $rota !== 'cadastro') {
         include("menu.php");
     }
 }

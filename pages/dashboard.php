@@ -2,9 +2,6 @@
 $titulo = "Dashboard";
 require_once "includes/inicio.php";
 
-// variavel mês
-$m = $_GET['m'] ?? NULL;
-
 function totalRendas()
 {
     global $conexao;
@@ -118,9 +115,8 @@ function despesasPendentes()
                         <p class="paragrafo">
                             Adicione sua primeira renda ou despesa para começar a acompanhar seus resultados.
                         </p>
-                        <a href="rendas"
-                           class="btn"
-                           onclick="abrirCadastrarModal('rendas')">Registrar Renda
+                        <a href="rendas<?= (isset($m) ? '?m=' . $m : '') ?>" class="btn">
+                            Registrar Renda
                         </a>
                     </div>
                 <?php endif; ?>

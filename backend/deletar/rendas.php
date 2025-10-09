@@ -4,9 +4,16 @@ require_once __DIR__ . '/../valida.php';
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
+    // lógica de redirecionamento
+    if (isset($_SESSION['m'])) {
+        $redirecionamento = "Location: " . BASE_URL . "rendas?m=" . $_SESSION['m'];
+    } else {
+        $redirecionamento = "Location: " . BASE_URL . "rendas";
+    }
+
     if (!$id) {
         $_SESSION['resposta'] = "ID inválido para exclusão.";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 
@@ -16,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
         $_SESSION['resposta'] = "Token de segurança inválido!";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 
@@ -36,12 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         $stmt->close();
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
 
     } catch (Exception $erro) {
         $_SESSION['resposta'] = "Erro inesperado no servidor. Tente novamente.";
-        header("Location: " . BASE_URL . "rendas");
+        header($redirecionamento);
         exit;
     }
 } else {

@@ -302,9 +302,6 @@
   .p-5 {
     padding: calc(var(--spacing) * 5);
   }
-  .p-10 {
-    padding: calc(var(--spacing) * 10);
-  }
   .px-5 {
     padding-inline: calc(var(--spacing) * 5);
   }
@@ -416,9 +413,6 @@
       justify-content: center;
       gap: calc(var(--spacing) * 5);
       border-radius: var(--radius-lg);
-      border-style: var(--tw-border-style);
-      border-width: 1px;
-      border-color: var(--color-borda);
       padding: calc(var(--spacing) * 5);
       padding-block: calc(var(--spacing) * 8);
       & h1 {
