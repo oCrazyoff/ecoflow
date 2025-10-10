@@ -1205,8 +1205,8 @@
       gap: calc(var(--spacing) * 3);
       & button {
         display: flex;
-        height: calc(var(--spacing) * 10);
-        width: calc(var(--spacing) * 10);
+        height: calc(var(--spacing) * 13);
+        width: calc(var(--spacing) * 13);
         cursor: pointer;
         align-items: center;
         justify-content: center;
@@ -1219,11 +1219,11 @@
           width: auto;
         }
         & i {
-          margin-top: calc(var(--spacing) * -1);
+          margin-top: calc(var(--spacing) * 0);
           font-size: var(--text-3xl);
           line-height: var(--tw-leading, var(--text-3xl--line-height));
           @media (width >= 64rem) {
-            margin-top: calc(var(--spacing) * 0);
+            margin-top: calc(var(--spacing) * -1);
           }
         }
         &:hover {
@@ -1514,7 +1514,10 @@
         justify-content: space-between;
         gap: calc(var(--spacing) * 3);
         border-radius: var(--radius-xl);
-        background-color: var(--color-gray-200);
+        background-color: color-mix(in srgb, oklch(92.8% 0.006 264.531) 60%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-gray-200) 60%, transparent);
+        }
         padding-inline: calc(var(--spacing) * 3);
         padding-block: calc(var(--spacing) * 2);
         & .txt-resumo {
@@ -1723,15 +1726,15 @@
   body {
     display: flex;
     height: 100dvh;
-    padding-bottom: calc(var(--spacing) * 20);
-    @media (width >= 64rem) {
-      padding-bottom: calc(var(--spacing) * 0);
-    }
     & main {
       height: 100%;
       width: 100%;
       overflow: auto;
       background-color: var(--color-cinza-claro);
+      padding-bottom: calc(var(--spacing) * 20) !important;
+      @media (width >= 64rem) {
+        padding-bottom: calc(var(--spacing) * 0);
+      }
     }
   }
 }
@@ -1748,7 +1751,7 @@
   }
   .seletor-mes {
     display: flex;
-    height: calc(var(--spacing) * 10);
+    height: calc(var(--spacing) * 13);
     cursor: pointer;
     align-items: center;
     justify-content: center;
@@ -1758,6 +1761,9 @@
     border-color: var(--color-borda);
     background-color: var(--color-white);
     padding-inline: calc(var(--spacing) * 2);
+    @media (width >= 64rem) {
+      height: calc(var(--spacing) * 10);
+    }
   }
 }
 @property --tw-rotate-x {

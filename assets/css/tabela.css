@@ -14,11 +14,11 @@
             @apply flex items-center justify-center gap-3;
 
             & button {
-                @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-10 lg:w-auto
-                h-10 rounded-lg;
+                @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-13 lg:w-auto
+                h-13 rounded-lg;
 
                 & i {
-                    @apply text-3xl -mt-1 lg:mt-0;
+                    @apply text-3xl mt-0 lg:-mt-1;
                 }
 
                 &:hover {

@@ -224,7 +224,9 @@ if (isset($m) && $m > 0 && $m < 13) {
             WHERE usuario_id = ?
             AND MONTH(data) = ?
             AND YEAR(data) = YEAR(CURDATE())
-            GROUP BY categoria";
+            GROUP BY categoria
+            ORDER BY total DESC
+            LIMIT 5";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("is", $_SESSION['id'], $m);
 } else {
@@ -233,7 +235,9 @@ if (isset($m) && $m > 0 && $m < 13) {
             WHERE usuario_id = ?
             AND MONTH(data) = MONTH(CURDATE())
             AND YEAR(data) = YEAR(CURDATE())
-            GROUP BY categoria";
+            GROUP BY categoria
+            ORDER BY total DESC
+            LIMIT 5";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $_SESSION['id']);
 }
@@ -283,20 +287,11 @@ foreach ($resultados as $r) {
             },
             options: {
                 responsive: true,
-                borderRadius: 10,
+                borderRadius: 8,
                 plugins: {
                     legend: {
                         display: false
                     },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Valor (R$)'
-                        }
-                    }
                 }
             }
         });

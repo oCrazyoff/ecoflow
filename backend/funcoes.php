@@ -61,17 +61,6 @@ function formatarReais(float $valor): string
     return 'R$ ' . number_format($valor, 2, ',', '.');
 }
 
-function formatarDataHora(string $dataHora, bool $mostrarHora = true): string
-{
-    $timestamp = strtotime($dataHora);
-
-    if ($mostrarHora) {
-        return date('d/m/Y H:i', $timestamp); // Ex: 08/10/2025 14:35
-    } else {
-        return date('d/m/Y', $timestamp);     // Ex: 08/10/2025
-    }
-}
-
 function formatarData(string $data): string
 {
     $timestamp = strtotime($data);
@@ -121,10 +110,13 @@ function validarDescricao(string $descricao)
 
 function validarValor($valor)
 {
-    // Substitui vírgula por ponto, se houver
+    // Remove separador de milhar (ponto)
+    $valor = str_replace('.', '', $valor);
+
+    // Substitui vírgula decimal por ponto
     $valor = str_replace(',', '.', $valor);
 
-    // Verifica se é número decimal positivo
+    // Verifica se é um número válido
     if (!is_numeric($valor)) {
         return false;
     }
