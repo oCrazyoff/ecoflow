@@ -35,12 +35,12 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
 
         <title><?= htmlspecialchars((isset($titulo) ? $titulo . " • EcoFlow" : 'EcoFlow')) ?></title>
     </head>
-<body <?= (isset($n_valida) && $n_valida == true) ? "class='flex-col h-auto'" : "" ?>>
+<body <?= ((isset($n_valida) && $n_valida == true) || $rota == 'relatorio') ? "class='flex-col h-auto'" : "" ?>>
 <?php
 // removendo menu das paginas sem rota
 if (array_key_exists($rota, $routes)) {
-    // removendo o menu das paginas que não tem menu
-    if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login' && $rota !== 'cadastro') {
+    // removendo o menu das paginas que não devem ter menu
+    if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login' && $rota !== 'cadastro' && $rota !== 'relatorio') {
         include("menu.php");
     }
 }

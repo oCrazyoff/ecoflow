@@ -21,7 +21,7 @@
     }
 
     .container-cards {
-        @apply grid grid-cols-3 gap-5 p-5;
+        @apply grid grid-cols-1 lg:grid-cols-3 gap-5 p-5;
 
         & .card {
             @apply relative bg-white rounded-xl border border-borda p-[1.5rem];

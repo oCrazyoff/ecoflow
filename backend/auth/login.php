@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "funcoes_auth.php";
+require_once "validacoes_login.php";
 require_once "backend/conexao.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -31,11 +32,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!empty($email) && !empty($senha)) {
         try {
-            // Faz a verificação no banco de dados
-            $stmt = $conexao->prepare("SELECT id, nome, email, senha_hash, cargo FROM usuarios WHERE email = ?");
+            $stmt = $conexao->prepare("SELECT id, nome, email, senha_hash, cargo, ultima_verificacao, relatorio_anual_pendente FROM usuarios WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
-            $stmt->bind_result($id, $nome, $email, $senha_db, $cargo);
+            $stmt->bind_result($id, $nome, $email, $senha_db, $cargo, $ultima_verificacao_db, $relatorio_pendente_db);
 
             $usuarioEncontrado = $stmt->fetch();
             $stmt->close();
@@ -59,10 +59,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 if ($cargo == 0) {
                     // caso o usuario for comum
-                    header("Location: " . BASE_URL . "dashboard");
-                    exit;
+
+                    $hoje = new DateTime();
+                    // Garante que mesmo usuários novos (com data nula) passem pela verificação.
+                    $ultimaVerificacao = new DateTime($ultima_verificacao_db ?? '1970-01-01');
+                    $relatorioPendente = (bool)$relatorio_pendente_db;
+
+                    // VERIFICAÇÃO DE INÍCIO DE ANO
+                    if ($ultimaVerificacao->format('Y') < $hoje->format('Y')) {
+                        $stmtUpdate = $conexao->prepare("UPDATE usuarios SET relatorio_anual_pendente = 1 WHERE id = ?");
+                        $stmtUpdate->bind_param("i", $id);
+                        $stmtUpdate->execute();
+                        $stmtUpdate->close();
+                        $relatorioPendente = true; // Atualiza a variável local para o redirecionamento
+                    }
+
+                    // VERIFICAÇÃO DE RECORRENTES (Executa se o mês for diferente)
+                    if ($ultimaVerificacao->format('Y-m') < $hoje->format('Y-m')) {
+                        verificarRecorrentes($id);
+                    }
+
+                    // ATUALIZA A DATA DA ÚLTIMA VERIFICAÇÃO PARA AGORA
+                    $stmtUpdateData = $conexao->prepare("UPDATE usuarios SET ultima_verificacao = NOW() WHERE id = ?");
+                    $stmtUpdateData->bind_param("i", $id);
+                    $stmtUpdateData->execute();
+                    $stmtUpdateData->close();
+
+                    // LÓGICA DE REDIRECIONAMENTO
+                    if ($relatorioPendente) {
+                        // Se há um relatório pendente, força o redirecionamento para a página de fechamento.
+                        $_SESSION['relatorio_pendente'] = true;
+                        header("Location: " . BASE_URL . "relatorio");
+                        exit;
+                    } else {
+                        // Se não há pendências, segue para o dashboard.
+                        header("Location: " . BASE_URL . "dashboard");
+                        exit;
+                    }
+
                 } else {
-                    // caso o usuario tenha um cargo invalido
+                    // caso o usuario não tenha um cargo invalido
                     header("Location: " . BASE_URL . "login");
                     $_SESSION['resposta'] = "Cargo Invalido!";
                     exit;

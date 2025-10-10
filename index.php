@@ -13,6 +13,10 @@ $routes = [
     'fazer_cadastro' => 'backend/auth/cadastro.php',
     'deslogar' => 'backend/auth/deslogar.php',
 
+    // relatório
+    'relatorio' => 'pages/relatorio.php',
+    'finalizar_relatorio' => 'backend/relatorio/finalizar.php',
+
     // paginas do usuario
     'dashboard' => 'pages/dashboard.php',
     'rendas' => 'pages/rendas.php',

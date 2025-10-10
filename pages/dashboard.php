@@ -6,7 +6,7 @@ function totalRendas()
 {
     global $conexao;
 
-    // pega o mês do GET ou usa o mês atual
+    // pega o mês do GET ou usa o mês atual e ano
     if (isset($_GET['m']) && is_numeric($_GET['m'])) {
         $mes = $_GET['m'];
     } else {
@@ -14,7 +14,7 @@ function totalRendas()
     }
 
     // filtra apenas pelo mês
-    $sql = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ?";
+    $sql = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
 
     $stmt->bind_param("ii", $_SESSION['id'], $mes);
@@ -37,7 +37,7 @@ function despesasPagas()
         $mes = date('m');
     }
 
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 1 AND MONTH(data) = ?";
+    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 1 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("ii", $_SESSION['id'], $mes);
 
@@ -59,7 +59,7 @@ function despesasPendentes()
         $mes = date('m');
     }
 
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 0 AND MONTH(data) = ?";
+    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 0 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("ii", $_SESSION['id'], $mes);
 
@@ -80,7 +80,6 @@ function despesasPendentes()
             </div>
             <div class="opt-header">
                 <?php require_once "includes/seletor_mes.php" ?>
-                <button id="btn-relatorio"><i class="bi bi-file-earmark-bar-graph"></i> Relatório</button>
             </div>
         </header>
         <div class="container-cards">
@@ -131,6 +130,7 @@ function despesasPendentes()
                                 FROM rendas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = ?
+                                AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor 
                                 DESC LIMIT 5";
                         $stmt = $conexao->prepare($sql);
@@ -140,6 +140,7 @@ function despesasPendentes()
                                 FROM rendas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = MONTH(CURDATE())
+                                AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor 
                                 DESC LIMIT 5";
                         $stmt = $conexao->prepare($sql);
@@ -168,6 +169,7 @@ function despesasPendentes()
                                 FROM despesas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = ?
+                                AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor DESC 
                                 LIMIT 5";
                         $stmt = $conexao->prepare($sql);
@@ -177,6 +179,7 @@ function despesasPendentes()
                                 FROM despesas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = MONTH(CURDATE())
+                                AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor DESC 
                                 LIMIT 5";
                         $stmt = $conexao->prepare($sql);

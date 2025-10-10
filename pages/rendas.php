@@ -2,13 +2,13 @@
 $titulo = "Rendas";
 require_once "includes/inicio.php";
 
-//puxando todas as rendas do mês
+//puxando todas as rendas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = ?";
+    $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('ii', $_SESSION['id'], $m);
 } else {
-    $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE())";
+    $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('i', $_SESSION['id']);
 }

@@ -125,6 +125,4 @@ function validarValor($valor) {
 
     return (float)$valor;
 }
-
-
 ?>
