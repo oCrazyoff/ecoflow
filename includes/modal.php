@@ -23,8 +23,8 @@ $dia = date('d');
                            placeholder="Ex: Conta de Luz"
                            required>
                     <label for="valor">Valor</label>
-                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01"
-                           min="0">
+                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00"
+                           inputmode="numeric">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
@@ -50,8 +50,8 @@ $dia = date('d');
                         <option value="1">Pago</option>
                     </select>
                     <label for="valor">Valor</label>
-                    <input type="number" name="valor" id="valor" class="input-modal" placeholder="0,00" step="0.01"
-                           min="0">
+                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00"
+                           inputmode="numeric">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
@@ -62,7 +62,7 @@ $dia = date('d');
                         <?php
                         $categoria_selecionada = 1;
                         // Gera as opções automaticamente
-                        for ($i = 1; $i <= 6; $i++) {
+                        for ($i = 1; $i <= 7; $i++) {
                             $texto = tipoCategorias($i);
                             $selected = ($i == $categoria_selecionada) ? 'selected' : '';
                             echo "<option value='$i' $selected>$texto</option>";
@@ -85,6 +85,24 @@ $dia = date('d');
 
 <script>
     // funções do modal
+
+    // digitação dinamica valor
+    const inputValor = document.getElementById('valor');
+
+    inputValor.addEventListener('input', function () {
+        // Remove tudo que não for número
+        let valor = this.value.replace(/\D/g, '');
+
+        // Divide por 100 pra ter as casas decimais
+        valor = (valor / 100).toFixed(2) + '';
+
+        // Troca o ponto por vírgula e adiciona separador de milhar
+        valor = valor.replace('.', ',');
+        valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        // Atualiza o campo
+        this.value = valor;
+    });
 
     // Capitaliza a primeira letra
     function capitalizarPrimeiraLetra(str) {

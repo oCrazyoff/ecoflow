@@ -3,7 +3,7 @@
         @apply bg-white rounded-xl border border-borda p-[1.5rem] my-5;
 
         & h3 {
-            @apply text-xl font-bold text-texto-opaco mb-5;
+            @apply text-lg lg:text-xl font-bold text-texto-opaco mb-5;
         }
 
         & form {
@@ -34,7 +34,7 @@
             }
 
             & .side-input {
-                @apply flex items-center justify-center gap-5 w-full;
+                @apply flex flex-col lg:flex-row items-center justify-center gap-5 w-full;
             }
         }
 

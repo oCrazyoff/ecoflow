@@ -100,14 +100,14 @@ function despesasPendentes()
             </div>
         </div>
         <div class="meio-dashboard">
-            <div class="card col-span-3">
+            <div class="card col-span-1 lg:col-span-3">
                 <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
                     <h3>Análise Financeira</h3>
-                    <div class="grafico-analise">
-                        <canvas id="resumoMensalChart"></canvas>
+                    <div>
+                        <canvas class="min-w-full h-auto" id="resumoMensalChart"></canvas>
                     </div>
                 <?php else: ?>
-                    <div class="container-mensagem">
+                    <div class="container-mensagem mt-0">
                         <i class="bi bi-piggy-bank icone">
                         </i>
                         <h3 class="titulo">Sem movimentações neste mês</h3>
@@ -124,7 +124,7 @@ function despesasPendentes()
                 <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
                     <h3>Resumo Financeiro</h3>
                     <?php
-                    // puxando as 5 maiores rendas do usuario
+                    // puxando as 4 maiores rendas do usuario
                     if (isset($m) && $m > 0 && $m < 13) {
                         $sql = "SELECT descricao, data, valor 
                                 FROM rendas 
@@ -132,7 +132,7 @@ function despesasPendentes()
                                 AND MONTH(data) = ?
                                 AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor 
-                                DESC LIMIT 5";
+                                DESC LIMIT 4";
                         $stmt = $conexao->prepare($sql);
                         $stmt->bind_param("is", $_SESSION['id'], $m);
                     } else {
@@ -163,7 +163,7 @@ function despesasPendentes()
                         <?php endwhile; ?>
                     <?php endif; ?>
                     <?php
-                    // puxando as 5 maiores despesas do usuario
+                    // puxando as 4 maiores despesas do usuario
                     if (isset($m) && $m > 0 && $m < 13) {
                         $sql = "SELECT descricao, status, categoria, valor
                                 FROM despesas 
@@ -171,7 +171,7 @@ function despesasPendentes()
                                 AND MONTH(data) = ?
                                 AND YEAR(data) = YEAR(CURDATE())
                                 ORDER BY valor DESC 
-                                LIMIT 5";
+                                LIMIT 4";
                         $stmt = $conexao->prepare($sql);
                         $stmt->bind_param("is", $_SESSION['id'], $m);
                     } else {
@@ -209,41 +209,74 @@ function despesasPendentes()
                         <?php endwhile; ?>
                     <?php endif; ?>
                 <?php else: ?>
-                    <div class="container-mensagem flex items-center justify-center h-full">
+                    <div class="container-mensagem flex items-center justify-center h-full mt-0">
                         <i class="bi bi-cup-hot icone"></i>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
     </main>
+<?php
+// Consulta total de despesas por categoria
+if (isset($m) && $m > 0 && $m < 13) {
+    $sql = "SELECT categoria, SUM(valor) AS total
+            FROM despesas
+            WHERE usuario_id = ?
+            AND MONTH(data) = ?
+            AND YEAR(data) = YEAR(CURDATE())
+            GROUP BY categoria";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("is", $_SESSION['id'], $m);
+} else {
+    $sql = "SELECT categoria, SUM(valor) AS total
+            FROM despesas
+            WHERE usuario_id = ?
+            AND MONTH(data) = MONTH(CURDATE())
+            AND YEAR(data) = YEAR(CURDATE())
+            GROUP BY categoria";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $_SESSION['id']);
+}
+
+$stmt->execute();
+$resultados = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Monta arrays para o gráfico
+$labels = [];
+$valores = [];
+
+foreach ($resultados as $r) {
+    $labels[] = tipoCategorias((int)$r['categoria']);
+    $valores[] = (float)$r['total'];
+}
+?>
     <script>
         const ctx = document.getElementById('resumoMensalChart');
 
         new Chart(ctx, {
             type: 'bar',
             data: {
-                // Rótulos para o eixo X (cada uma das barras)
-                labels: ['Rendas', 'Despesas Pagas', 'Despesas Pendentes'],
+                labels: <?= json_encode($labels) ?>,
                 datasets: [{
-                    label: 'R$',
-
-                    // dados injetados diretamente do PHP
-                    data: [
-                        <?= totalRendas() ?>,
-                        <?= despesasPagas() ?>,
-                        <?= despesasPendentes() ?>,
-                    ],
-
-                    // Cores de fundo para cada barra
+                    label: 'R$: ',
+                    data: <?= json_encode($valores) ?>,
                     backgroundColor: [
                         'rgba(75, 192, 192, 0.6)',
                         'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 159, 64, 0.6)'
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(100, 181, 246, 0.6)'
                     ],
                     borderColor: [
                         'rgba(75, 192, 192, 1)',
                         'rgba(54, 162, 235, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(100, 181, 246, 1)'
                     ],
                     borderWidth: 1
                 }]
@@ -254,11 +287,15 @@ function despesasPendentes()
                 plugins: {
                     legend: {
                         display: false
-                    }
+                    },
                 },
                 scales: {
                     y: {
-                        beginAtZero: true // Garante que o eixo Y comece no zero
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor (R$)'
+                        }
                     }
                 }
             }

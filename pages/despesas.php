@@ -20,7 +20,8 @@ $result = $stmt->get_result();
         <h2>Despesas</h2>
         <div class="container-btn-tabela">
             <?php require_once "includes/seletor_mes.php" ?>
-            <button onclick="abrirCadastrarModal('despesas')"><i class="bi bi-plus-circle"></i> Nova Despesa</button>
+            <button onclick="abrirCadastrarModal('despesas')"><i class="bi bi-plus"></i>
+                <span>Nova Despesa</span></button>
         </div>
     </div>
     <?php if ($result->num_rows > 0) : ?>
@@ -44,7 +45,7 @@ $result = $stmt->get_result();
                         <tr>
                             <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
                             <td><?= htmlspecialchars(tipoCategorias($row['categoria'])) ?></td>
-                            <td class="text-red-500"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
+                            <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
                             <td>
                                 <?php if ($row['status'] == 0): ?>
                                     <span class="w-full bg-yellow-500 text-white rounded-full px-5 py-1">
@@ -58,7 +59,7 @@ $result = $stmt->get_result();
                             </td>
                             <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                             <td>
-                                <span class="w-full border border-borda rounded-full px-5 py-1">
+                                <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
                                 <?= (($row['recorrente'] == 0) ? 'Não Recorrente' : 'Recorrente') ?>
                                 </span>
                             </td>

@@ -20,7 +20,7 @@ $result = $stmt->get_result();
         <h2>Rendas</h2>
         <div class="container-btn-tabela">
             <?php require_once "includes/seletor_mes.php" ?>
-            <button onclick="abrirCadastrarModal('rendas')"><i class="bi bi-plus-circle"></i> Nova Renda</button>
+            <button onclick="abrirCadastrarModal('rendas')"><i class="bi bi-plus"></i> <span>Nova Renda</span></button>
         </div>
     </div>
     <?php if ($result->num_rows > 0) : ?>
@@ -41,9 +41,9 @@ $result = $stmt->get_result();
                     <?php while ($row = $result->fetch_assoc()) : ?>
                         <tr>
                             <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
-                            <td class="text-green-500"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
+                            <td class="text-green-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
                             <td>
-                                <span class="w-full border border-borda rounded-full px-5 py-1">
+                                <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
                                 <?= (($row['recorrente'] == 0) ? 'Não Recorrente' : 'Recorrente') ?>
                                 </span>
                             </td>

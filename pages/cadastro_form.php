@@ -26,7 +26,7 @@ require_once "includes/inicio.php"
                 <input type="password" name="confirma-senha" id="confirma-senha"
                        placeholder="Digite sua senha novamente">
             </div>
-            <button><i class="bi bi-person-add"></i> Criar Conta</button>
+            <button>Criar Conta</button>
             <p>Já tem uma conta? <a href="login">Login</a></p>
         </form>
     </div>

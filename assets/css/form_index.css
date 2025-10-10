@@ -3,7 +3,7 @@
         @apply flex items-center justify-center h-dvh w-full;
 
         & form {
-            @apply flex flex-col gap-5 items-center justify-center p-5 py-8 rounded-lg w-1/3;
+            @apply flex flex-col gap-5 items-center justify-center p-5 py-8 rounded-lg w-full lg:w-1/3;
 
             & h1 {
                 @apply text-3xl font-bold text-verde;
@@ -17,7 +17,7 @@
                 @apply flex flex-col gap-2 w-full;
 
                 & input {
-                    @apply border border-borda py-2 px-3 rounded-lg;
+                    @apply border border-borda py-2 px-3 rounded-lg bg-white;
 
                     &::placeholder {
                         @apply text-texto-opaco;

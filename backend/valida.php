@@ -8,6 +8,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 // caso o usuario tenha um relatório pendente
 $pendente = $_SESSION['relatorio_pendente'] ?? false;
+$rota = $rota ?? false;
 
 if ($pendente && $rota !== 'relatorio' && $rota !== 'finalizar_relatorio') {
     $_SESSION['resposta'] = "Gere um relatório primeiro!";

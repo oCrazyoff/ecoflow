@@ -25,8 +25,12 @@
         /*outline: 1px solid red;*/
     }
 
+    html {
+        @apply scroll-smooth;
+    }
+
     body {
-        @apply flex h-dvh;
+        @apply flex h-dvh pb-20 lg:pb-0;
 
         & main {
             @apply w-full h-full overflow-auto bg-cinza-claro;
@@ -44,6 +48,7 @@
     }
 
     .seletor-mes {
-        @apply flex items-center justify-center px-2 py-2 bg-white rounded-lg border border-borda cursor-pointer;
+        @apply flex items-center justify-center px-2 h-10 bg-white rounded-lg border border-borda
+        cursor-pointer;
     }
 }

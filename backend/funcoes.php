@@ -80,7 +80,7 @@ function formatarData(string $data): string
 
 function tipoCategorias($categoria)
 {
-    if ($categoria > 0 && $categoria < 7) {
+    if ($categoria > 0 && $categoria < 8) {
         switch ($categoria) {
             case 1:
                 return 'Moradia';
@@ -94,12 +94,16 @@ function tipoCategorias($categoria)
                 return 'Educação';
             case 6:
                 return 'Lazer';
+            case 7:
+                return 'Financeiro';
         }
     } else {
         return 'Outro';
     }
 }
-function validarDescricao(string $descricao) {
+
+function validarDescricao(string $descricao)
+{
     // Remove espaços extras
     $descricao = trim($descricao);
 
@@ -114,7 +118,9 @@ function validarDescricao(string $descricao) {
 
     return $descricao;
 }
-function validarValor($valor) {
+
+function validarValor($valor)
+{
     // Substitui vírgula por ponto, se houver
     $valor = str_replace(',', '.', $valor);
 
@@ -125,4 +131,5 @@ function validarValor($valor) {
 
     return (float)$valor;
 }
+
 ?>

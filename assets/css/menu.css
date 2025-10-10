@@ -1,6 +1,6 @@
 @layer components {
     .menu {
-        @apply flex flex-col items-center justify-between min-w-[15%] border-r border-borda;
+        @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda;
 
         & .topo-logo, nav, .baixo-menu {
             @apply p-4;
@@ -67,6 +67,30 @@
 
             & .topo-menu nav a span, .baixo-menu a span {
                 @apply hidden;
+            }
+        }
+    }
+
+    .menu-mobile {
+        @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl p-2 border-t border-borda z-200;
+
+        & nav {
+            @apply grid grid-cols-4 gap-1 w-full;
+
+            & a {
+                @apply flex flex-col items-center justify-center p-1 w-full rounded-xl;
+
+                & i {
+                    @apply text-xl;
+                }
+
+                &:hover {
+                    @apply bg-verde-opaco text-verde;
+                }
+
+                &.atual {
+                    @apply text-verde font-bold bg-verde-opaco;
+                }
             }
         }
     }

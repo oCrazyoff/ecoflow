@@ -17,8 +17,8 @@ require_once "includes/inicio.php"
                 <label for="senha">Senha</label>
                 <input type="password" name="senha" id="senha" placeholder="Digite sua senha">
             </div>
-            <button><i class="bi bi-arrow-bar-right"></i> Entrar</button>
-            <p>Ñão tem uma conta? <a href="cadastro">Cadastre-se</a></p>
+            <button>Entrar</button>
+            <p>Não tem uma conta? <a href="cadastro">Cadastre-se</a></p>
         </form>
     </div>
 </main>

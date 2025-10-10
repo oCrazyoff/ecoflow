@@ -2,7 +2,7 @@
 $titulo = "Perfil";
 require_once "includes/inicio.php"
 ?>
-<main class="px-10 py-5">
+<main class="px-5 lg:px-10 py-5">
     <h2 class="text-2xl font-bold">Perfil do Usuário</h2>
     <div class="card-perfil">
         <h3>Informações Pessoais</h3>

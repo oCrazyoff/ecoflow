@@ -1,6 +1,6 @@
 @layer components {
     .container-mensagem {
-        @apply flex flex-col gap-2 items-center justify-center w-full;
+        @apply flex flex-col gap-2 items-center justify-center w-full mt-10 lg:mt-0;
 
         & .icone {
             @apply flex items-center justify-center text-5xl w-20 h-20 text-verde bg-verde/20 rounded-full;
@@ -11,11 +11,12 @@
         }
 
         & .paragrafo {
-            @apply text-xl text-texto-opaco w-1/2 text-center;
+            @apply text-xl text-texto-opaco w-full lg:w-1/2 text-center;
         }
 
         & .btn {
-            @apply px-5 py-2 bg-verde rounded-lg text-white cursor-pointer hover:bg-verde-hover;
+            @apply w-full lg:w-auto text-center px-5 py-2 bg-verde rounded-lg text-white cursor-pointer
+            hover:bg-verde-hover;
         }
     }
 }

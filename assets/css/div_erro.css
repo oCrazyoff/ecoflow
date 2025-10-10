@@ -1,8 +1,9 @@
 @layer components {
 
     #div-erro {
-        @apply flex items-center justify-center gap-4 text-base lg:text-lg rounded-xl fixed right-8 bottom-[-50%]
-        shadow-lg bg-white px-3 lg:px-8 py-2 animate-[show-mobile_5s] lg:animate-[show_5s] text-black z-750;
+        @apply flex items-center justify-center gap-4 text-base lg:text-lg rounded-xl fixed right-2 lg:right-8
+        bottom-[-50%] shadow-lg bg-white px-3 lg:px-8 py-2 animate-[show-mobile_5s] lg:animate-[show_5s]
+        text-black z-750 border border-borda;
 
         & i {
             @apply text-xl lg:text-2xl;
@@ -26,20 +27,16 @@
 
     @keyframes show-mobile {
         0% {
-            bottom: 80%;
-            right: -100%;
+            bottom: -50%;
         }
         20% {
-            bottom: 80%;
-            right: 1rem;
+            bottom: 7rem;
         }
         80% {
-            bottom: 80%;
-            right: 1rem;
+            bottom: 7rem;
         }
         100% {
-            bottom: 80%;
-            right: -100%;
+            bottom: -50%;
         }
     }
 }
