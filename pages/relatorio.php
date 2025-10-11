@@ -1,5 +1,5 @@
 <?php
-$titulo = "Relatório Anual - " . date("Y") - 1;
+$titulo = "Relatório Anual " . date("Y") - 1;
 require_once "includes/inicio.php";
 
 // As funções para os cards de resumo no topo permanecem as mesmas
@@ -277,6 +277,7 @@ $ano_passado = date('Y') - 1;
 
             // Finalmente, chama a janela de impressão.
             window.print();
+            setTimeout(() => finalizarRelatorio(), 5000);
         }
     </script>
 <?php require_once "includes/fim.php" ?>
