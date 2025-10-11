@@ -79,8 +79,8 @@ $ano_passado = date('Y') - 1;
     </div>
     <!--alerta inicio-->
     <div id="alerta-inicio"
-         class="absolute top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-        <div class="flex flex-col items-center justify-center gap-5 p-10 rounded-xl w-1/3 bg-yellow-100 border
+         class="fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
+        <div class="flex flex-col items-center justify-center gap-5 p-5 lg:p-10 rounded-xl w-5/6 lg:w-1/3 bg-yellow-100 border
         border-yellow-500">
             <i class="bi bi-exclamation-triangle text-6xl text-yellow-500"></i>
             <h2 class="text-center text-2xl text-yellow-600 font-bold">Dados não salvos!</h2>
@@ -96,8 +96,8 @@ $ano_passado = date('Y') - 1;
 
     <!--alerta relatorio-->
     <div id="alerta-relatorio"
-         class="hidden absolute top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-        <div class="flex flex-col items-center justify-center gap-5 p-10 rounded-xl w-1/3 bg-white border border-borda
+         class="hidden fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
+        <div class="flex flex-col items-center justify-center gap-5 p-5 lg:p-10 rounded-xl w-5/6 lg:w-1/3 bg-white border border-borda
         shadow-xl">
             <i class="bi bi-exclamation-triangle text-6xl text-verde"></i>
             <h2 class="text-center text-3xl font-bold">Atenção</h2>

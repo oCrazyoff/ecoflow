@@ -33,7 +33,7 @@
         @apply flex h-dvh;
 
         & main {
-            @apply w-full h-full overflow-auto bg-cinza-claro !pb-20 lg:pb-0;
+            @apply w-full h-full overflow-auto bg-cinza-claro pb-20 lg:pb-0;
         }
     }
 }
