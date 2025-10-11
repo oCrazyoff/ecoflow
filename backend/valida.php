@@ -10,16 +10,16 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $pendente = $_SESSION['relatorio_pendente'] ?? false;
 $rota = $rota ?? false;
 
-if ($pendente && $rota !== 'relatorio' && $rota !== 'finalizar_relatorio') {
-    $_SESSION['resposta'] = "Gere um relatório primeiro!";
-    header("Location: " . BASE_URL . "relatorio");
-    exit();
-}
-
-if ($pendente == false && $rota === 'relatorio') {
-    header("Location: " . BASE_URL . "dashboard");
-    exit();
-}
+//if ($pendente && $rota !== 'relatorio' && $rota !== 'finalizar_relatorio') {
+//    $_SESSION['resposta'] = "Gere um relatório primeiro!";
+//    header("Location: " . BASE_URL . "relatorio");
+//    exit();
+//}
+//
+//if ($pendente == false && $rota === 'relatorio') {
+//    header("Location: " . BASE_URL . "dashboard");
+//    exit();
+//}
 
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();

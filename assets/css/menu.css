@@ -1,6 +1,6 @@
 @layer components {
     .menu {
-        @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda;
+        @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda bg-white;
 
         & .topo-logo, nav, .baixo-menu {
             @apply p-4;

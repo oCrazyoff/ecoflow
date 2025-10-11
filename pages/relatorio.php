@@ -54,7 +54,7 @@ $ano_passado = date('Y') - 1;
     <style>
         /* Estilos para impressão */
         @media print {
-            .header-dashboard button, #processando, #div-erro {
+            .header-dashboard button, #processando, #div-erro, #mensagem-retorno {
                 display: none;
             }
 
@@ -74,8 +74,13 @@ $ano_passado = date('Y') - 1;
     </style>
     <!--div processando-->
     <div id="processando"
-         class="hidden absolute top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-        <p class="text-white text-2xl">Processando...</p>
+         class="hidden fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
+        <p class="text-white text-2xl flex gap-1">
+            Processando
+            <span class="animate-bounce">.</span>
+            <span class="animate-bounce animation-delay-200">.</span>
+            <span class="animate-bounce animation-delay-400">.</span>
+        </p>
     </div>
     <!--alerta inicio-->
     <div id="alerta-inicio"
@@ -216,6 +221,24 @@ $ano_passado = date('Y') - 1;
                 <?php endif; ?>
             <?php endfor; ?>
         </div>
+        <div id="mensagem-retorno"
+             class="hidden fixed top-0 left-0 bg-gradient-to-tl from-white to-gray-100 h-full w-full z-500">
+            <div class="interface flex flex-col-reverse lg:flex-row items-center justify-between gap-5 lg:gap-10 h-full">
+                <div class="flex flex-col items-center lg:items-start justify-center gap-5 w-full lg:w-2/3 h-2/3 lg:h-auto">
+                    <h2 class="text-5xl text-verde font-bold text-center lg:text-left">Relatório Gerado!</h2>
+                    <p class="text-2xl text-texto-opaco text-center lg:text-left">
+                        Suas informações foram processadas e deletadas com sucesso.
+                        Agora você pode voltar para a dashboard.
+                    </p>
+                    <a class="px-5 py-3 bg-verde text-white rounded-xl w-full lg:w-max hover:bg-verde-hover text-center"
+                       href="<?= BASE_URL . "dashboard" ?>">
+                        Voltar para Dashboard
+                    </a>
+                </div>
+                <img class="w-full lg:w-1/3 h-1/3 lg:h-auto" src="<?= BASE_URL . "assets/img/img-relatorio.svg" ?>"
+                     alt="Desenho confirmação">
+            </div>
+        </div>
     </main>
     <script>
         // fechar alerta inicio
@@ -258,10 +281,7 @@ $ano_passado = date('Y') - 1;
                     const result = await response.json();
 
                     if (result.status === 'success') {
-                        setTimeout(() => {
-                            // Se tudo deu certo no back-end, redireciona para o dashboard.
-                            window.location.href = '<?= BASE_URL . 'dashboard' ?>';
-                        }, 10000)
+                        document.getElementById('mensagem-retorno').classList.remove('hidden');
                     } else {
                         // caso houver erro
                         alert('Ocorreu um erro ao finalizar o ano. Seus dados não foram apagados. Tente novamente.');
