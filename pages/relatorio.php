@@ -258,8 +258,16 @@ $ano_passado = date('Y') - 1;
                     const result = await response.json();
 
                     if (result.status === 'success') {
-                        // Se tudo deu certo no back-end, redireciona para o dashboard.
-                        window.location.href = '<?= BASE_URL . 'dashboard' ?>';
+                        // Adiciona o "ouvinte" do evento. Ele ficará esperando a janela de impressão fechar.
+                        window.addEventListener('afterprint', afterPrintHandler, {once: true});
+
+                        // Finalmente, chama a janela de impressão.
+                        window.print();
+
+                        setTimeout(() => {
+                            // Se tudo deu certo no back-end, redireciona para o dashboard.
+                            window.location.href = '<?= BASE_URL . 'dashboard' ?>';
+                        }, 5000)
                     } else {
                         // caso houver erro
                         alert('Ocorreu um erro ao finalizar o ano. Seus dados não foram apagados. Tente novamente.');
@@ -271,13 +279,6 @@ $ano_passado = date('Y') - 1;
                     document.getElementById('processando').classList.add('hidden');
                 }
             };
-
-            // Adiciona o "ouvinte" do evento. Ele ficará esperando a janela de impressão fechar.
-            window.addEventListener('afterprint', afterPrintHandler, {once: true});
-
-            // Finalmente, chama a janela de impressão.
-            window.print();
-            setTimeout(() => finalizarRelatorio(), 5000);
         }
     </script>
 <?php require_once "includes/fim.php" ?>
