@@ -110,11 +110,14 @@ function validarDescricao(string $descricao)
 
 function validarValor($valor)
 {
-    // Remove separador de milhar (ponto)
-    $valor = str_replace('.', '', $valor);
-
-    // Substitui vírgula decimal por ponto
-    $valor = str_replace(',', '.', $valor);
+    // Se tiver vírgula, assume formato brasileiro
+    if (strpos($valor, ',') !== false) {
+        // Remove separador de milhar
+        $valor = str_replace('.', '', $valor);
+        // Substitui vírgula decimal por ponto
+        $valor = str_replace(',', '.', $valor);
+    }
+    // Caso contrário, assume formato americano (ponto como decimal)
 
     // Verifica se é um número válido
     if (!is_numeric($valor)) {

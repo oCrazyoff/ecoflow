@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // validar o valor
     $valor = validarValor($valor);
-    if ($valor == false) {
+    if ($valor === false) {
         $_SESSION['resposta'] = "Valor inválido!";
         header($redirecionamento);
         exit;

@@ -40,7 +40,7 @@
     }
 
     body {
-        @apply flex h-dvh bg-cinza-claro;
+        @apply flex h-auto lg:h-dvh bg-cinza-claro;
 
         & main {
             @apply w-full h-full overflow-auto pb-20 lg:pb-0;
@@ -58,7 +58,7 @@
     }
 
     .seletor-mes {
-        @apply flex items-center justify-center px-2 h-13 lg:h-10 bg-white rounded-lg border border-borda
+        @apply flex items-center justify-center px-2 h-10 rounded-lg border border-borda
         cursor-pointer;
     }
 }

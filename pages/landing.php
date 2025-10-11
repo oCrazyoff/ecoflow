@@ -12,9 +12,9 @@ require_once "includes/inicio.php"
     </div>
 </header>
 
-<main>
+<main class="pb-0">
     <section class="bg-gradient-to-tr from-verde-hover to-verde h-auto lg:h-[calc(100dvh-4rem)] py-10">
-        <div class="interface h-full flex gap-5 items-center justify-between">
+        <div class="interface h-full flex flex-col-reverse lg:flex-row gap-5 items-center justify-between">
             <div class="txt-hero">
                 <p class="font-semibold px-5 py-1 rounded-full bg-white/20 w-max text-sm">
                     Finanças pessoais simplificadas
@@ -30,7 +30,7 @@ require_once "includes/inicio.php"
                     <a class="btn-hero" href="#sobre">Saiba mais</a>
                 </div>
             </div>
-            <img class="img-hero hidden lg:block" src="assets/img/img-hero.svg" alt="Desenho de finanças">
+            <img class="img-hero" src="assets/img/img-hero.svg" alt="Desenho de finanças">
         </div>
         <a href="#sobre" class="absolute bottom-10 left-1/2 animate-bounce text-5xl text-white/50 hidden lg:block">
             <i class="bi bi-arrow-down-short"></i>
@@ -121,7 +121,9 @@ require_once "includes/inicio.php"
     </section>
 
     <footer class="flex items-center justify-center bg-black text-white p-5 text-center">
-        <p>&copy; <?= date('Y') ?> EcoFlow. Todos os direitos reservados.</p>
+        <p>&copy; <?= date('Y') ?> EcoFlow. Feito por
+            <a class="border-b" href="https://www.walysson.com.br/" target="_blank">Walysson.</a>
+        </p>
     </footer>
 </main>
 <?php require_once "includes/fim.php" ?>

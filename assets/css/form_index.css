@@ -1,6 +1,6 @@
 @layer components {
     .container-form-index {
-        @apply flex items-center justify-center h-dvh w-full;
+        @apply flex items-center justify-center min-h-dvh w-full;
 
         & form {
             @apply flex flex-col gap-5 items-center justify-center p-5 py-8 rounded-lg w-full lg:w-1/3;

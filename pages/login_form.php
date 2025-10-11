@@ -2,7 +2,7 @@
 $n_valida = true;
 require_once "includes/inicio.php"
 ?>
-<main>
+<main class="pb-0">
     <div class="container-form-index">
         <form action="fazer_login" method="POST">
             <!--csrf-->

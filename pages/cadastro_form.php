@@ -2,9 +2,9 @@
 $n_valida = true;
 require_once "includes/inicio.php"
 ?>
-<main>
+<main class="pb-0">
     <div class="container-form-index">
-        <form action="fazer_login" method="POST">
+        <form action="fazer_cadastro" method="POST">
             <!--csrf-->
             <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
             <h1>Eco<span>Flow</span></h1>
