@@ -14,8 +14,8 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: 45.132.157.8
-          username: u262084135.springgreen-chimpanzee-503754.hostingersite.com
-          password: ${{ secrets.senha_hostinger }}
+          server: ftpupload.net
+          username: if0_38495560
+          password: ${{ secrets.senha_ftp }}
           local-dir: ./
-          server-dir: ./
+          server-dir: ./htdocs/
