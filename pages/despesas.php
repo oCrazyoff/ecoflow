@@ -32,9 +32,9 @@ $result = $stmt->get_result();
                     <thead>
                     <tr>
                         <th>Descrição</th>
-                        <th>Categoria</th>
-                        <th>Valor</th>
                         <th>Status</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
                         <th>Data</th>
                         <th>Recorrente</th>
                         <th>Ações</th>
@@ -44,8 +44,6 @@ $result = $stmt->get_result();
                     <?php while ($row = $result->fetch_assoc()) : ?>
                         <tr>
                             <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
-                            <td><?= htmlspecialchars(tipoCategorias($row['categoria'])) ?></td>
-                            <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
                             <td>
                                 <?php if ($row['status'] == 0): ?>
                                     <span class="w-full bg-yellow-500 text-white rounded-full px-5 py-1">
@@ -57,6 +55,8 @@ $result = $stmt->get_result();
                                     </span>
                                 <?php endif; ?>
                             </td>
+                            <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
+                            <td><?= htmlspecialchars(tipoCategorias($row['categoria'])) ?></td>
                             <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                             <td>
                                 <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
