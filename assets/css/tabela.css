@@ -40,7 +40,7 @@
         }
 
         & .container-table {
-            @apply max-w-full max-h-[calc(100dvh-16rem)] lg:max-h-[75dvh] overflow-auto border border-borda rounded-lg;
+            @apply max-w-full max-h-full overflow-auto border border-borda rounded-lg;
 
             & table {
                 @apply w-full text-center;

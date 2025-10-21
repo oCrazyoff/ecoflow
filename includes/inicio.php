@@ -44,4 +44,7 @@ if (array_key_exists($rota, $routes)) {
         include("menu.php");
     }
 }
+
+// incluindo o loading
+require_once "loading.php";
 ?>
