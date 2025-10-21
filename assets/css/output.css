@@ -59,7 +59,9 @@
     --color-texto-opaco: #656565;
     --color-borda: rgba(202, 202, 202, 0.64);
     --color-cinza-claro: #F9FAFB;
-    --animate-loading: loading 1s ease-in-out infinite;
+    --animate-loading1: loading 1s ease-in-out infinite;
+    --animate-loading2: loading 1.2s ease-in-out infinite;
+    --animate-loading3: loading 1.3s ease-in-out infinite;
   }
 }
 @layer base {
@@ -306,6 +308,15 @@
   }
   .animate-bounce {
     animation: var(--animate-bounce);
+  }
+  .animate-loading1 {
+    animation: var(--animate-loading1);
+  }
+  .animate-loading2 {
+    animation: var(--animate-loading2);
+  }
+  .animate-loading3 {
+    animation: var(--animate-loading3);
   }
   .cursor-pointer {
     cursor: pointer;
@@ -1854,18 +1865,8 @@
       gap: calc(var(--spacing) * 8);
       & span {
         width: calc(var(--spacing) * 10);
-        animation: var(--animate-loading);
         border-radius: var(--radius-lg);
         background-color: var(--color-verde);
-      }
-      & .parte-1 {
-        height: calc(var(--spacing) * 30);
-      }
-      & .parte-2 {
-        height: calc(var(--spacing) * 50);
-      }
-      & .parte-3 {
-        height: calc(var(--spacing) * 40);
       }
     }
   }

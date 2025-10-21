@@ -18,7 +18,9 @@
     --color-borda: rgba(202, 202, 202, 0.64);
     --color-cinza-claro: #F9FAFB;
 
-    --animate-loading: loading 1s ease-in-out infinite;
+    --animate-loading1: loading 1s ease-in-out infinite;
+    --animate-loading2: loading 1.2s ease-in-out infinite;
+    --animate-loading3: loading 1.3s ease-in-out infinite;
     @keyframes loading {
         0%,
         100% {
@@ -68,19 +70,7 @@
             @apply flex items-center justify-center gap-8;
 
             & span{
-                @apply rounded-lg w-10 bg-verde animate-loading;
-            }
-
-            & .parte-1 {
-                @apply h-30;
-            }
-
-            & .parte-2 {
-                @apply h-50;
-            }
-
-            & .parte-3 {
-                @apply h-40;
+                @apply rounded-lg w-10 bg-verde;
             }
         }
     }
