@@ -1,6 +1,6 @@
 @layer components {
     .main-tabela {
-        @apply flex flex-col gap-5 p-3 pt-5 lg:p-10;
+        @apply flex flex-col gap-5 p-3 pt-5 lg:p-10 pb-20 lg:pb-10;
     }
 
     .header-tabela {

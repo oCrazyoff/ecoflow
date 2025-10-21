@@ -1277,8 +1277,12 @@
     gap: calc(var(--spacing) * 5);
     padding: calc(var(--spacing) * 3);
     padding-top: calc(var(--spacing) * 5);
+    padding-bottom: calc(var(--spacing) * 20);
     @media (width >= 64rem) {
       padding: calc(var(--spacing) * 10);
+    }
+    @media (width >= 64rem) {
+      padding-bottom: calc(var(--spacing) * 10);
     }
   }
   .header-tabela {
