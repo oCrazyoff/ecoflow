@@ -172,12 +172,33 @@ $ano_passado = date('Y') - 1;
                 $stmt_despesas->execute();
                 $resultado_despesas = $stmt_despesas->get_result();
                 $stmt_despesas->close();
+
+                // lógica para o saldo
+                $sql_total_rendas = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
+                $stmt_total_rendas = $conexao->prepare($sql_total_rendas);
+                $stmt_total_rendas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
+                $stmt_total_rendas->execute();
+                $stmt_total_rendas->bind_result($total_rendas_mes);
+                $stmt_total_rendas->fetch();
+                $stmt_total_rendas->close();
+
+                $sql_total_despesas = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
+                $stmt_total_despesas = $conexao->prepare($sql_total_despesas);
+                $stmt_total_despesas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
+                $stmt_total_despesas->execute();
+                $stmt_total_despesas->bind_result($total_despesas_mes);
+                $stmt_total_despesas->fetch();
+                $stmt_total_despesas->close();
                 ?>
 
                 <!-- Só exibe o card do mês se houver alguma movimentação -->
                 <?php if ($resultado_rendas->num_rows > 0 || $resultado_despesas->num_rows > 0): ?>
                     <div class="bg-white rounded-xl p-10 border border-borda shadow-lg">
-                        <h3 class="text-2xl font-bold text-center"><?= htmlspecialchars($meses[$mes]) ?></h3>
+                        <h3 class="text-2xl font-bold text-center">
+                            <?= htmlspecialchars($meses[$mes]) ?>
+                            <span class="text-verde">•</span>
+                            <?= formatarReais($total_rendas_mes - $total_despesas_mes) ?>
+                        </h3>
                         <div>
 
                             <!-- Seção de Rendas -->

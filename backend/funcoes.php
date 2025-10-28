@@ -72,7 +72,7 @@ function tipoCategorias($categoria)
     if ($categoria > 0 && $categoria < 8) {
         switch ($categoria) {
             case 1:
-                return 'Moradia';
+                return 'Casa';
             case 2:
                 return 'Alimentação';
             case 3:
@@ -84,7 +84,7 @@ function tipoCategorias($categoria)
             case 6:
                 return 'Lazer';
             case 7:
-                return 'Financeiro';
+                return 'Cartão';
         }
     } else {
         return 'Outro';

@@ -5,6 +5,12 @@ $meses = [
     5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto',
     9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
 ];
+
+if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
+    $m = (int)$_GET['m'];
+} else {
+    $m = (int)date('m');
+}
 ?>
 
 <form method="GET">

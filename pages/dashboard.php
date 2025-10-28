@@ -6,8 +6,8 @@ function totalRendas()
 {
     global $conexao;
 
-    // pega o mês do GET ou usa o mês atual e ano
-    if (isset($_GET['m']) && is_numeric($_GET['m'])) {
+    // pega o mês do GET ou usa o mês atual
+    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
         $mes = $_GET['m'];
     } else {
         $mes = date('m'); // Mês atual
@@ -31,10 +31,11 @@ function despesasPagas()
 {
     global $conexao;
 
-    if (isset($_GET['m']) && is_numeric($_GET['m'])) {
+    // pega o mês do GET ou usa o mês atual
+    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
         $mes = $_GET['m'];
     } else {
-        $mes = date('m');
+        $mes = date('m'); // Mês atual
     }
 
     $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 1 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
@@ -53,10 +54,11 @@ function despesasPendentes()
 {
     global $conexao;
 
-    if (isset($_GET['m']) && is_numeric($_GET['m'])) {
+    // pega o mês do GET ou usa o mês atual
+    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
         $mes = $_GET['m'];
     } else {
-        $mes = date('m');
+        $mes = date('m'); // Mês atual
     }
 
     $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 0 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
@@ -76,7 +78,7 @@ function despesasPendentes()
         <header class="header-dashboard">
             <div class="txt-header">
                 <h2>Dashboard</h2>
-                <p>Olá, <?= htmlspecialchars($_SESSION['nome']) ?>! Aqui está o resumo das suas finanças</p>
+                <p>Saldo <span class="text-verde">•</span> <?= formatarReais(totalRendas() - despesasPagas()) ?></p>
             </div>
             <div class="opt-header">
                 <?php require_once "includes/seletor_mes.php" ?>
