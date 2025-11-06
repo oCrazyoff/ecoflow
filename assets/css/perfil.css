@@ -39,10 +39,10 @@
         }
 
         &.deslogar {
-            @apply border-red-500/30;
+            @apply border-red-600/30;
 
             & h3 {
-                @apply text-red-500 m-0;
+                @apply text-red-600 m-0;
             }
 
             & p {
@@ -50,10 +50,10 @@
             }
 
             & a {
-                @apply p-2 text-white bg-red-500 rounded-lg cursor-pointer;
+                @apply p-2 text-white bg-red-600 rounded-lg cursor-pointer;
 
                 &:hover {
-                    @apply bg-red-600;
+                    @apply bg-red-800;
                 }
             }
         }
