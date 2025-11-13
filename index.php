@@ -42,6 +42,9 @@ $routes = [
     // rotas de deletar
     'deletar_rendas' => 'backend/deletar/rendas.php',
     'deletar_despesas' => 'backend/deletar/despesas.php',
+
+    // rota de api
+    'deepseek' => 'api/deepseek.php',
 ];
 
 if (array_key_exists($url, $routes)) {

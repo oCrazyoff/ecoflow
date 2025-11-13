@@ -1,6 +1,7 @@
 <?php
 $titulo = "Dashboard";
 require_once "includes/inicio.php";
+require_once "api/deepseek.php";
 
 function totalRendas()
 {
@@ -74,54 +75,83 @@ function despesasPendentes()
 }
 
 ?>
-    <main>
-        <header class="header-dashboard">
-            <div class="txt-header">
-                <h2>Dashboard</h2>
-                <p>Saldo <span class="text-verde">•</span> <?= formatarReais(totalRendas() - despesasPagas()) ?></p>
-            </div>
-            <div class="opt-header">
-                <?php require_once "includes/seletor_mes.php" ?>
-            </div>
-        </header>
-        <div class="container-cards">
-            <div class="card">
-                <p>Total de Rendas</p>
-                <h3><?= formatarReais(totalRendas()) ?></h3>
-                <i class="bi bi-cash-stack"></i>
-            </div>
-            <div class="card">
-                <p>Despesas Pagas</p>
-                <h3><?= formatarReais(despesasPagas()) ?></h3>
-                <i class="bi bi-graph-down-arrow"></i>
-            </div>
-            <div class="card">
-                <p>Despesas Pendentes</p>
-                <h3><?= formatarReais(despesasPendentes()) ?></h3>
-                <i class="bi bi-currency-dollar"></i>
-            </div>
+<main>
+    <header class="header-dashboard">
+        <div class="txt-header">
+            <h2>Dashboard</h2>
+            <p>Saldo <span class="text-verde">•</span> <?= formatarReais(totalRendas() - despesasPagas()) ?></p>
         </div>
-        <div class="meio-dashboard">
-            <div class="card col-span-1 lg:col-span-3">
-                <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
-                    <h3>Análise Financeira</h3>
-                    <div>
-                        <canvas class="min-w-full h-auto" id="resumoMensalChart"></canvas>
-                    </div>
-                <?php else: ?>
-                    <div class="container-mensagem mt-0">
-                        <i class="bi bi-piggy-bank icone">
-                        </i>
-                        <h3 class="titulo">Sem movimentações neste mês</h3>
-                        <p class="paragrafo">
-                            Adicione sua primeira renda ou despesa para começar a acompanhar seus resultados.
-                        </p>
-                        <a href="rendas<?= (isset($m) ? '?m=' . $m : '') ?>" class="btn">
-                            Registrar Renda
-                        </a>
-                    </div>
-                <?php endif; ?>
-            </div>
+        <div class="opt-header">
+            <?php require_once "includes/seletor_mes.php" ?>
+        </div>
+    </header>
+    <div class="container-cards">
+        <div class="card">
+            <p>Total de Rendas</p>
+            <h3><?= formatarReais(totalRendas()) ?></h3>
+            <i class="bi bi-cash-stack"></i>
+        </div>
+        <div class="card">
+            <p>Despesas Pagas</p>
+            <h3><?= formatarReais(despesasPagas()) ?></h3>
+            <i class="bi bi-graph-down-arrow"></i>
+        </div>
+        <div class="card">
+            <p>Despesas Pendentes</p>
+            <h3><?= formatarReais(despesasPendentes()) ?></h3>
+            <i class="bi bi-currency-dollar"></i>
+        </div>
+    </div>
+    <div class="meio-dashboard">
+        <div class="card col-span-1 lg:col-span-3">
+            <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
+                <h3>Análise Financeira</h3>
+                <div>
+                    <canvas class="min-w-full h-auto" id="resumoMensalChart"></canvas>
+                </div>
+            <?php else: ?>
+                <div class="container-mensagem mt-0">
+                    <i class="bi bi-piggy-bank icone">
+                    </i>
+                    <h3 class="titulo">Sem movimentações neste mês</h3>
+                    <p class="paragrafo">
+                        Adicione sua primeira renda ou despesa para começar a acompanhar seus resultados.
+                    </p>
+                    <a href="rendas<?= (isset($m) ? '?m=' . $m : '') ?>" class="btn">
+                        Registrar Renda
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="container-direita">
+            <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
+                <div class="card assistente-ia">
+                    <h3><i class="bi bi-stars"></i> Assistente I.A</h3>
+                    <?php
+                    $d = date('d');
+                    $d = 20;
+
+                    if ($d > 0 && $d < 16) {
+                        $titulo_ia = 'Meta Financeira 🎯';
+                        $txt_ia = gerarMeta($m);
+                    } elseif ($d > 15 && $d < 31) {
+                        if ((totalRendas() - despesasPagas()) > 0) {
+                            $titulo_ia = 'Parabéns ✅';
+                            $txt_ia = gerarSucesso($m);
+                        } else {
+                            $titulo_ia = 'Alerta ❗';
+                            $txt_ia = gerarAlerta($m);
+                        }
+                    }
+                    ?>
+                    <?php if (!empty(trim($txt_ia))): ?>
+                        <h4 class="titulo"><?= htmlspecialchars($titulo_ia) ?></h4>
+                        <p><?= htmlspecialchars($txt_ia) ?></p>
+                    <?php else: ?>
+                        <i class="bi bi-exclamation-triangle text-5xl text-verde text-center"></i>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
             <div class="card">
                 <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
                     <h3>Resumo Financeiro</h3>
@@ -152,7 +182,7 @@ function despesasPendentes()
                     $resultado_rendas = $stmt->get_result();
                     $stmt->close();
 
-                    if ($resultado_rendas->num_rows > 0):?>
+                    if ($resultado_rendas->num_rows > 0): ?>
                         <h4 class="titulo-resumo">Maiores Rendas</h4>
                         <?php while ($renda = $resultado_rendas->fetch_assoc()): ?>
                             <div class="item-resumo">
@@ -191,7 +221,7 @@ function despesasPendentes()
                     $resultado_despesas = $stmt->get_result();
                     $stmt->close();
 
-                    if ($resultado_despesas->num_rows > 0):?>
+                    if ($resultado_despesas->num_rows > 0): ?>
                         <h4 class="titulo-resumo">Maiores Despesas</h4>
                         <?php while ($despesa = $resultado_despesas->fetch_assoc()): ?>
                             <div class="item-resumo">
@@ -217,7 +247,8 @@ function despesasPendentes()
                 <?php endif; ?>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 <?php
 // Consulta total de despesas por categoria
 if (isset($m) && $m > 0 && $m < 13) {
@@ -256,46 +287,46 @@ foreach ($resultados as $r) {
     $valores[] = (float)$r['total'];
 }
 ?>
-    <script>
-        const ctx = document.getElementById('resumoMensalChart');
+<script>
+    const ctx = document.getElementById('resumoMensalChart');
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?= json_encode($labels) ?>,
-                datasets: [{
-                    label: 'R$: ',
-                    data: <?= json_encode($valores) ?>,
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(153, 102, 255, 0.6)',
-                        'rgba(255, 159, 64, 0.6)',
-                        'rgba(100, 181, 246, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(100, 181, 246, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                borderRadius: 8,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                }
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode($labels) ?>,
+            datasets: [{
+                label: 'R$: ',
+                data: <?= json_encode($valores) ?>,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(100, 181, 246, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(100, 181, 246, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            borderRadius: 8,
+            plugins: {
+                legend: {
+                    display: false
+                },
             }
-        });
-    </script>
+        }
+    });
+</script>
 <?php require_once "includes/fim.php" ?>

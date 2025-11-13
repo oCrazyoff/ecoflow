@@ -14,8 +14,7 @@
             @apply flex items-center justify-center gap-5;
 
             & #btn-relatorio {
-                @apply flex items-center justify-center gap-3 px-2 py-2 bg-white rounded-lg border border-borda
-                cursor-pointer;
+                @apply flex items-center justify-center gap-3 px-2 py-2 bg-white rounded-lg border border-borda cursor-pointer;
             }
         }
     }
@@ -35,14 +34,36 @@
             }
 
             & i {
-                @apply absolute flex items-center justify-center right-[1.5rem] top-[1.5rem] text-2xl
-                text-verde bg-verde/10 rounded-lg w-10 h-10;
+                @apply absolute flex items-center justify-center right-[1.5rem] top-[1.5rem] text-2xl text-verde bg-verde/10 rounded-lg w-10 h-10;
             }
         }
     }
 
     .meio-dashboard {
         @apply grid grid-cols-1 lg:grid-cols-4 gap-5 px-5 pb-5;
+
+        & .container-direita {
+
+            & .assistente-ia {
+                @apply flex flex-col gap-3 justify-center mb-[1.5rem] border-verde/30;
+
+                & h3 {
+                    @apply m-0;
+
+                    & i {
+                        @apply text-verde;
+                    }
+                }
+
+                & h4 {
+                    @apply font-semibold;
+                }
+
+                & p {
+                    @apply text-texto-opaco;
+                }
+            }
+        }
 
         & .card {
             @apply bg-white rounded-xl border border-borda p-[1.5rem] h-max;
