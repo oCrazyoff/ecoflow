@@ -75,36 +75,90 @@ function despesasPendentes()
 }
 
 // lógica do assistente IA
-$mes = $_GET['m'];
+$mes = $_GET['m'] ?? date('m');
 
-$sql_ia = "SELECT mensagem FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
+// saldo
+$saldo = totalRendas() - despesasPagas();
+
+// buscando insights do banco
+$sql_ia = "SELECT titulo, mensagem, DAY(data) AS dia FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
 $stmt_ia = $conexao->prepare($sql_ia);
 $stmt_ia->bind_param("is", $_SESSION['id'], $mes);
 $stmt_ia->execute();
 $resultado_ia = $stmt_ia->get_result();
+$dados_ia = $resultado_ia->fetch_assoc();
 $stmt_ia->close();
 
-$d = date('d');
-$d = 12;
-
+// caso tenha algo salvo no banco
 if ($resultado_ia->num_rows > 0) {
-    // Busca a mensagem salva
-    $dados_ia = $resultado_ia->fetch_assoc();
-    $txt_ia = $dados_ia['mensagem'];
-
-    // Define o título conforme o saldo
-    if ((totalRendas() - despesasPagas()) > 0) {
+    // lógica do titulo
+    if ($dados_ia['titulo'] == 0) {
+        $titulo_ia = 'Meta Financeira 🎯';
+    } elseif ($dados_ia['titulo'] == 1) {
         $titulo_ia = 'Parabéns ✅';
-    } else {
+    } elseif ($dados_ia['titulo'] == 2) {
         $titulo_ia = 'Alerta ⚠️';
     }
-} else {
-    // Caso ainda não tenha insight salvo
-    if ($d > 0 && $d < 16) {
+
+    // caso for esse mês atual
+    if ($mes == date('m')) {
+        // caso for começo do mês
+        if (date('d') <= 15 && $dados_ia['titulo'] == 0) {
+            $txt_ia = $dados_ia['mensagem'];
+        } elseif (date('d') <= 15 && $dados_ia['titulo'] != 0) {
+            $titulo_ia = 'Alerta ⚠️';
+            $txt_ia = gerarAlerta($mes);
+        }
+
+        // caso for fim do mês
+        if (date('d') > 15) {
+            // caso o saldo for positivo
+            if ($saldo > 0 && $dados_ia['titulo'] == 1) {
+                $txt_ia = $dados_ia['mensagem'];
+            } elseif ($saldo > 0 && $dados_ia['titulo'] != 1) {
+                $titulo_ia = 'Parabéns ✅';
+                $txt_ia = gerarSucesso($mes);
+
+                // caso o saldo for negativo
+                if ($saldo < 0 && $dados_ia['titulo'] == 2) {
+                    $txt_ia = $dados_ia['mensagem'];
+                } elseif ($saldo < 0 && $dados_ia['titulo'] != 2) {
+                    $titulo_ia = 'Alerta ⚠️';
+                    $txt_ia = gerarAlerta($mes);
+                }
+            }
+        }
+    }
+
+    // caso for mês passado e seja apenas uma meta ou uma mensagem coerente com o saldo
+    if (($mes < date('m')) && ($dados_ia['titulo'] != 0) && (($saldo > 0 && $dados_ia['titulo'] == 1) || ($saldo < 0 && $dados_ia['titulo'] == 2))) {
+        $txt_ia = $dados_ia['mensagem'];
+    } elseif ($mes < date('m')) {
+        if ($saldo > 0) {
+            $titulo_ia = 'Parabéns ✅';
+            $txt_ia = gerarSucesso($mes);
+        } else {
+            $titulo_ia = 'Alerta ⚠️';
+            $txt_ia = gerarAlerta($mes);
+        }
+    }
+} else { // caso não tenha nada no banco
+    // caso for o mês atual
+    if ($mes == date('m') && date('d') <= 15) {
         $titulo_ia = 'Meta Financeira 🎯';
         $txt_ia = gerarMeta($mes);
-    } elseif ($d > 15 && $d < 31) {
-        if ((totalRendas() - despesasPagas()) > 0) {
+    } elseif ($mes == date('m') && date('d') > 15) {
+        if ($saldo > 0) {
+            $titulo_ia = 'Parabéns ✅';
+            $txt_ia = gerarSucesso($mes);
+        } else {
+            $titulo_ia = 'Alerta ⚠️';
+            $txt_ia = gerarAlerta($mes);
+        }
+    }
+    // caso for mês passado e o saldo diferente de 0
+    if ($mes < date('m') && $saldo != 0) {
+        if ($saldo > 0) {
             $titulo_ia = 'Parabéns ✅';
             $txt_ia = gerarSucesso($mes);
         } else {
@@ -118,7 +172,7 @@ if ($resultado_ia->num_rows > 0) {
     <header class="header-dashboard">
         <div class="txt-header">
             <h2>Dashboard</h2>
-            <p>Saldo <span class="text-verde">•</span> <?= formatarReais(totalRendas() - despesasPagas()) ?></p>
+            <p>Saldo <span class="text-verde">•</span> <?= formatarReais($saldo) ?></p>
         </div>
         <div class="opt-header">
             <?php require_once "includes/seletor_mes.php" ?>

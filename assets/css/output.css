@@ -281,6 +281,9 @@
   .h-1\/3 {
     height: calc(1/3 * 100%);
   }
+  .h-20 {
+    height: calc(var(--spacing) * 20);
+  }
   .h-\[4rem\] {
     height: 4rem;
   }

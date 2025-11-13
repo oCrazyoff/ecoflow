@@ -32,7 +32,7 @@
 @layer base {
     * {
         @apply duration-300 ease-in-out;
-        /*outline: 1px solid red;*/
+        /* outline: 1px solid red; */
     }
 
     html {
