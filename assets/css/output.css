@@ -1426,6 +1426,20 @@
         }
       }
     }
+    & .btn-pendente, .btn-pago {
+      width: 100%;
+      cursor: pointer;
+      border-radius: calc(infinity * 1px);
+      padding-inline: calc(var(--spacing) * 5);
+      padding-block: calc(var(--spacing) * 1);
+      color: var(--color-white);
+    }
+    & .btn-pendente {
+      background-color: var(--color-yellow-500);
+    }
+    & .btn-pago {
+      background-color: var(--color-green-500);
+    }
   }
 }
 @layer components {

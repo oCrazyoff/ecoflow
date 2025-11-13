@@ -77,7 +77,7 @@ function despesasPendentes()
 // lógica do assistente IA
 $mes = $_GET['m'] ?? date('m');
 $dia = date('d');
-$dia = 16;
+// $dia = 16;
 $saldo = totalRendas() - despesasPagas();
 
 // Buscando insights do banco

@@ -14,8 +14,7 @@
             @apply flex items-center justify-center gap-3;
 
             & button {
-                @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-13 lg:w-auto
-                h-10 rounded-lg;
+                @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-13 lg:w-auto h-10 rounded-lg;
 
                 & i {
                     @apply text-3xl mt-0 lg:-mt-1;
@@ -45,7 +44,8 @@
             & table {
                 @apply w-full text-center;
 
-                & thead th, tbody td {
+                & thead th,
+                tbody td {
                     @apply p-3;
                 }
 
@@ -68,7 +68,8 @@
                 & .acoes {
                     @apply flex items-center justify-center gap-3 lg:gap-10 text-xl;
 
-                    & .btn-edita, .btn-deleta {
+                    & .btn-edita,
+                    .btn-deleta {
                         @apply w-10 h-10 rounded-lg cursor-pointer;
 
                         &:hover {
@@ -85,6 +86,19 @@
                     }
                 }
             }
+        }
+
+        & .btn-pendente,
+        .btn-pago {
+            @apply w-full text-white rounded-full px-5 py-1 cursor-pointer;
+        }
+
+        & .btn-pendente {
+            @apply bg-yellow-500;
+        }
+
+        & .btn-pago {
+            @apply bg-green-500;
         }
     }
 }
