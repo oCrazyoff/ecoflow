@@ -78,7 +78,7 @@
     }
 
     & .assistente-ia {
-        @apply flex flex-col gap-3 justify-center border-verde/30;
+        @apply flex flex-col gap-3 justify-center border !border-verde/30;
 
         & h3 {
             @apply !m-0;

@@ -76,12 +76,12 @@ function despesasPendentes()
 
 // lógica do assistente IA
 $mes = $_GET['m'] ?? date('m');
-
-// saldo
+$dia = date('d');
+$dia = 16;
 $saldo = totalRendas() - despesasPagas();
 
-// buscando insights do banco
-$sql_ia = "SELECT titulo, mensagem, DAY(data) AS dia FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
+// Buscando insights do banco
+$sql_ia = "SELECT titulo, mensagem FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
 $stmt_ia = $conexao->prepare($sql_ia);
 $stmt_ia->bind_param("is", $_SESSION['id'], $mes);
 $stmt_ia->execute();
@@ -89,82 +89,65 @@ $resultado_ia = $stmt_ia->get_result();
 $dados_ia = $resultado_ia->fetch_assoc();
 $stmt_ia->close();
 
-// caso tenha algo salvo no banco
-if ($resultado_ia->num_rows > 0) {
-    // lógica do titulo
-    if ($dados_ia['titulo'] == 0) {
-        $titulo_ia = 'Meta Financeira 🎯';
-    } elseif ($dados_ia['titulo'] == 1) {
-        $titulo_ia = 'Parabéns ✅';
-    } elseif ($dados_ia['titulo'] == 2) {
-        $titulo_ia = 'Alerta ⚠️';
-    }
+// Variáveis de saída
+$titulo_ia = '';
+$txt_ia = '';
+$expected_title_type = null; // 0=Meta, 1=Parabéns, 2=Alerta
 
-    // caso for esse mês atual
-    if ($mes == date('m')) {
-        // caso for começo do mês
-        if (date('d') <= 15 && $dados_ia['titulo'] == 0) {
-            $txt_ia = $dados_ia['mensagem'];
-        } elseif (date('d') <= 15 && $dados_ia['titulo'] != 0) {
-            $titulo_ia = 'Alerta ⚠️';
-            $txt_ia = gerarAlerta($mes);
-        }
-
-        // caso for fim do mês
-        if (date('d') > 15) {
-            // caso o saldo for positivo
-            if ($saldo > 0 && $dados_ia['titulo'] == 1) {
-                $txt_ia = $dados_ia['mensagem'];
-            } elseif ($saldo > 0 && $dados_ia['titulo'] != 1) {
-                $titulo_ia = 'Parabéns ✅';
-                $txt_ia = gerarSucesso($mes);
-
-                // caso o saldo for negativo
-                if ($saldo < 0 && $dados_ia['titulo'] == 2) {
-                    $txt_ia = $dados_ia['mensagem'];
-                } elseif ($saldo < 0 && $dados_ia['titulo'] != 2) {
-                    $titulo_ia = 'Alerta ⚠️';
-                    $txt_ia = gerarAlerta($mes);
-                }
-            }
-        }
-    }
-
-    // caso for mês passado e seja apenas uma meta ou uma mensagem coerente com o saldo
-    if (($mes < date('m')) && ($dados_ia['titulo'] != 0) && (($saldo > 0 && $dados_ia['titulo'] == 1) || ($saldo < 0 && $dados_ia['titulo'] == 2))) {
-        $txt_ia = $dados_ia['mensagem'];
-    } elseif ($mes < date('m')) {
+if ($mes == date('m')) {
+    // --- MÊS ATUAL ---
+    if ($dia <= 15) {
+        // Começo do mês: esperado é uma Meta
+        $expected_title_type = 0;
+    } else {
+        // Fim do mês: esperado é Parabéns ou Alerta
         if ($saldo > 0) {
+            $expected_title_type = 1; // Parabéns
+        } elseif ($saldo < 0) {
+            $expected_title_type = 2; // Alerta
+        }
+    }
+} elseif ($mes < date('m')) {
+    // --- MÊS PASSADO ---
+    // Esperado é o resultado final: Parabéns ou Alerta
+    if ($saldo > 0) {
+        $expected_title_type = 1; // Parabéns
+    } elseif ($saldo < 0) {
+        $expected_title_type = 2; // Alerta
+    }
+}
+
+// Se há um estado esperado (não é mês futuro)
+if ($expected_title_type !== null) {
+
+    // CASO 1: Um insight salvo E o tipo dele bate com o esperado
+    if ($dados_ia && $dados_ia['titulo'] == $expected_title_type) {
+        $txt_ia = $dados_ia['mensagem'];
+
+        // Define o título com base no tipo
+        if ($expected_title_type == 0) $titulo_ia = 'Meta Financeira 🎯';
+        if ($expected_title_type == 1) $titulo_ia = 'Parabéns ✅';
+        if ($expected_title_type == 2) $titulo_ia = 'Alerta ⚠️';
+
+        // CASO 2: Insight salvo OU o tipo não bate (ex: esperava 'Parabéns' mas salvou 'Meta')
+    } else {
+        // Gera uma nova mensagem com base no tipo esperado
+        if ($expected_title_type == 0) {
+            $titulo_ia = 'Meta Financeira 🎯';
+            $txt_ia = gerarMeta($mes);
+        } elseif ($expected_title_type == 1) {
             $titulo_ia = 'Parabéns ✅';
             $txt_ia = gerarSucesso($mes);
-        } else {
+        } elseif ($expected_title_type == 2) {
             $titulo_ia = 'Alerta ⚠️';
             $txt_ia = gerarAlerta($mes);
         }
     }
-} else { // caso não tenha nada no banco
-    // caso for o mês atual
-    if ($mes == date('m') && date('d') <= 15) {
+
+    // Se for começo do mês e o insight salvo NÃO for uma meta, forçar uma meta.
+    if ($mes == date('m') && $dia <= 15 && $dados_ia && $dados_ia['titulo'] != 0) {
         $titulo_ia = 'Meta Financeira 🎯';
         $txt_ia = gerarMeta($mes);
-    } elseif ($mes == date('m') && date('d') > 15) {
-        if ($saldo > 0) {
-            $titulo_ia = 'Parabéns ✅';
-            $txt_ia = gerarSucesso($mes);
-        } else {
-            $titulo_ia = 'Alerta ⚠️';
-            $txt_ia = gerarAlerta($mes);
-        }
-    }
-    // caso for mês passado e o saldo diferente de 0
-    if ($mes < date('m') && $saldo != 0) {
-        if ($saldo > 0) {
-            $titulo_ia = 'Parabéns ✅';
-            $txt_ia = gerarSucesso($mes);
-        } else {
-            $titulo_ia = 'Alerta ⚠️';
-            $txt_ia = gerarAlerta($mes);
-        }
     }
 }
 ?>

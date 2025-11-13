@@ -1667,9 +1667,11 @@
     flex-direction: column;
     justify-content: center;
     gap: calc(var(--spacing) * 3);
-    border-color: color-mix(in srgb, #218380 30%, transparent);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    border-color: color-mix(in srgb, #218380 30%, transparent) !important;
     @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-verde) 30%, transparent);
+      border-color: color-mix(in oklab, var(--color-verde) 30%, transparent) !important;
     }
     & h3 {
       margin: calc(var(--spacing) * 0) !important;
