@@ -22,6 +22,7 @@ function limparDadosAntigos(int $userId): bool
 
     $anoAtual = date('Y');
 
+    // Inicia a transação
     $conexao->begin_transaction();
 
     try {
@@ -39,10 +40,18 @@ function limparDadosAntigos(int $userId): bool
         $stmtRendas->execute();
         $stmtRendas->close();
 
+        // Deleta insights antigos
+        $sqlInsights = "DELETE FROM insights WHERE usuario_id = ? AND YEAR(data) < ?";
+        $stmtInsights = $conexao->prepare($sqlInsights);
+        $stmtInsights->bind_param("ii", $userId, $anoAtual);
+        $stmtInsights->execute();
+        $stmtInsights->close();
+
+        // Se tudo deu certo, confirma as mudanças
         $conexao->commit();
         return true;
-
     } catch (Exception $e) {
+        // Se algo deu errado, desfaz tudo
         $conexao->rollback();
         return false;
     }
@@ -67,7 +76,6 @@ try {
     // responde ao JavaScript com sucesso.
     header('Content-Type: application/json');
     echo json_encode(['status' => 'success', 'message' => 'Ano finalizado com sucesso.']);
-
 } catch (Exception $e) {
     http_response_code(500); // Internal Server Error
     echo json_encode(['status' => 'error', 'message' => 'Ocorreu um erro no servidor.']);

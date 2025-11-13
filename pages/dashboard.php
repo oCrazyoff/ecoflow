@@ -3,23 +3,6 @@ $titulo = "Dashboard";
 require_once "includes/inicio.php";
 require_once "api/deepseek.php";
 
-// lógica do assistente IA
-$d = date('d');
-$d = 28;
-
-if ($d > 0 && $d < 16) {
-    $titulo_ia = 'Meta Financeira 🎯';
-    $txt_ia = gerarMeta($m);
-} elseif ($d > 15 && $d < 31) {
-    if ((totalRendas() - despesasPagas()) > 0) {
-        $titulo_ia = 'Parabéns ✅';
-        $txt_ia = gerarSucesso($m);
-    } else {
-        $titulo_ia = 'Alerta ⚠️';
-        $txt_ia = gerarAlerta($m);
-    }
-}
-
 function totalRendas()
 {
     global $conexao;
@@ -91,6 +74,45 @@ function despesasPendentes()
     return $valor ?? 0;
 }
 
+// lógica do assistente IA
+$mes = $_GET['m'];
+
+$sql_ia = "SELECT mensagem FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
+$stmt_ia = $conexao->prepare($sql_ia);
+$stmt_ia->bind_param("is", $_SESSION['id'], $mes);
+$stmt_ia->execute();
+$resultado_ia = $stmt_ia->get_result();
+$stmt_ia->close();
+
+$d = date('d');
+$d = 12;
+
+if ($resultado_ia->num_rows > 0) {
+    // Busca a mensagem salva
+    $dados_ia = $resultado_ia->fetch_assoc();
+    $txt_ia = $dados_ia['mensagem'];
+
+    // Define o título conforme o saldo
+    if ((totalRendas() - despesasPagas()) > 0) {
+        $titulo_ia = 'Parabéns ✅';
+    } else {
+        $titulo_ia = 'Alerta ⚠️';
+    }
+} else {
+    // Caso ainda não tenha insight salvo
+    if ($d > 0 && $d < 16) {
+        $titulo_ia = 'Meta Financeira 🎯';
+        $txt_ia = gerarMeta($mes);
+    } elseif ($d > 15 && $d < 31) {
+        if ((totalRendas() - despesasPagas()) > 0) {
+            $titulo_ia = 'Parabéns ✅';
+            $txt_ia = gerarSucesso($mes);
+        } else {
+            $titulo_ia = 'Alerta ⚠️';
+            $txt_ia = gerarAlerta($mes);
+        }
+    }
+}
 ?>
 <main>
     <header class="header-dashboard">
