@@ -1,27 +1,58 @@
+// Tenta adicionar a classe logo no início para evitar "flash" de conteúdo
+document.documentElement.classList.add("loading");
+
 document.addEventListener("DOMContentLoaded", () => {
     const loader = document.getElementById("container-loading");
 
-    // Esconde o loader quando a página terminar de carregar
-    window.addEventListener("load", () => {
-        if (loader) loader.classList.add("hidden");
+    // Se o loader não existir na página, não faz nada
+    if (!loader) return;
+
+    // Função para esconder o loader
+    const hideLoader = () => {
+        loader.classList.add("hidden");
+        document.documentElement.classList.remove("loading");
+    };
+
+    // Função para mostrar o loader
+    const showLoader = () => {
+        loader.classList.remove("hidden");
+        document.documentElement.classList.add("loading");
+    };
+
+    // 1. Esconde o loader quando a página terminar de carregar
+    window.addEventListener("load", hideLoader);
+
+    // 2. Garante que o loader suma se o usuário usar o botão "Voltar"
+    window.addEventListener("pageshow", (event) => {
+        // Se a página foi carregada do cache (botão voltar)
+        if (event.persisted) {
+            hideLoader();
+        }
     });
 
-    // Mostra o loader antes de sair da página (links)
+    // 3. Mostra o loader antes da página ser recarregada
+    window.addEventListener("beforeunload", () => {
+        showLoader();
+    });
+
+    // 4. Mostra o loader ao clicar em links internos
     document.querySelectorAll("a[href]").forEach(link => {
         link.addEventListener("click", e => {
             const href = link.getAttribute("href");
 
-            // Evita ativar em âncoras vazias ou links externos
-            if (!href || href.startsWith("#") || link.target === "_blank") return;
+            // Ignora links de âncora (#), links para nova aba ou links vazios
+            if (!href || href.startsWith("#") || link.target === "_blank") {
+                return;
+            }
 
-            loader.classList.remove("hidden");
+            showLoader();
         });
     });
 
-    // Mostra o loader em qualquer envio de formulário
+    // 5. Mostra o loader ao enviar formulários
     document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", () => {
-            loader.classList.remove("hidden");
+            showLoader();
         });
     });
 });
