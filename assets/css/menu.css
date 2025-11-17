@@ -2,7 +2,9 @@
     .menu {
         @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda bg-white;
 
-        & .topo-logo, nav, .baixo-menu {
+        & .topo-logo,
+        nav,
+        .baixo-menu {
             @apply p-4;
         }
 
@@ -65,7 +67,8 @@
                 }
             }
 
-            & .topo-menu nav a span, .baixo-menu a span {
+            & .topo-menu nav a span,
+            .baixo-menu a span {
                 @apply hidden;
             }
         }
@@ -78,10 +81,10 @@
             @apply grid grid-cols-4 w-full;
 
             & a {
-                @apply flex flex-col items-center justify-center w-full rounded-xl;
+                @apply flex flex-col items-center justify-center w-full rounded-xl text-sm;
 
                 & i {
-                    @apply text-xl;
+                    @apply text-lg;
                 }
 
                 &:hover {

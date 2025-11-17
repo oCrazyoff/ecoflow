@@ -25,7 +25,11 @@ if ($pendente == false && $rota === 'relatorio') {
 if ($_SESSION['cargo'] == 0) {
     if (
         $rota == 'usuarios' ||
-        $rota == 'avisos'
+        $rota == 'avisos' ||
+        $rota == 'cadastrar_usuarios' ||
+        $rota == 'editar_usuarios' ||
+        $rota == 'buscar_usuarios' ||
+        $rota == 'deletar_usuarios'
     ) {
         session_start();
         $_SESSION['resposta'] = "Acesso negado!";

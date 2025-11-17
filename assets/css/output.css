@@ -1269,9 +1269,11 @@
         align-items: center;
         justify-content: center;
         border-radius: var(--radius-xl);
+        font-size: var(--text-sm);
+        line-height: var(--tw-leading, var(--text-sm--line-height));
         & i {
-          font-size: var(--text-xl);
-          line-height: var(--tw-leading, var(--text-xl--line-height));
+          font-size: var(--text-lg);
+          line-height: var(--tw-leading, var(--text-lg--line-height));
         }
         &:hover {
           color: var(--color-verde);
