@@ -47,6 +47,7 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
         }
     }
 
-    // incluindo o loading
+    // incluindo o loading e o aviso
     require_once __DIR__ . "/../loading.php";
+    require_once __DIR__ . "/../aviso.php";
     ?>
