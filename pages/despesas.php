@@ -1,6 +1,6 @@
 <?php
 $titulo = "Despesas";
-require_once "includes/inicio.php";
+require_once "includes/layout/inicio.php";
 
 // puxando todas as despesas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
@@ -131,4 +131,4 @@ $result = $stmt->get_result();
 
 <?php $tipo_modal = "despesas" ?>
 <?php require_once "includes/modal.php" ?>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

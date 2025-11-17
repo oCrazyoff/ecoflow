@@ -18,7 +18,7 @@
 
 <!--menu mobile-->
 <div class="menu-mobile">
-    <nav>
+    <nav class="<?= ($_SESSION['cargo']) == 1 ? 'grid-cols-6' : '' ?>">
         <?php require 'link_menu.php'; ?>
         <a class="<?= ($rota === 'perfil') ? 'atual' : '' ?>" href="perfil<?= (isset($m) ? '?m=' . $m : '') ?>">
             <i class="bi bi-person-circle"></i>

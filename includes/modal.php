@@ -19,12 +19,9 @@ $dia = date('d');
 
                     <!--conteudo do formulario-->
                     <label for="descricao">Descrição</label>
-                    <input type="text" name="descricao" id="descricao" class="input-modal"
-                           placeholder="Ex: Conta de Luz"
-                           required>
+                    <input type="text" name="descricao" id="descricao" class="input-modal" placeholder="Ex: Salário" required>
                     <label for="valor">Valor</label>
-                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00"
-                           inputmode="numeric">
+                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00" inputmode="numeric">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
@@ -32,26 +29,24 @@ $dia = date('d');
                     </select>
                     <label for="data">Data</label>
                     <input class="input-modal" type="date" name="data" id="data"
-                           value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
+                        value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
 
                 <?php elseif
 
-                    // modal de despesas
+                // modal de despesas
                 ($tipo_modal == 'despesas'): ?>
 
                     <!--conteudo do formulario-->
                     <label for="descricao">Descrição</label>
-                    <input type="text" name="descricao" id="descricao" class="input-modal"
-                           placeholder="Ex: Conta de Luz"
-                           required>
+                    <input type="text" name="descricao" id="descricao" class="input-modal" placeholder="Ex: Conta de Luz"
+                        required>
                     <label for="status">Status</label>
                     <select class="input-modal" name="status" id="status">
                         <option value="0">Pendente</option>
                         <option value="1">Pago</option>
                     </select>
                     <label for="valor">Valor</label>
-                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00"
-                           inputmode="numeric">
+                    <input type="text" name="valor" id="valor" class="input-modal" placeholder="0,00" inputmode="numeric">
                     <label for="recorrente">Recorrente</label>
                     <select class="input-modal" name="recorrente" id="recorrente">
                         <option value="0">Não</option>
@@ -72,7 +67,25 @@ $dia = date('d');
                     </select>
                     <label for="data">Data</label>
                     <input class="input-modal" type="date" name="data" id="data"
-                           value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
+                        value="<?= sprintf('%04d-%02d-%02d', $ano, $mes, $dia) ?>">
+
+                <?php elseif
+
+                // modal de usuarios
+                ($tipo_modal == 'usuarios'): ?>
+
+                    <!-- conteudo do formulário -->
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" class="input-modal" placeholder="Nome do usuário" required>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" class="input-modal" placeholder="Email do usuário" required>
+                    <label for="cargo">Cargo</label>
+                    <select name="cargo" id="cargo" class="input-modal">
+                        <option value="0">Comum</option>
+                        <option value="1">Adm</option>
+                    </select>
+                    <label for="senha">Senha</label>
+                    <input type="password" name="senha" id="senha" class="input-modal" placeholder="Sua senha">
                 <?php endif; ?>
             <?php endif; ?>
             <div class="grid grid-cols-2 gap-2 mt-5">
@@ -89,7 +102,7 @@ $dia = date('d');
     // digitação dinamica valor
     const inputValor = document.getElementById('valor');
 
-    inputValor.addEventListener('input', function () {
+    inputValor.addEventListener('input', function() {
         // Remove tudo que não for número
         let valor = this.value.replace(/\D/g, '');
 

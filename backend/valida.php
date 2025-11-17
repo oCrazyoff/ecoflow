@@ -21,6 +21,19 @@ if ($pendente == false && $rota === 'relatorio') {
     exit();
 }
 
+// impedindo usuarios comuns de acessarem rotas de adm
+if ($_SESSION['cargo'] == 0) {
+    if (
+        $rota == 'usuarios' ||
+        $rota == 'avisos'
+    ) {
+        session_start();
+        $_SESSION['resposta'] = "Acesso negado!";
+        header("Location:" . BASE_URL . "dashboard");
+        exit();
+    }
+}
+
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();
     session_destroy();

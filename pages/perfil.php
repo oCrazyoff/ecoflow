@@ -1,6 +1,6 @@
 <?php
 $titulo = "Perfil";
-require_once "includes/inicio.php"
+require_once "includes/layout/inicio.php"
 ?>
 <main class="px-5 lg:px-10 py-5 pb-20 lg:pb-0">
     <h2 class="text-2xl font-bold">Perfil do Usuário</h2>
@@ -14,12 +14,12 @@ require_once "includes/inicio.php"
                 <div class="input-group">
                     <label for="nome">Nome</label>
                     <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($_SESSION['nome']) ?>"
-                           placeholder="Digite seu nome">
+                        placeholder="Digite seu nome">
                 </div>
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" value="<?= htmlspecialchars($_SESSION['email']) ?>"
-                           placeholder="Digite seu email">
+                        placeholder="Digite seu email">
                 </div>
             </div>
             <div class="container-btn">
@@ -58,4 +58,4 @@ require_once "includes/inicio.php"
         <a href="deslogar"><i class="bi bi-arrow-bar-left"></i> Sair da conta</a>
     </div>
 </main>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

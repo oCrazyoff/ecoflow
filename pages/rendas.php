@@ -1,6 +1,6 @@
 <?php
 $titulo = "Rendas";
-require_once "includes/inicio.php";
+require_once "includes/layout/inicio.php";
 
 //puxando todas as rendas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
@@ -29,40 +29,41 @@ $result = $stmt->get_result();
             <div class="container-table">
                 <table>
                     <thead>
-                    <tr>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Recorrente</th>
-                        <th>Data</th>
-                        <th>Ações</th>
-                    </tr>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Recorrente</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <?php while ($row = $result->fetch_assoc()) : ?>
-                        <tr>
-                            <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
-                            <td class="text-green-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
-                            <td>
-                                <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
-                                <?= (($row['recorrente'] == 0) ? 'Não Recorrente' : 'Recorrente') ?>
-                                </span>
-                            </td>
-                            <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
-                            <td class="acoes">
-                                <button class="btn-edita"
+                        <?php while ($row = $result->fetch_assoc()) : ?>
+                            <tr>
+                                <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
+                                <td class="text-green-500 whitespace-nowrap">
+                                    <?= htmlspecialchars(formatarReais($row['valor'])) ?></td>
+                                <td>
+                                    <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
+                                        <?= (($row['recorrente'] == 0) ? 'Não Recorrente' : 'Recorrente') ?>
+                                    </span>
+                                </td>
+                                <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
+                                <td class="acoes">
+                                    <button class="btn-edita"
                                         onclick="abrirEditarModal('rendas', <?= htmlspecialchars($row['id']) ?>)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <form action="deletar_rendas" method="POST">
-                                    <!--csrf-->
-                                    <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
-                                    <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form action="deletar_rendas" method="POST">
+                                        <!--csrf-->
+                                        <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                        <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
 
-                                    <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
+                                        <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
             </div>
@@ -73,12 +74,11 @@ $result = $stmt->get_result();
             <h3 class="titulo">Nenhuma renda registrada</h3>
             <p class="paragrafo">Comece a registrar suas rendas para ter um controle
                 financeiro completo</p>
-            <button class="btn"
-                    onclick="abrirCadastrarModal('rendas')">Registrar Renda
+            <button class="btn" onclick="abrirCadastrarModal('rendas')">Registrar Renda
             </button>
         </div>
     <?php endif; ?>
 </main>
 <?php $tipo_modal = "rendas" ?>
 <?php require_once "includes/modal.php" ?>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

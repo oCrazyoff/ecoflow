@@ -1,6 +1,6 @@
 <?php
 $n_valida = true;
-require_once "includes/inicio.php"
+require_once "includes/layout/inicio.php"
 ?>
 <main class="pb-0">
     <div class="container-form-index">
@@ -24,11 +24,11 @@ require_once "includes/inicio.php"
             <div class="input-group">
                 <label for="confirma-senha">Confirmar Senha</label>
                 <input type="password" name="confirma-senha" id="confirma-senha"
-                       placeholder="Digite sua senha novamente">
+                    placeholder="Digite sua senha novamente">
             </div>
             <button>Criar Conta</button>
             <p>Já tem uma conta? <a href="login">Login</a></p>
         </form>
     </div>
 </main>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

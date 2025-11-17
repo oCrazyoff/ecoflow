@@ -1,6 +1,6 @@
 <?php
 $titulo = "Relatório Anual " . date("Y") - 1;
-require_once "includes/inicio.php";
+require_once "includes/layout/inicio.php";
 
 // As funções para os cards de resumo no topo permanecem as mesmas
 function totalRendasAnoPassado()
@@ -61,33 +61,33 @@ $meses = [
 $ano_passado = date('Y') - 1;
 ?>
 <style>
-/* Estilos para impressão */
-@media print {
+    /* Estilos para impressão */
+    @media print {
 
-    .header-dashboard button,
-    #processando,
-    #div-erro,
-    #mensagem-retorno {
-        display: none;
-    }
+        .header-dashboard button,
+        #processando,
+        #div-erro,
+        #mensagem-retorno {
+            display: none;
+        }
 
-    .header-dashboard .txt-header {
-        justify-self: flex-start;
-    }
+        .header-dashboard .txt-header {
+            justify-self: flex-start;
+        }
 
-    .container-cards,
-    .container-meses {
-        grid-template-columns: 1fr;
-    }
+        .container-cards,
+        .container-meses {
+            grid-template-columns: 1fr;
+        }
 
-    span[class*="bg-"],
-    i {
-        -webkit-print-color-adjust: exact;
-        /* Para Chrome, Safari, etc. */
-        print-color-adjust: exact;
-        /* Padrão */
+        span[class*="bg-"],
+        i {
+            -webkit-print-color-adjust: exact;
+            /* Para Chrome, Safari, etc. */
+            print-color-adjust: exact;
+            /* Padrão */
+        }
     }
-}
 </style>
 <!--div processando-->
 <div id="processando"
@@ -171,7 +171,7 @@ $ano_passado = date('Y') - 1;
     <!-- Container com os cards de cada mês -->
     <div class="grid grid-cols-1 gap-5 px-5 pb-5">
         <?php for ($mes = 1; $mes <= 12; $mes++): ?>
-        <?php
+            <?php
             // Busca rendas do mês
             $sql_rendas = "SELECT descricao, data, valor FROM rendas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
             $stmt_rendas = $conexao->prepare($sql_rendas);
@@ -206,56 +206,56 @@ $ano_passado = date('Y') - 1;
             $stmt_total_despesas->close();
             ?>
 
-        <!-- Só exibe o card do mês se houver alguma movimentação -->
-        <?php if ($resultado_rendas->num_rows > 0 || $resultado_despesas->num_rows > 0): ?>
-        <div class="bg-white rounded-xl p-10 border border-borda shadow-lg">
-            <h3 class="text-2xl font-bold text-center">
-                <?= htmlspecialchars($meses[$mes]) ?>
-                <span class="text-verde">•</span>
-                <?= formatarReais($total_rendas_mes - $total_despesas_mes) ?>
-            </h3>
-            <div>
-
-                <!-- Seção de Rendas -->
-                <?php if ($resultado_rendas->num_rows > 0): ?>
-                <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
-                    Rendas</h4>
-                <?php while ($renda = $resultado_rendas->fetch_assoc()): ?>
-                <div class="flex items-center justify-between py-2 border-b border-gray-300">
+            <!-- Só exibe o card do mês se houver alguma movimentação -->
+            <?php if ($resultado_rendas->num_rows > 0 || $resultado_despesas->num_rows > 0): ?>
+                <div class="bg-white rounded-xl p-10 border border-borda shadow-lg">
+                    <h3 class="text-2xl font-bold text-center">
+                        <?= htmlspecialchars($meses[$mes]) ?>
+                        <span class="text-verde">•</span>
+                        <?= formatarReais($total_rendas_mes - $total_despesas_mes) ?>
+                    </h3>
                     <div>
-                        <p class="font-semibold"><?= htmlspecialchars($renda['descricao']) ?></p>
-                        <span class="text-texto-opaco"><?= htmlspecialchars(formatarData($renda['data'])) ?></span>
-                    </div>
-                    <p class="text-green-500 font-semibold"><?= htmlspecialchars(formatarReais($renda['valor'])) ?></p>
-                </div>
-                <?php endwhile; ?>
-                <?php endif; ?>
 
-                <!-- Seção de Despesas -->
-                <?php if ($resultado_despesas->num_rows > 0): ?>
-                <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
-                    Despesas</h4>
-                <?php while ($despesa = $resultado_despesas->fetch_assoc()): ?>
-                <div class="flex items-center justify-between py-2 border-b border-gray-300">
-                    <div>
-                        <p class="font-semibold">
-                            <?= htmlspecialchars($despesa['descricao']) ?>
-                            <?php if ($despesa['status'] == 0): ?>
-                            <span class="text-sm px-3 rounded-full bg-[#EFB101] text-white">Pendente</span>
-                            <?php else: ?>
-                            <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
-                            <?php endif; ?>
-                        </p>
-                        <span
-                            class="text-texto-opaco"><?= htmlspecialchars(tipoCategorias($despesa['categoria'])) ?></span>
+                        <!-- Seção de Rendas -->
+                        <?php if ($resultado_rendas->num_rows > 0): ?>
+                            <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
+                                Rendas</h4>
+                            <?php while ($renda = $resultado_rendas->fetch_assoc()): ?>
+                                <div class="flex items-center justify-between py-2 border-b border-gray-300">
+                                    <div>
+                                        <p class="font-semibold"><?= htmlspecialchars($renda['descricao']) ?></p>
+                                        <span class="text-texto-opaco"><?= htmlspecialchars(formatarData($renda['data'])) ?></span>
+                                    </div>
+                                    <p class="text-green-500 font-semibold"><?= htmlspecialchars(formatarReais($renda['valor'])) ?></p>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+
+                        <!-- Seção de Despesas -->
+                        <?php if ($resultado_despesas->num_rows > 0): ?>
+                            <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
+                                Despesas</h4>
+                            <?php while ($despesa = $resultado_despesas->fetch_assoc()): ?>
+                                <div class="flex items-center justify-between py-2 border-b border-gray-300">
+                                    <div>
+                                        <p class="font-semibold">
+                                            <?= htmlspecialchars($despesa['descricao']) ?>
+                                            <?php if ($despesa['status'] == 0): ?>
+                                                <span class="text-sm px-3 rounded-full bg-[#EFB101] text-white">Pendente</span>
+                                            <?php else: ?>
+                                                <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
+                                            <?php endif; ?>
+                                        </p>
+                                        <span
+                                            class="text-texto-opaco"><?= htmlspecialchars(tipoCategorias($despesa['categoria'])) ?></span>
+                                    </div>
+                                    <p class="text-red-500 font-semibold"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
                     </div>
-                    <p class="text-red-500 font-semibold"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
                 </div>
-                <?php endwhile; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php endif; ?>
+            <?php endif; ?>
         <?php endfor; ?>
     </div>
     <div id="mensagem-retorno"
@@ -279,66 +279,66 @@ $ano_passado = date('Y') - 1;
     </div>
 </main>
 <script>
-// fechar alerta inicio
-function fecharAlertaInicio() {
-    const alerta = document.getElementById("alerta-inicio");
+    // fechar alerta inicio
+    function fecharAlertaInicio() {
+        const alerta = document.getElementById("alerta-inicio");
 
-    alerta.classList.add("hidden");
-}
+        alerta.classList.add("hidden");
+    }
 
-// fechar alerta relatorio
-function fecharAlertaRelatorio() {
-    const alerta = document.getElementById("alerta-relatorio");
+    // fechar alerta relatorio
+    function fecharAlertaRelatorio() {
+        const alerta = document.getElementById("alerta-relatorio");
 
-    alerta.classList.add("hidden");
-}
+        alerta.classList.add("hidden");
+    }
 
-// mostrar alerta relatorio
-function mostrarAlertaRelatorio() {
-    const alerta = document.getElementById("alerta-relatorio");
+    // mostrar alerta relatorio
+    function mostrarAlertaRelatorio() {
+        const alerta = document.getElementById("alerta-relatorio");
 
-    alerta.classList.remove("hidden");
-}
+        alerta.classList.remove("hidden");
+    }
 
-// gerar relatório
-function gerarRelatorio() {
-    fecharAlertaRelatorio();
+    // gerar relatório
+    function gerarRelatorio() {
+        fecharAlertaRelatorio();
 
-    // Define uma função que será chamada DEPOIS que a janela de impressão for fechada
-    const afterPrintHandler = async () => {
-        window.removeEventListener('afterprint', afterPrintHandler);
+        // Define uma função que será chamada DEPOIS que a janela de impressão for fechada
+        const afterPrintHandler = async () => {
+            window.removeEventListener('afterprint', afterPrintHandler);
 
-        try {
-            // Mostra um feedback visual para o usuário
-            document.getElementById('processando').classList.remove('hidden');
+            try {
+                // Mostra um feedback visual para o usuário
+                document.getElementById('processando').classList.remove('hidden');
 
-            const response = await fetch('finalizar_relatorio', {
-                method: 'POST',
-            });
+                const response = await fetch('finalizar_relatorio', {
+                    method: 'POST',
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (result.status === 'success') {
-                document.getElementById('mensagem-retorno').classList.remove('hidden');
-            } else {
-                // caso houver erro
-                alert('Ocorreu um erro ao finalizar o ano. Seus dados não foram apagados. Tente novamente.');
+                if (result.status === 'success') {
+                    document.getElementById('mensagem-retorno').classList.remove('hidden');
+                } else {
+                    // caso houver erro
+                    alert('Ocorreu um erro ao finalizar o ano. Seus dados não foram apagados. Tente novamente.');
+                    document.getElementById('processando').classList.add('hidden');
+                }
+
+            } catch (error) {
+                alert('Ocorreu um erro de conexão. Verifique sua internet e tente novamente.');
                 document.getElementById('processando').classList.add('hidden');
             }
+        };
 
-        } catch (error) {
-            alert('Ocorreu um erro de conexão. Verifique sua internet e tente novamente.');
-            document.getElementById('processando').classList.add('hidden');
-        }
-    };
+        // Adiciona o "ouvinte" do evento. Ele ficará esperando a janela de impressão fechar.
+        window.addEventListener('afterprint', afterPrintHandler, {
+            once: true
+        });
 
-    // Adiciona o "ouvinte" do evento. Ele ficará esperando a janela de impressão fechar.
-    window.addEventListener('afterprint', afterPrintHandler, {
-        once: true
-    });
-
-    // Finalmente, chama a janela de impressão.
-    window.print();
-}
+        // Finalmente, chama a janela de impressão.
+        window.print();
+    }
 </script>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

@@ -96,7 +96,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         header("Location: " . BASE_URL . "dashboard");
                         exit;
                     }
-
+                } elseif ($cargo == 1) {
+                    // apenas redireciona
+                    header("Location: " . BASE_URL . "dashboard");
+                    exit;
                 } else {
                     // caso o usuario não tenha um cargo invalido
                     header("Location: " . BASE_URL . "login");
@@ -109,7 +112,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit;
             }
         } catch (Exception $erro) {
-            registrarErro(null, "Erro ao logar usuario!", $erro);
             // Caso houver erro ele retorna
             switch ($erro->getCode()) {
                 // erro de quantidade de paramêtros erro

@@ -1,6 +1,6 @@
 <?php
 $titulo = "Dashboard";
-require_once "includes/inicio.php";
+require_once "includes/layout/inicio.php";
 require_once "api/deepseek.php";
 
 function totalRendas()
@@ -379,4 +379,4 @@ foreach ($resultados as $r) {
         }
     });
 </script>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

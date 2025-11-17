@@ -1,6 +1,6 @@
 <?php
 $n_valida = true;
-require_once "includes/inicio.php"
+require_once "includes/layout/inicio.php"
 ?>
 <main class="pb-0">
     <div class="container-form-index">
@@ -22,4 +22,4 @@ require_once "includes/inicio.php"
         </form>
     </div>
 </main>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>

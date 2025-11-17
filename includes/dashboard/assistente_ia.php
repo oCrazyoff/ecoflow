@@ -1,5 +1,5 @@
 <div class="card assistente-ia">
-    <h3><i class="bi bi-stars"></i> Assistente I.A</h3>
+    <h3><i class="bi bi-stars animate-pulse"></i> Assistente I.A</h3>
     <?php if (isset($txt_ia) && !empty(trim($txt_ia))): ?>
         <h4 class="titulo"><?= htmlspecialchars($titulo_ia) ?></h4>
         <p><?= htmlspecialchars($txt_ia) ?></p>

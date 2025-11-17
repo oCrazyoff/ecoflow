@@ -1,6 +1,6 @@
 <?php
 $n_valida = true;
-require_once "includes/inicio.php"
+require_once "includes/layout/inicio.php"
 ?>
 <header class="sticky top-0 left-0 bg-white py-2 h-[4rem] border-b border-borda shadow-lg">
     <div class="interface h-full flex items-center justify-between">
@@ -103,7 +103,7 @@ require_once "includes/inicio.php"
                 <a href="cadastro">Criar conta grátis</a>
             </div>
             <img class="w-full lg:w-1/3 mb-10 lg:mb-0" src="assets/img/img-vantagens.svg"
-                 alt="Desenho administrando economias">
+                alt="Desenho administrando economias">
         </div>
     </section>
 
@@ -126,4 +126,4 @@ require_once "includes/inicio.php"
         </p>
     </footer>
 </main>
-<?php require_once "includes/fim.php" ?>
+<?php require_once "includes/layout/fim.php" ?>
