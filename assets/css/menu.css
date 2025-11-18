@@ -81,7 +81,7 @@
             @apply grid grid-cols-4 w-full;
 
             & a {
-                @apply flex flex-col items-center justify-center w-full rounded-xl text-sm;
+                @apply flex flex-col items-center justify-center w-full rounded-xl text-xs;
 
                 & i {
                     @apply text-lg;
@@ -99,7 +99,7 @@
                     @apply font-bold text-verde;
 
                     & i {
-                        @apply text-verde font-bold bg-verde-opaco px-5 rounded-full;
+                        @apply text-verde font-bold bg-verde-opaco px-4 rounded-full;
                     }
                 }
             }

@@ -2,7 +2,6 @@ CREATE TABLE `avisos` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `titulo` varchar(255) NOT NULL,
   `conteudo` text NOT NULL,
-  `ativo` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1=Ativo/Visível, 0=Inativo',
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

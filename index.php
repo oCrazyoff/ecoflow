@@ -35,22 +35,29 @@ $routes = [
     'buscar_rendas' => 'backend/buscar/rendas.php',
     'buscar_despesas' => 'backend/buscar/despesas.php',
     'buscar_usuarios' => 'backend/buscar/usuarios.php',
+    'buscar_avisos' => 'backend/buscar/avisos.php',
 
     // rotas de cadastro
     'cadastrar_rendas' => 'backend/cadastrar/rendas.php',
     'cadastrar_despesas' => 'backend/cadastrar/despesas.php',
     'cadastrar_usuarios' => 'backend/cadastrar/usuarios.php',
+    'cadastrar_avisos' => 'backend/cadastrar/avisos.php',
 
     // rotas de edição
     'editar_rendas' => 'backend/editar/rendas.php',
     'editar_despesas' => 'backend/editar/despesas.php',
     'editar_usuarios' => 'backend/editar/usuarios.php',
     'trocar_status_despesa' => 'backend/editar/status_despesa.php',
+    'editar_avisos' => 'backend/editar/avisos.php',
 
     // rotas de deletar
     'deletar_rendas' => 'backend/deletar/rendas.php',
     'deletar_despesas' => 'backend/deletar/despesas.php',
     'deletar_usuarios' => 'backend/deletar/usuarios.php',
+    'deletar_avisos' => 'backend/deletar/avisos.php',
+
+    // rotas da função aviso
+    'marcar_aviso_visto' => 'backend/aviso/marcar_visto.php',
 ];
 
 if (array_key_exists($url, $routes)) {

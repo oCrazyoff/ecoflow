@@ -39,15 +39,14 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
 
 <body <?= ((isset($n_valida) && $n_valida == true) || $rota == 'relatorio') ? "class='flex-col h-auto'" : "" ?>>
     <?php
-    // removendo menu das paginas sem rota
+    // removendo menu e aviso das paginas sem rota e proibidas
     if (array_key_exists($rota, $routes)) {
-        // removendo o menu das paginas que não devem ter menu
         if (isset($_SESSION['id']) && $rota !== '' && $rota !== 'login' && $rota !== 'cadastro' && $rota !== 'relatorio') {
             include __DIR__ . "/../menu/menu.php";
+            require_once __DIR__ . "/../aviso.php";
         }
     }
 
     // incluindo o loading e o aviso
     require_once __DIR__ . "/../loading.php";
-    require_once __DIR__ . "/../aviso.php";
     ?>

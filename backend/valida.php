@@ -21,23 +21,6 @@ if ($pendente == false && $rota === 'relatorio') {
     exit();
 }
 
-// impedindo usuarios comuns de acessarem rotas de adm
-if ($_SESSION['cargo'] == 0) {
-    if (
-        $rota == 'usuarios' ||
-        $rota == 'avisos' ||
-        $rota == 'cadastrar_usuarios' ||
-        $rota == 'editar_usuarios' ||
-        $rota == 'buscar_usuarios' ||
-        $rota == 'deletar_usuarios'
-    ) {
-        session_start();
-        $_SESSION['resposta'] = "Acesso negado!";
-        header("Location:" . BASE_URL . "dashboard");
-        exit();
-    }
-}
-
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();
     session_destroy();
@@ -62,6 +45,23 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
             $_SESSION["nome"] = $nome;
             $_SESSION["email"] = $email;
             $_SESSION["cargo"] = $cargo;
+
+            // impedindo usuarios comuns de acessarem rotas de adm
+            if ($_SESSION['cargo'] == 0) {
+                if (
+                    $rota == 'usuarios' ||
+                    $rota == 'avisos' ||
+                    $rota == 'cadastrar_usuarios' ||
+                    $rota == 'editar_usuarios' ||
+                    $rota == 'buscar_usuarios' ||
+                    $rota == 'deletar_usuarios'
+                ) {
+                    session_start();
+                    $_SESSION['resposta'] = "Acesso negado!";
+                    header("Location:" . BASE_URL . "dashboard");
+                    exit();
+                }
+            }
         }
     } else {
         $_SESSION['resposta'] = "Erro inesperado!";

@@ -1,6 +1,6 @@
 <?php
 // buscando avisos pendentes
-$sql = "SELECT id, titulo, conteudo FROM avisos WHERE ativo = 1";
+$sql = "SELECT id, titulo, conteudo FROM avisos";
 $stmt = $conexao->prepare($sql);
 $stmt->execute();
 $avisos = $stmt->get_result();
@@ -19,9 +19,10 @@ while ($aviso = $avisos->fetch_assoc()):
 ?>
 <div class="container-aviso">
     <div class="aviso">
-        <h2><i class="bi bi-info-lg"></i> <?= htmlspecialchars($avis['titulo']) ?></h2>
+        <h2><i class="bi bi-info-circle"></i> <?= htmlspecialchars($aviso['titulo']) ?></h2>
         <p><?= htmlspecialchars($aviso['conteudo']) ?></p>
-        <div class="container-btn"><button onclick="vistarAviso(<?= htmlspecialchars($aviso['id']) ?>)">
+        <div class="container-btn">
+            <button onclick="vistarAviso(<?= htmlspecialchars($aviso['id']) ?>, this)">
                 Entendido
                 <i class="bi bi-check-all"></i>
             </button>
