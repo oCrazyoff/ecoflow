@@ -98,8 +98,7 @@ $dia = date('d');
                 required>
             <label for="conteudo">Conteudo</label>
             <textarea type="text" name="conteudo" id="conteudo" class="input-modal" placeholder="Conteudo do aviso"
-                required>
-            </textarea>
+                required></textarea>
 
             <?php endif; ?>
             <?php endif; ?>
