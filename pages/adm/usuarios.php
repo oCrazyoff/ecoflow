@@ -71,11 +71,13 @@ $result = $stmt->get_result();
         </div>
     <?php else: ?>
         <div class="container-mensagem">
-            <i class="bi bi-cash-stack icone"></i>
-            <h3 class="titulo">Nenhuma renda registrada</h3>
-            <p class="paragrafo">Comece a registrar suas rendas para ter um controle
-                financeiro completo</p>
-            <button class="btn" onclick="abrirCadastrarModal('usuarios')">Registrar Renda
+            <i class="bi bi-people icone"></i>
+            <h3 class="titulo">Nenhum usuário registrado</h3>
+            <p class="paragrafo">
+                Registre um usuário ao sistema EcoFlow
+            </p>
+            <button class="btn" onclick="abrirCadastrarModal('usuarios')">
+                Registrar Usuário
             </button>
         </div>
     <?php endif; ?>

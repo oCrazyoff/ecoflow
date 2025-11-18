@@ -98,11 +98,13 @@ $stmt_n_vistos->close();
     </div>
     <?php else: ?>
     <div class="container-mensagem">
-        <i class="bi bi-cash-stack icone"></i>
-        <h3 class="titulo">Nenhuma renda registrada</h3>
-        <p class="paragrafo">Comece a registrar suas rendas para ter um controle
-            financeiro completo</p>
-        <button class="btn" onclick="abrirCadastrarModal('avisos')">Registrar Renda
+        <i class="bi bi-exclamation-circle icone"></i>
+        <h3 class="titulo">Nenhum aviso registrado</h3>
+        <p class="paragrafo">
+            Registre avisos quando precisar avisar os usuários sobre alguma manutenção ou algo importante
+        </p>
+        <button class="btn" onclick="abrirCadastrarModal('avisos')">
+            Cadastrar Aviso
         </button>
     </div>
     <?php endif; ?>
