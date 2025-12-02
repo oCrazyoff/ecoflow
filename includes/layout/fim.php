@@ -21,8 +21,8 @@ while ($aviso = $avisos->fetch_assoc()):
 
     if ($resultado_verificar->num_rows <= 0):
 ?>
-<script src="<?= BASE_URL . "assets/js/aviso.js" ?>"></script>
-<?php endif; ?>
+        <script src="<?= BASE_URL . "assets/js/aviso.js" ?>"></script>
+    <?php endif; ?>
 <?php endwhile; ?>
 
 </html>

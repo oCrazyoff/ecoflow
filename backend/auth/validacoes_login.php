@@ -1,4 +1,12 @@
 <?php
+function logMsg($msg)
+{
+    // Salva o log num arquivo 'debug_recorrentes.log' com data e hora
+    $file = __DIR__ . '/debug_recorrentes.log';
+    $time = date('d/m/Y H:i:s');
+    file_put_contents($file, "[$time] $msg" . PHP_EOL, FILE_APPEND);
+}
+
 function verificarRecorrentes(int $userId): void
 {
     global $conexao;
@@ -6,7 +14,7 @@ function verificarRecorrentes(int $userId): void
     $anoAtual = date('Y');
     $mesAtual = date('m');
 
-    // Inicia uma transação para garantir que todas as operações sejam bem-sucedidas.
+    // Inicia transação
     $conexao->begin_transaction();
 
     try {
@@ -30,10 +38,18 @@ function verificarRecorrentes(int $userId): void
             $diaOriginal = $primeiraData->format('d');
 
             for ($mes = $mesInicial + 1; $mes <= $mesAtual; $mes++) {
-                $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
-                $dataVerificar = "$anoAtual-$mesFormatado-$diaOriginal";
+                // Validação de data segura (evita erros como 31 de fevereiro)
+                if (!checkdate($mes, $diaOriginal, $anoAtual)) {
+                    // Se o dia não existe no mês (ex: dia 31 em abril), ajusta para o último dia do mês
+                    $diaValido = date('t', strtotime("$anoAtual-$mes-01"));
+                } else {
+                    $diaValido = $diaOriginal;
+                }
 
-                // Verifica se a renda já existe no mês
+                $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
+                $dataVerificar = "$anoAtual-$mesFormatado-$diaValido";
+
+                // Verifica se já existe
                 $sqlCheckR = "SELECT id FROM rendas WHERE usuario_id = ? AND descricao = ? AND YEAR(data) = ? AND MONTH(data) = ? LIMIT 1";
                 $stmtCheckR = $conexao->prepare($sqlCheckR);
                 $stmtCheckR->bind_param("isii", $userId, $itemRenda['descricao'], $anoAtual, $mes);
@@ -41,11 +57,14 @@ function verificarRecorrentes(int $userId): void
                 $stmtCheckR->store_result();
 
                 if ($stmtCheckR->num_rows === 0) {
-                    // Se não existe, insere a nova renda recorrente
+
                     $sqlInsertR = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data) VALUES (?, ?, ?, 1, ?)";
                     $stmtInsertR = $conexao->prepare($sqlInsertR);
                     $stmtInsertR->bind_param("isds", $userId, $itemRenda['descricao'], $itemRenda['valor'], $dataVerificar);
-                    $stmtInsertR->execute();
+
+                    if (!$stmtInsertR->execute()) {
+                        throw new Exception("Erro ao inserir Renda: " . $stmtInsertR->error);
+                    }
                     $stmtInsertR->close();
                 }
                 $stmtCheckR->close();
@@ -74,10 +93,17 @@ function verificarRecorrentes(int $userId): void
             $diaOriginal = $primeiraData->format('d');
 
             for ($mes = $mesInicial + 1; $mes <= $mesAtual; $mes++) {
-                $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
-                $dataVerificar = "$anoAtual-$mesFormatado-$diaOriginal";
+                // Validação de data segura
+                if (!checkdate($mes, $diaOriginal, $anoAtual)) {
+                    $diaValido = date('t', strtotime("$anoAtual-$mes-01"));
+                } else {
+                    $diaValido = $diaOriginal;
+                }
 
-                // Verifica se a despesa já existe no mês
+                $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
+                $dataVerificar = "$anoAtual-$mesFormatado-$diaValido";
+
+                // Verifica se já existe
                 $sqlCheckD = "SELECT id FROM despesas WHERE usuario_id = ? AND descricao = ? AND YEAR(data) = ? AND MONTH(data) = ? LIMIT 1";
                 $stmtCheckD = $conexao->prepare($sqlCheckD);
                 $stmtCheckD->bind_param("isii", $userId, $itemDespesa['descricao'], $anoAtual, $mes);
@@ -85,11 +111,14 @@ function verificarRecorrentes(int $userId): void
                 $stmtCheckD->store_result();
 
                 if ($stmtCheckD->num_rows === 0) {
-                    // Se não existe, insere a nova despesa recorrente com status 'Pendente' (0)
+
                     $sqlInsertD = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria, data) VALUES (?, ?, ?, 0, 1, ?, ?)";
                     $stmtInsertD = $conexao->prepare($sqlInsertD);
                     $stmtInsertD->bind_param("isdis", $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria'], $dataVerificar);
-                    $stmtInsertD->execute();
+
+                    if (!$stmtInsertD->execute()) {
+                        throw new Exception("Erro ao inserir Despesa: " . $stmtInsertD->error);
+                    }
                     $stmtInsertD->close();
                 }
                 $stmtCheckD->close();
@@ -97,11 +126,10 @@ function verificarRecorrentes(int $userId): void
         }
         $stmtDespesas->close();
 
-        // Se tudo deu certo, efetiva as mudanças.
+        // Se tudo deu certo
         $conexao->commit();
     } catch (Exception $e) {
-        // Se algo deu errado, desfaz tudo.
         $conexao->rollback();
+        logMsg("ERRO CRÍTICO (Rollback realizado): " . $e->getMessage());
     }
 }
-?>

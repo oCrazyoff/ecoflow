@@ -8,14 +8,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim(strip_tags($_POST['email']));
     $senha = trim($_POST["senha"]);
 
-    // Verificar o email
+    // Validações Iniciais
     if (validarEmail($email) == false) {
         $_SESSION['resposta'] = "Email inválido!";
         header("Location: " . BASE_URL . "login");
         exit;
     }
 
-    //Verificar token CSRF
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
         $_SESSION['resposta'] = "Método invalido!";
@@ -23,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    //Validadar senha
     if (validarSenha($senha) == false) {
         $_SESSION['resposta'] = "Senha inválida!";
         header("Location: " . BASE_URL . "login");
@@ -46,62 +44,63 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit;
             }
 
-            // verifica se a senha esta correta
             if (password_verify($senha, $senha_db)) {
-
-                // atualiza as variaveis sessions
+                // Login com sucesso
                 $_SESSION["id"] = $id;
                 $_SESSION["nome"] = $nome;
                 $_SESSION["email"] = $email;
                 $_SESSION["cargo"] = $cargo;
-
                 $_SESSION['resposta'] = "Bem Vindo! " . $_SESSION['nome'];
 
-                if ($cargo == 0) {
-                    // caso o usuario for comum
+                // verificações antes do login
+                if ($cargo == 0 || $cargo == 1) {
 
                     $hoje = new DateTime();
-                    // Garante que mesmo usuários novos (com data nula) passem pela verificação.
+                    // Garante data válida para usuários antigos/novos
                     $ultimaVerificacao = new DateTime($ultima_verificacao_db ?? '1970-01-01');
                     $relatorioPendente = (bool)$relatorio_pendente_db;
 
-                    // VERIFICAÇÃO DE INÍCIO DE ANO
+                    // 1. VERIFICAÇÃO DE INÍCIO DE ANO (Relatório Anual)
                     if ($ultimaVerificacao->format('Y') < $hoje->format('Y')) {
                         $stmtUpdate = $conexao->prepare("UPDATE usuarios SET relatorio_anual_pendente = 1 WHERE id = ?");
                         $stmtUpdate->bind_param("i", $id);
                         $stmtUpdate->execute();
                         $stmtUpdate->close();
-                        $relatorioPendente = true; // Atualiza a variável local para o redirecionamento
+                        $relatorioPendente = true;
                     }
 
-                    // VERIFICAÇÃO DE RECORRENTES (Executa se o mês for diferente)
+                    // 2. VERIFICAÇÃO DE RECORRENTES (Despesas/Rendas)
+                    // Só executa se o mês atual for maior que o mês da última verificação
                     if ($ultimaVerificacao->format('Y-m') < $hoje->format('Y-m')) {
+
+                        // Executa a função de gerar despesas e rendas
                         verificarRecorrentes($id);
                     }
 
-                    // ATUALIZA A DATA DA ÚLTIMA VERIFICAÇÃO PARA AGORA
+                    // 3. ATUALIZA A DATA DA ÚLTIMA VERIFICAÇÃO PARA "AGORA"
                     $stmtUpdateData = $conexao->prepare("UPDATE usuarios SET ultima_verificacao = NOW() WHERE id = ?");
                     $stmtUpdateData->bind_param("i", $id);
                     $stmtUpdateData->execute();
                     $stmtUpdateData->close();
+                }
 
-                    // LÓGICA DE REDIRECIONAMENTO
+                // redirecionamento
+                if ($cargo == 0) {
+                    // Usuário Comum: Verifica se precisa ver o relatório anual
                     if ($relatorioPendente) {
-                        // Se há um relatório pendente, força o redirecionamento para a página de fechamento.
                         $_SESSION['relatorio_pendente'] = true;
                         header("Location: " . BASE_URL . "relatorio");
                         exit;
                     } else {
-                        // Se não há pendências, segue para o dashboard.
                         header("Location: " . BASE_URL . "dashboard");
                         exit;
                     }
                 } elseif ($cargo == 1) {
-                    // apenas redireciona
+                    // Administrador: Vai direto para o dashboard
                     header("Location: " . BASE_URL . "dashboard");
                     exit;
                 } else {
-                    // caso o usuario não tenha um cargo invalido
+                    // Cargo desconhecido
                     header("Location: " . BASE_URL . "login");
                     $_SESSION['resposta'] = "Cargo Invalido!";
                     exit;
@@ -112,14 +111,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit;
             }
         } catch (Exception $erro) {
-            // Caso houver erro ele retorna
+            // Tratamento de Erros
             switch ($erro->getCode()) {
-                // erro de quantidade de paramêtros erro
                 case 1136:
                     $_SESSION['resposta'] = "Quantidade de dados inseridos inválida!";
                     header("Location: " . BASE_URL . "login");
                     exit;
                 default:
+                    // Opcional: Logar o erro real em arquivo para debug
+                    // error_log($erro->getMessage());
                     $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
                     header("Location: " . BASE_URL . "login");
                     exit;

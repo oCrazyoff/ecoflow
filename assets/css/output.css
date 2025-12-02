@@ -341,6 +341,12 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .animate-\[show-mobile_5s\] {
+    animation: show-mobile 5s;
+  }
+  .animate-\[show_5s\] {
+    animation: show 5s;
+  }
   .animate-bounce {
     animation: var(--animate-bounce);
   }
@@ -723,6 +729,11 @@
   .lg\:w-max {
     @media (width >= 64rem) {
       width: max-content;
+    }
+  }
+  .lg\:animate-\[show_5s\] {
+    @media (width >= 64rem) {
+      animation: show 5s;
     }
   }
   .lg\:flex-row {

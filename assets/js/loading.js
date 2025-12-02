@@ -31,7 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 3. Mostra o loader antes da página ser recarregada
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener("beforeunload", (e) => {
+        // Se o form teve erro, NÃO mostra o loader
+        if (window.formHasError === true) {
+            e.preventDefault();
+            hideLoader();
+            window.formHasError = false;
+            return;
+        }
+
         showLoader();
     });
 
@@ -52,6 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // 5. Mostra o loader ao enviar formulários
     document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", () => {
+            // Se houve erro no formulário, NÃO mostra o loader
+            if (window.formHasError === true) {
+                hideLoader();
+                window.formHasError = false; // reseta
+                return;
+            }
+
             showLoader();
         });
     });
