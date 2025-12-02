@@ -1,102 +1,85 @@
-# EcoFlow - Seu Gerenciador Financeiro Pessoal
+# EcoFlow 💸 
+> **Seu controle financeiro inteligente e automatizado.**
 
-<p align="center">
-  <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
-</p>
+![Status](https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-yellow?style=for-the-badge)
 
-<p align="center">
-  Um sistema simples e intuitivo para gerenciar suas finanças pessoais, ajudando você a ter uma visão clara de suas receitas e despesas.
-</p>
+## 📖 Sobre o Projeto
 
-## 📋 Tabela de Conteúdos
+**EcoFlow** é uma plataforma web de gestão financeira pessoal projetada para simplificar a forma como você lida com seu dinheiro. Diferente de planilhas complexas, o EcoFlow oferece uma interface intuitiva com automação de lançamentos e inteligência de dados.
 
-- [Sobre o Projeto](#-sobre-o-projeto)
-- [✨ Funcionalidades](#-funcionalidades)
-- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-- [🚀 Começando](#-começando)
-  - [Pré-requisitos](#pré-requisitos)
-  - [Instalação](#instalação)
-- [🤝 Como Contribuir](#-como-contribuir)
+O grande diferencial do projeto é o uso de **Inteligência Artificial** para analisar os gastos do usuário e fornecer recomendações personalizadas de economia e investimentos.
 
-## 📝 Sobre o Projeto
+---
 
-O **EcoFlow** nasceu da necessidade de ter uma ferramenta de controle financeiro que seja ao mesmo tempo poderosa e fácil de usar. Com ele, você pode cadastrar todas as suas entradas e saídas, categorizá-las e visualizar relatórios que te ajudarão a tomar decisões financeiras mais inteligentes.
+## ✨ Funcionalidades Principais
 
-## ✨ Funcionalidades
+* **📊 Dashboard Interativa:** Visão geral das finanças com gráficos dinâmicos de receitas vs. despesas.
+* **🤖 EcoFlow AI:** Receba dicas e recomendações financeiras baseadas nos seus hábitos de consumo geradas por Inteligência Artificial.
+* **🔄 Sistema de Recorrência:** Lançamento automático de contas fixas (aluguel, salário, assinaturas) na virada do mês, sem precisar redigitar.
+* **📅 Relatórios Anuais:** Acompanhamento de evolução patrimonial e fechamento de ano.
+* **🔐 Segurança:** Sistema de login robusto com proteção contra CSRF e validação de dados.
+* **📱 Responsivo:** Acesso fácil via computador ou dispositivos móveis.
 
--   ✅ Cadastro de Receitas (salário, vendas, etc.)
--   ✅ Cadastro de Despesas (aluguel, alimentação, lazer, etc.)
--   ✅ Categorização de lançamentos.
--   ✅ Dashboard com resumo mensal e anual.
--   ✅ Interface limpa e responsiva.
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
-Este projeto foi construído com as seguintes tecnologias:
+* **Back-end:** PHP (Vanilla)
+* **Banco de Dados:** MySQL / MariaDB
+* **Front-end:** HTML5, Tailwind, JavaScript
 
--   **Backend:** PHP
--   **Banco de Dados:** MySQL
--   **Frontend:** HTML, Tailwind CSS, JavaScript
--   **Gerenciador de Pacotes:** NPM
+---
 
-## 🚀 Começando
-
-Para ter uma cópia local do projeto rodando, siga estes passos.
+## 🚀 Como Rodar o Projeto
 
 ### Pré-requisitos
+* Ter o [XAMPP](https://www.apachefriends.org/pt_br/index.html) ou ambiente similar instalado.
+* Git instalado.
 
-Você vai precisar ter as seguintes ferramentas instaladas em sua máquina:
--   Um servidor web local (XAMPP, WAMP, Laragon, etc.) que inclua:
-    -   PHP (versão 8.0 ou superior recomendada)
-    -   MySQL
--   [Node.js e npm](https://nodejs.org/en/) (para compilar o Tailwind CSS)
--   [Git](https://git-scm.com/)
-
-### Instalação
+### Passo a Passo
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/ecoflow.git](https://github.com/seu-usuario/ecoflow.git)
+    git clone [https://github.com/SEU-USUARIO/ecoflow.git](https://github.com/SEU-USUARIO/ecoflow.git)
     ```
 
-2.  **Acesse a pasta do projeto:**
-    ```bash
-    cd ecoflow
-    ```
+2.  **Configure o Banco de Dados:**
+    * Acesse o PHPMyAdmin (ou seu gerenciador preferido).
+    * Crie um banco de dados chamado `ecoflow`.
+    * Importe o arquivo `ecoflow.sql` (localizado na pasta `/database`).
 
-3.  **Instale as dependências do NPM:**
-    ```bash
-    npm install
-    ```
+3.  **Configuração:**
+    * Verifique o arquivo `backend/conexao.php` e ajuste as credenciais do banco se necessário.
 
-4.  **Configure o Banco de Dados:**
-    -   Crie um novo banco de dados no seu MySQL (ex: `ecoflow`).
-    -   Importe o arquivo `.sql` que está na pasta `database/`.
-    -   Configure a conexão com o banco de dados no arquivo de conexão (backend/conexao.php).
-
-5.  **Compile o Tailwind CSS:**
-    -   Para compilar os assets e ficar observando por mudanças durante o desenvolvimento, rode:
-    ```bash
-    npm run dev
-    ```
-    -   Para compilar a versão final para produção (minificada), você pode criar um script `build` no seu `package.json`.
-
-6.  **Inicie o servidor:**
-    -   Inicie seu servidor Apache/MySQL e acesse o projeto pelo seu navegador (ex: `http://localhost/ecoflow`).
-
-Pronto! O sistema deve estar funcionando.
-
-## 🤝 Como Contribuir
-
-Contribuições são o que tornam a comunidade de código aberto um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será **muito apreciada**.
-
-1.  Faça um **Fork** do projeto.
-2.  Crie uma **Branch** para sua feature (`git checkout -b feature/AmazingFeature`).
-3.  Faça o **Commit** de suas mudanças (`git commit -m 'Add some AmazingFeature'`).
-4.  Faça o **Push** para a Branch (`git push origin feature/AmazingFeature`).
-5.  Abra um **Pull Request**.
+4.  **Executar:**
+    * Inicie o Apache e MySQL no XAMPP.
+    * Acesse no navegador: `http://localhost/ecoflow`
 
 ---
-Feito com por [Walysson](https://www.walysson.com.br)
+
+## 🚧 Status do Projeto
+
+O projeto encontra-se em **fase ativa de desenvolvimento**. Novas funcionalidades estão sendo implementadas semanalmente.
+* [x] Sistema de Login/Cadastro
+* [x] Lançamento de Despesas/Rendas
+* [x] Lógica de Recorrência Mensal
+* [ ] Integração completa da API de IA
+* [ ] Modo Escuro (Dark Mode)
+* [ ] Sistema de Metas
+
+---
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir uma *issue* para relatar bugs ou sugerir novas features.
+
+---
+
+## 📝 Autor
+
+Desenvolvido por **Walysson Ribeiro**.
+
+---
+<p align="center">
+  Feito com 💙 e PHP.
+</p>
