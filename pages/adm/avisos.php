@@ -76,6 +76,10 @@ $stmt_n_vistos->close();
                                     <?= htmlspecialchars(formatarData($row['data'])) ?>
                                 </td>
                                 <td class="acoes">
+                                    <button id="btn-visu-<?= $row['id'] ?>" class="btn-visu"
+                                        onclick="abrirVisualizar('<?= $row['id'] ?>')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                     <button class="btn-edita"
                                         onclick="abrirEditarModal('avisos', <?= htmlspecialchars($row['id']) ?>)">
                                         <i class="bi bi-pencil"></i>
@@ -94,6 +98,95 @@ $stmt_n_vistos->close();
                 </table>
             </div>
         </div>
+        <?php
+        $sql_avisos = "SELECT id, titulo FROM avisos";
+        $stmt_avisos = $conexao->prepare($sql_avisos);
+        $stmt_avisos->execute();
+        $result_avisos = $stmt_avisos->get_result();
+        $stmt_avisos->close();
+
+        if ($result_avisos->num_rows > 0):
+            while ($row_avisos = $result_avisos->fetch_assoc()):
+        ?>
+                <div class="modal-visualizar hidden" id="visualizar-<?= $row_avisos['id'] ?>">
+                    <div class="container-modal">
+                        <button class="btn-fechar" onclick="fecharVisualizar('<?= $row_avisos['id'] ?>')">
+                            <i class="bi bi-x"></i>
+                        </button>
+                        <div class="titulo">
+                            <h2>Status de Visualização - <?= $row_avisos['titulo'] ?></h2>
+                            <p>Veja quais usuários já visualizaram este aviso</p>
+                        </div>
+                        <div class="container-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    // buscando os usuarios e vendo se visualizaram ou não
+                                    $sql_users = "SELECT id, nome FROM usuarios";
+                                    $stmt_users = $conexao->prepare($sql_users);
+                                    $stmt_users->execute();
+                                    $result_users = $stmt_users->get_result();
+                                    $stmt_users->close();
+
+                                    while ($row_user = $result_users->fetch_assoc()):
+                                    ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row_user['nome']) ?></td>
+                                            <?php
+                                            $sql_aviso = "SELECT usuario_id FROM usuarios_avisos_vistos WHERE aviso_id = ?";
+                                            $stmt_aviso = $conexao->prepare($sql_aviso);
+                                            $stmt_aviso->bind_param("s", $row_avisos['id']);
+                                            $stmt_aviso->execute();
+                                            $result_aviso = $stmt_aviso->get_result();
+                                            $stmt_aviso->close();
+
+                                            $usuarios_viram = [];
+
+                                            while ($row_aviso = $result_aviso->fetch_assoc()) {
+                                                $usuarios_viram[] = $row_aviso['usuario_id'];
+                                            }
+
+                                            if (in_array($row_user['id'], $usuarios_viram)):
+                                            ?>
+                                                <td class="tag-visu">
+                                                    <p>
+                                                        <i class="bi bi-eye"></i> Visualizado
+                                                    </p>
+                                                </td>
+                                            <?php else: ?>
+                                                <td class="tag-n-visu">
+                                                    <p>
+                                                        <i class="bi bi-eye-slash"></i> Não Visualizado
+                                                    </p>
+                                                </td>
+                                            <?php endif ?>
+                                        <?php endwhile ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile ?>
+            <script>
+                function abrirVisualizar(aviso) {
+                    const visualizar = document.getElementById("visualizar-" + aviso);
+
+                    visualizar.classList.remove("hidden");
+                }
+
+                function fecharVisualizar(aviso) {
+                    const visualizar = document.getElementById("visualizar-" + aviso);
+
+                    visualizar.classList.add("hidden");
+                }
+            </script>
+        <?php endif ?>
     <?php else: ?>
         <div class="container-mensagem">
             <i class="bi bi-exclamation-circle icone"></i>

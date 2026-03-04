@@ -1,104 +1,105 @@
 @layer components {
-    .main-tabela {
-        @apply flex flex-col gap-5 p-3 pt-5 lg:p-10 pb-20 lg:pb-10;
+  .main-tabela {
+    @apply flex flex-col gap-5 p-3 pt-5 lg:p-10 pb-20 lg:pb-10;
+  }
+
+  .header-tabela {
+    @apply flex items-center justify-between w-full;
+
+    & h2 {
+      @apply text-2xl font-bold;
     }
 
-    .header-tabela {
-        @apply flex items-center justify-between w-full;
+    & .container-btn-tabela {
+      @apply flex items-center justify-center gap-3;
 
-        & h2 {
-            @apply text-2xl font-bold;
+      & button {
+        @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-13 lg:w-auto h-10 rounded-lg;
+
+        & i {
+          @apply text-3xl mt-0 lg:-mt-1;
         }
 
-        & .container-btn-tabela {
-            @apply flex items-center justify-center gap-3;
+        &:hover {
+          @apply bg-verde-hover;
+        }
 
-            & button {
-                @apply flex items-center justify-center gap-2 px-5 bg-verde text-white cursor-pointer w-13 lg:w-auto h-10 rounded-lg;
+        & span {
+          @apply hidden lg:block;
+        }
+      }
+    }
+  }
 
-                & i {
-                    @apply text-3xl mt-0 lg:-mt-1;
-                }
+  .conteudo-tabela {
+    @apply bg-white rounded-lg border border-borda p-5;
 
-                &:hover {
-                    @apply bg-verde-hover;
-                }
+    & h3 {
+      @apply text-xl mb-3 font-bold;
+    }
 
-                & span {
-                    @apply hidden lg:block;
-                }
+    & .container-table {
+      @apply max-w-full max-h-full overflow-auto border border-borda rounded-lg;
+
+      & table {
+        @apply w-full text-center;
+
+        & thead th,
+        tbody td {
+          @apply p-3 whitespace-nowrap;
+        }
+
+        & thead {
+          @apply sticky top-0 bg-cinza-claro text-texto-opaco;
+        }
+
+        & tbody tr {
+          @apply border-t border-borda;
+
+          &:hover {
+            @apply bg-gray-100;
+          }
+        }
+
+        & thead tr {
+          @apply border-b border-borda;
+        }
+
+        & .acoes {
+          @apply flex items-center justify-center gap-3 lg:gap-5 text-xl;
+
+          & .btn-visu,
+          .btn-edita,
+          .btn-deleta {
+            @apply w-10 h-10 rounded-lg cursor-pointer;
+
+            &:hover {
+              @apply bg-gray-200;
             }
+          }
+
+          & .btn-edita {
+            @apply text-blue-500;
+          }
+
+          & .btn-deleta {
+            @apply text-red-500;
+          }
         }
+      }
     }
 
-    .conteudo-tabela {
-        @apply bg-white rounded-lg border border-borda p-5;
-
-        & h3 {
-            @apply text-xl mb-3 font-bold;
-        }
-
-        & .container-table {
-            @apply max-w-full max-h-full overflow-auto border border-borda rounded-lg;
-
-            & table {
-                @apply w-full text-center;
-
-                & thead th,
-                tbody td {
-                    @apply p-3 whitespace-nowrap;
-                }
-
-                & thead {
-                    @apply sticky top-0 bg-cinza-claro text-texto-opaco;
-                }
-
-                & tbody tr {
-                    @apply border-t border-borda;
-
-                    &:hover {
-                        @apply bg-gray-100;
-                    }
-                }
-
-                & thead tr {
-                    @apply border-b border-borda;
-                }
-
-                & .acoes {
-                    @apply flex items-center justify-center gap-3 lg:gap-10 text-xl;
-
-                    & .btn-edita,
-                    .btn-deleta {
-                        @apply w-10 h-10 rounded-lg cursor-pointer;
-
-                        &:hover {
-                            @apply bg-gray-200;
-                        }
-                    }
-
-                    & .btn-edita {
-                        @apply text-blue-500;
-                    }
-
-                    & .btn-deleta {
-                        @apply text-red-500;
-                    }
-                }
-            }
-        }
-
-        & .btn-pendente,
-        .btn-pago {
-            @apply w-full text-white rounded-full px-5 py-1 cursor-pointer;
-        }
-
-        & .btn-pendente {
-            @apply bg-yellow-500;
-        }
-
-        & .btn-pago {
-            @apply bg-green-500;
-        }
+    & .btn-pendente,
+    .btn-pago {
+      @apply w-full text-white rounded-full px-5 py-1 cursor-pointer;
     }
+
+    & .btn-pendente {
+      @apply bg-yellow-500;
+    }
+
+    & .btn-pago {
+      @apply bg-green-500;
+    }
+  }
 }

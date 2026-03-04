@@ -1,45 +1,118 @@
 @layer components {
-    #modal {
-        @apply fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
+  #modal {
+    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
 
-        & #form-container {
-            @apply bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw];
+    & #form-container {
+      @apply bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw];
 
-            & #modal-form {
-                @apply max-h-[80dvh] overflow-auto px-1;
+      & #modal-form {
+        @apply max-h-[80dvh] overflow-auto px-1;
 
-                & label {
-                    @apply inline-block mt-3;
-                }
-
-                & button {
-                    @apply text-white px-4 py-2 cursor-pointer rounded-lg;
-                }
-
-                & .btn-submit {
-                    @apply bg-verde;
-
-                    &:hover {
-                        @apply bg-verde-hover;
-                    }
-                }
-
-                & .btn-cancelar {
-                    @apply bg-white text-black border border-borda;
-
-                    &:hover {
-                        @apply bg-gray-200;
-                    }
-                }
-            }
-
-            & .input-modal {
-                @apply w-full border border-borda p-2 rounded-lg;
-            }
-
-            & textarea.input-modal {
-                @apply min-h-15;
-            }
+        & label {
+          @apply inline-block mt-3;
         }
+
+        & button {
+          @apply text-white px-4 py-2 cursor-pointer rounded-lg;
+        }
+
+        & .btn-submit {
+          @apply bg-verde;
+
+          &:hover {
+            @apply bg-verde-hover;
+          }
+        }
+
+        & .btn-cancelar {
+          @apply bg-white text-black border border-borda;
+
+          &:hover {
+            @apply bg-gray-200;
+          }
+        }
+      }
+
+      & .input-modal {
+        @apply w-full border border-borda p-2 rounded-lg;
+      }
+
+      & textarea.input-modal {
+        @apply min-h-15;
+      }
     }
+  }
+
+  .modal-visualizar {
+    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-500 w-full;
+
+    & .container-modal {
+      @apply relative bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw] max-h-[90dvh];
+
+      & .btn-fechar {
+        @apply absolute right-3 top-2 text-2xl cursor-pointer;
+
+        &:hover {
+          @apply text-texto-opaco;
+        }
+      }
+
+      & .titulo {
+        @apply mb-5;
+
+        & h2 {
+          @apply text-xl font-semibold;
+        }
+
+        & p {
+          @apply text-texto-opaco;
+        }
+      }
+      & .container-table {
+        @apply max-w-full max-h-[20rem] overflow-auto;
+
+        & table {
+          @apply min-w-full text-center;
+
+          & thead th,
+          tbody td {
+            @apply p-3 whitespace-nowrap;
+          }
+
+          & thead {
+            @apply sticky top-0 bg-cinza-claro text-texto-opaco;
+          }
+
+          & tbody tr {
+            @apply border-t border-borda;
+
+            &:hover {
+              @apply bg-gray-100;
+            }
+          }
+
+          & thead tr {
+            @apply border-b border-borda;
+          }
+
+          & .tag-visu,
+          .tag-n-visu {
+            @apply flex items-center justify-center;
+
+            & p {
+              @apply text-white rounded-full w-max px-5;
+            }
+          }
+
+          & .tag-visu p {
+            @apply bg-verde;
+          }
+
+          & .tag-n-visu p {
+            @apply bg-verde-hover;
+          }
+        }
+      }
+    }
+  }
 }
