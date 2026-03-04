@@ -1,108 +1,108 @@
 @layer components {
-    .menu {
-        @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda bg-white;
+  .menu {
+    @apply hidden lg:flex flex-col items-center justify-between min-w-[15%] border-r border-borda bg-white;
 
-        & .topo-logo,
-        nav,
-        .baixo-menu {
-            @apply p-4;
-        }
-
-        & .topo-menu {
-            @apply flex flex-col w-full;
-
-            & .topo-logo {
-                @apply flex items-center justify-between border-b border-borda;
-
-                & button {
-                    @apply cursor-pointer;
-                }
-            }
-
-            & nav {
-                @apply flex flex-col gap-3 items-center justify-between;
-
-                & a {
-                    @apply flex items-center justify-start gap-3 px-3 py-2 w-full rounded-xl;
-
-                    &:hover {
-                        @apply bg-verde-opaco text-verde;
-                    }
-
-                    &.atual {
-                        @apply text-verde font-bold bg-verde-opaco;
-                    }
-                }
-            }
-        }
-
-        .baixo-menu {
-            @apply flex items-center justify-center w-full border-t border-borda;
-
-            & a {
-                @apply flex items-center justify-center gap-3 px-3 py-2 w-full rounded-xl;
-
-                &:hover {
-                    @apply bg-verde-opaco text-verde;
-                }
-
-                &.atual {
-                    @apply text-verde font-bold bg-verde-opaco;
-                }
-            }
-        }
-
-        &.retraido {
-            @apply min-w-auto;
-
-            & .topo-logo {
-                @apply flex items-center justify-center w-full;
-
-                & button {
-                    @apply rotate-180;
-                }
-
-                & h1 {
-                    @apply hidden;
-                }
-            }
-
-            & .topo-menu nav a span,
-            .baixo-menu a span {
-                @apply hidden;
-            }
-        }
+    & .topo-logo,
+    nav,
+    .baixo-menu {
+      @apply p-4;
     }
 
-    .menu-mobile {
-        @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl py-2 border-t border-borda z-200;
+    & .topo-menu {
+      @apply flex flex-col w-full;
 
-        & nav {
-            @apply grid grid-cols-4 w-full;
+      & .topo-logo {
+        @apply flex items-center justify-between border-b border-borda;
 
-            & a {
-                @apply flex flex-col items-center justify-center w-full rounded-xl text-xs;
-
-                & i {
-                    @apply text-lg;
-                }
-
-                &:hover {
-                    @apply text-verde;
-
-                    & i {
-                        @apply bg-verde-opaco text-verde px-5 rounded-full;
-                    }
-                }
-
-                &.atual {
-                    @apply font-bold text-verde;
-
-                    & i {
-                        @apply text-verde font-bold bg-verde-opaco px-4 rounded-full;
-                    }
-                }
-            }
+        & button {
+          @apply cursor-pointer;
         }
+      }
+
+      & nav {
+        @apply flex flex-col gap-3 items-center justify-between;
+
+        & a {
+          @apply flex items-center justify-start gap-3 px-3 py-2 w-full rounded-xl;
+
+          &:hover {
+            @apply bg-verde-opaco text-verde;
+          }
+
+          &.atual {
+            @apply text-verde font-bold bg-verde-opaco;
+          }
+        }
+      }
     }
+
+    .baixo-menu {
+      @apply flex items-center justify-center w-full border-t border-borda;
+
+      & a {
+        @apply flex items-center justify-center gap-3 px-3 py-2 w-full rounded-xl;
+
+        &:hover {
+          @apply bg-verde-opaco text-verde;
+        }
+
+        &.atual {
+          @apply text-verde font-bold bg-verde-opaco;
+        }
+      }
+    }
+
+    &.retraido {
+      @apply min-w-auto;
+
+      & .topo-logo {
+        @apply flex items-center justify-center w-full;
+
+        & button {
+          @apply rotate-180;
+        }
+
+        & h1 {
+          @apply hidden;
+        }
+      }
+
+      & .topo-menu nav a span,
+      .baixo-menu a span {
+        @apply hidden;
+      }
+    }
+  }
+
+  .menu-mobile {
+    @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl py-2 border-t border-borda z-200;
+
+    & nav {
+      @apply grid grid-cols-4 w-full;
+
+      & a {
+        @apply flex flex-col items-center justify-center w-full rounded-xl text-xs;
+
+        & i {
+          @apply text-lg;
+        }
+
+        &:hover {
+          @apply text-verde;
+
+          & i {
+            @apply bg-verde-opaco text-verde px-5 rounded-full;
+          }
+        }
+
+        &.atual {
+          @apply font-bold text-verde;
+
+          & i {
+            @apply text-verde font-bold bg-verde-opaco px-6 rounded-full;
+          }
+        }
+      }
+    }
+  }
 }
