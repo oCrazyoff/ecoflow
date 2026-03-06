@@ -80,6 +80,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmtInsert->bind_param("sssi", $nome, $email, $senha_hash, $cargo_int);
 
         if ($stmtInsert->execute()) {
+            -$novo_usuario_id = $conexao->insert_id;
+            $categorias_padrao = ['Casa', 'Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Cartão', 'Outro'];
+
+            $stmt_cat = $conexao->prepare("INSERT INTO categorias (usuario_id, nome) VALUES (?, ?)");
+            foreach ($categorias_padrao as $nome_cat) {
+                $stmt_cat->bind_param("is", $novo_usuario_id, $nome_cat);
+                $stmt_cat->execute();
+            }
+            $stmt_cat->close();
+            // ----------------------------------------
+
             $_SESSION['resposta'] = "Usuário cadastrado com sucesso!";
             header($redirecionamento);
             exit;

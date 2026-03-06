@@ -75,6 +75,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmtInsert->bind_param("sss", $nome, $email, $senha_hash);
 
         if ($stmtInsert->execute()) {
+            $novo_usuario_id = $conexao->insert_id;
+            $categorias_padrao = ['Casa', 'Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Cartão', 'Outro'];
+
+            $stmt_cat = $conexao->prepare("INSERT INTO categorias (usuario_id, nome) VALUES (?, ?)");
+            foreach ($categorias_padrao as $nome_cat) {
+                $stmt_cat->bind_param("is", $novo_usuario_id, $nome_cat);
+                $stmt_cat->execute();
+            }
+            $stmt_cat->close();
+            // ----------------------------------------
+
             $_SESSION['resposta_sucesso'] = "Conta criada com sucesso! Você já pode fazer o login.";
             header("Location: " . BASE_URL . "login");
             exit;
@@ -82,7 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Se a execução falhar por algum motivo
             throw new Exception("Não foi possível executar o cadastro.");
         }
-
     } catch (Exception $erro) {
         $_SESSION['resposta'] = "Ocorreu um erro inesperado. Tente novamente mais tarde.";
         header("Location: " . BASE_URL . "cadastro");
