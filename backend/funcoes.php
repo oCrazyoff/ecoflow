@@ -67,30 +67,6 @@ function formatarData(string $data): string
     return date('d/m/Y', $timestamp); // Ex: 08/10/2025
 }
 
-function tipoCategorias($categoria)
-{
-    if ($categoria > 0 && $categoria < 8) {
-        switch ($categoria) {
-            case 1:
-                return 'Casa';
-            case 2:
-                return 'Alimentação';
-            case 3:
-                return 'Transporte';
-            case 4:
-                return 'Saúde';
-            case 5:
-                return 'Educação';
-            case 6:
-                return 'Lazer';
-            case 7:
-                return 'Cartão';
-        }
-    } else {
-        return 'Outro';
-    }
-}
-
 function validarDescricao(string $descricao)
 {
     // Remove espaços extras
@@ -126,5 +102,3 @@ function validarValor($valor)
 
     return (float)$valor;
 }
-
-?>

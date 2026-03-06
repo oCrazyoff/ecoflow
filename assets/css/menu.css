@@ -78,7 +78,7 @@
     @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl py-2 border-t border-borda z-200;
 
     & nav {
-      @apply grid grid-cols-4 w-full;
+      @apply grid grid-cols-5 w-full;
 
       & a {
         @apply flex flex-col items-center justify-center w-full rounded-xl text-xs;

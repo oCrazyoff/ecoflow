@@ -22,6 +22,7 @@ $routes = [
     'rendas' => 'pages/rendas.php',
     'despesas' => 'pages/despesas.php',
     'perfil' => 'pages/perfil.php',
+    'categorias' => 'pages/categorias.php',
 
     // paginas do adm
     'usuarios' => 'pages/adm/usuarios.php',
@@ -36,12 +37,14 @@ $routes = [
     'buscar_despesas' => 'backend/buscar/despesas.php',
     'buscar_usuarios' => 'backend/buscar/usuarios.php',
     'buscar_avisos' => 'backend/buscar/avisos.php',
+    'buscar_categorias' => 'backend/buscar/categorias.php',
 
     // rotas de cadastro
     'cadastrar_rendas' => 'backend/cadastrar/rendas.php',
     'cadastrar_despesas' => 'backend/cadastrar/despesas.php',
     'cadastrar_usuarios' => 'backend/cadastrar/usuarios.php',
     'cadastrar_avisos' => 'backend/cadastrar/avisos.php',
+    'cadastrar_categorias' => 'backend/cadastrar/categorias.php',
 
     // rotas de edição
     'editar_rendas' => 'backend/editar/rendas.php',
@@ -49,12 +52,14 @@ $routes = [
     'editar_usuarios' => 'backend/editar/usuarios.php',
     'trocar_status_despesa' => 'backend/editar/status_despesa.php',
     'editar_avisos' => 'backend/editar/avisos.php',
+    'editar_categorias' => 'backend/editar/categorias.php',
 
     // rotas de deletar
     'deletar_rendas' => 'backend/deletar/rendas.php',
     'deletar_despesas' => 'backend/deletar/despesas.php',
     'deletar_usuarios' => 'backend/deletar/usuarios.php',
     'deletar_avisos' => 'backend/deletar/avisos.php',
+    'deletar_categorias' => 'backend/deletar/categorias.php',
 
     // rotas da função aviso
     'marcar_aviso_visto' => 'backend/aviso/marcar_visto.php',

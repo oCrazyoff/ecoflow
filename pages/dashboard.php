@@ -247,7 +247,7 @@ if ($expected_title_type !== null) {
                     <?php
                     // puxando as 4 maiores despesas do usuario
                     if (isset($m) && $m > 0 && $m < 13) {
-                        $sql = "SELECT descricao, status, categoria, valor
+                        $sql = "SELECT descricao, status, categoria_id, valor
                                 FROM despesas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = ?
@@ -257,7 +257,7 @@ if ($expected_title_type !== null) {
                         $stmt = $conexao->prepare($sql);
                         $stmt->bind_param("is", $_SESSION['id'], $m);
                     } else {
-                        $sql = "SELECT descricao, status, categoria, valor
+                        $sql = "SELECT descricao, status, categoria_id, valor
                                 FROM despesas 
                                 WHERE usuario_id = ?
                                 AND MONTH(data) = MONTH(CURDATE())
@@ -284,7 +284,20 @@ if ($expected_title_type !== null) {
                                             <span class="bg-green-500">Pago</span>
                                         <?php endif; ?>
                                     </h5>
-                                    <p><?= htmlspecialchars(tipoCategorias($despesa['categoria'])) ?></p>
+                                    <p>
+                                        <?php
+                                        // buscando o nome da categoria
+                                        $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
+                                        $stmt_categoria = $conexao->prepare($sql_categoria);
+                                        $stmt_categoria->bind_param("i", $despesa['categoria_id']);
+                                        $stmt_categoria->execute();
+                                        $stmt_categoria->bind_result($nome_categoria);
+                                        $stmt_categoria->fetch();
+                                        $stmt_categoria->close();
+
+                                        echo $nome_categoria;
+                                        ?>
+                                    </p>
                                 </div>
                                 <p class="text-red-500"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
                             </div>
@@ -300,25 +313,27 @@ if ($expected_title_type !== null) {
     </div>
 </main>
 <?php
-// Consulta total de despesas por categoria
+// Consulta total de despesas por categoria usando JOIN para obter o nome real
 if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT categoria, SUM(valor) AS total
-            FROM despesas
-            WHERE usuario_id = ?
-            AND MONTH(data) = ?
-            AND YEAR(data) = YEAR(CURDATE())
-            GROUP BY categoria
+    $sql = "SELECT c.nome AS nome_categoria, SUM(d.valor) AS total
+            FROM despesas d
+            JOIN categorias c ON d.categoria_id = c.id
+            WHERE d.usuario_id = ? 
+            AND MONTH(d.data) = ? 
+            AND YEAR(d.data) = YEAR(CURDATE())
+            GROUP BY d.categoria_id, c.nome
             ORDER BY total DESC
             LIMIT 5";
     $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("is", $_SESSION['id'], $m);
+    $stmt->bind_param("ii", $_SESSION['id'], $m); // Mudei "is" para "ii" pois mês é inteiro
 } else {
-    $sql = "SELECT categoria, SUM(valor) AS total
-            FROM despesas
-            WHERE usuario_id = ?
-            AND MONTH(data) = MONTH(CURDATE())
-            AND YEAR(data) = YEAR(CURDATE())
-            GROUP BY categoria
+    $sql = "SELECT c.nome AS nome_categoria, SUM(d.valor) AS total
+            FROM despesas d
+            JOIN categorias c ON d.categoria_id = c.id
+            WHERE d.usuario_id = ? 
+            AND MONTH(d.data) = MONTH(CURDATE()) 
+            AND YEAR(d.data) = YEAR(CURDATE())
+            GROUP BY d.categoria_id, c.nome
             ORDER BY total DESC
             LIMIT 5";
     $stmt = $conexao->prepare($sql);
@@ -333,7 +348,8 @@ $labels = [];
 $valores = [];
 
 foreach ($resultados as $r) {
-    $labels[] = tipoCategorias((int)$r['categoria']);
+    // Agora pegamos o nome que veio do JOIN
+    $labels[] = $r['nome_categoria'];
     $valores[] = (float)$r['total'];
 }
 ?>

@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $valor = trim(strip_tags($_POST['valor']));
     $status = trim(strip_tags($_POST['status']));
     $recorrente = trim(strip_tags($_POST['recorrente']));
-    $categoria = trim(strip_tags($_POST['categoria']));
+    $categoria = trim(strip_tags($_POST['categoria_id']));
     $data = trim(strip_tags($_POST['data']));
 
     // Validar a descrição
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
-        $sql = "UPDATE despesas SET descricao = ?, valor = ?, status = ?, recorrente = ?, categoria = ?, data = ? WHERE id = ? AND usuario_id = ?";
+        $sql = "UPDATE despesas SET descricao = ?, valor = ?, status = ?, recorrente = ?, categoria_id = ?, data = ? WHERE id = ? AND usuario_id = ?";
         $stmt = $conexao->prepare($sql);
         $stmt->bind_param("ssiiisii", $descricao, $valor, $status, $recorrente, $categoria, $data, $id, $usuario_id);
 
@@ -69,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
         header($redirecionamento);
         exit;
-
     } catch (Exception $erro) {
         error_log($erro->getMessage());
         $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";

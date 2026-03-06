@@ -4,11 +4,11 @@ require_once "includes/layout/inicio.php";
 
 // puxando todas as despesas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('ii', $_SESSION['id'], $m);
 } else {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('i', $_SESSION['id']);
 }
@@ -59,7 +59,20 @@ $result = $stmt->get_result();
                                 </td>
                                 <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?>
                                 </td>
-                                <td><?= htmlspecialchars(tipoCategorias($row['categoria'])) ?></td>
+                                <td>
+                                    <?php
+                                    // buscando o nome da categoria
+                                    $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
+                                    $stmt_categoria = $conexao->prepare($sql_categoria);
+                                    $stmt_categoria->bind_param("i", $row['categoria_id']);
+                                    $stmt_categoria->execute();
+                                    $stmt_categoria->bind_result($nome_categoria);
+                                    $stmt_categoria->fetch();
+                                    $stmt_categoria->close();
+
+                                    echo $nome_categoria;
+                                    ?>
+                                </td>
                                 <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                                 <td>
                                     <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">

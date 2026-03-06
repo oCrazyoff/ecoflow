@@ -9,13 +9,13 @@ if (!$id) {
     echo json_encode(['erro' => 'ID inválido']);
     exit;
 } else {
-    $stmt = $conexao->prepare("SELECT descricao, valor, recorrente, DATE(data) AS data, categoria_id, status FROM despesas WHERE id = ?");
+    $stmt = $conexao->prepare("SELECT nome FROM categorias WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $resultado = $stmt->get_result();
 
     if ($resultado->num_rows === 0) {
-        echo json_encode(['erro' => 'Despesa não encontrada']);
+        echo json_encode(['erro' => 'Categoria não encontrada']);
         exit;
     }
 

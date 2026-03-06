@@ -10,6 +10,10 @@
     <i class="bi bi-wallet"></i>
     <span>Despesas</span>
 </a>
+<a class="<?= ($rota === 'categorias') ? 'atual' : '' ?>" href="categorias<?= (isset($m) ? '?m=' . $m : '') ?>">
+    <i class="bi bi-tags"></i>
+    <span>Categorias</span>
+</a>
 <?php if ($_SESSION['cargo'] == 1): ?>
     <a class="<?= ($rota === 'usuarios') ? 'atual' : '' ?>" href="usuarios<?= (isset($m) ? '?m=' . $m : '') ?>">
         <i class="bi bi-people"></i>
