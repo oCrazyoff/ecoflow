@@ -181,7 +181,7 @@ $ano_passado = date('Y') - 1;
             $stmt_rendas->close();
 
             // Busca despesas do mês
-            $sql_despesas = "SELECT descricao, data, valor, categoria, status FROM despesas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
+            $sql_despesas = "SELECT descricao, data, valor, categoria_id, status FROM despesas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
             $stmt_despesas = $conexao->prepare($sql_despesas);
             $stmt_despesas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
             $stmt_despesas->execute();
@@ -246,8 +246,20 @@ $ano_passado = date('Y') - 1;
                                                 <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
                                             <?php endif; ?>
                                         </p>
-                                        <span
-                                            class="text-texto-opaco"><?= htmlspecialchars(tipoCategorias($despesa['categoria'])) ?></span>
+                                        <span class="text-texto-opaco">
+                                            <?php
+                                            // puxando nome da categoria
+                                            $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
+                                            $stmt_categoria = $conexao->prepare($sql_categoria);
+                                            $stmt_categoria->bind_param("i", $despesa['categoria_id']);
+                                            $stmt_categoria->execute();
+                                            $stmt_categoria->bind_result($nome_categoria);
+                                            $stmt_categoria->fetch();
+                                            $stmt_categoria->close();
+
+                                            echo $nome_categoria;
+                                            ?>
+                                        </span>
                                     </div>
                                     <p class="text-red-500 font-semibold"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
                                 </div>
