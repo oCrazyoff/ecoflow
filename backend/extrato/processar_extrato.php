@@ -34,6 +34,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // =========================================================================
         // FILTRAR E ESTRUTURAR
         // =========================================================================
+
+        // Pede para o servidor MySQL aguardar até 300 segundos (5 minutos) 
+        // sem derrubar a conexão enquanto a IA processa o texto.
+        $conexao->query("SET session wait_timeout = 300");
+        $conexao->query("SET session interactive_timeout = 300");
+
         $resposta_ia = analisarExtrato($texto_extrato);
 
         if (empty($resposta_ia)) {
@@ -61,18 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['resposta'] = "Erro JSON ($erro_php). A IA retornou um formato inesperado.";
             header($redirecionamento);
             exit;
-        }
-
-        // =========================================================================
-        // REVIVER A CONEXÃO COM O BANCO (Correção do "Has gone away")
-        // =========================================================================
-        // O @ oculta o aviso caso a conexão já esteja morta
-        if (!@$conexao->ping()) {
-            // A conexão morreu!
-            $conexao = new mysqli($host, $username, $password, $db_name);
-
-            // Garante que a acentuação não vai quebrar
-            $conexao->set_charset("utf8mb4");
         }
 
         // =========================================================================
