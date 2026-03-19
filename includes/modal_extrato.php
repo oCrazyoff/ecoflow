@@ -3,7 +3,7 @@
         <div class="titulo-modal">
             <h2><i class="bi bi-file-earmark-text"></i> Importar Extrato Bancário</h2>
             <p>
-                Cole o conteúdo do extrato ou envie um arquivo CSV/TXT. A IA irá identificar as transações
+                Cole o conteúdo do extrato ou envie um arquivo CSV/TXT. A I.A irá identificar as transações
                 automaticamente.
             </p>
         </div>
@@ -25,7 +25,7 @@
                 placeholder="Cole o conteúdo do extrato aqui...&#10;&#10;Exemplo:&#10;01/03/2025 PIX RECEBIDO - JOÃO +1.500,00&#10;05/03/2025 IFOOD RESTAURANTE -32,00&#10;21/03/2025 NETFLIX -45,00"></textarea>
             <div class="container-btn">
                 <button class="btn-cancelar" onclick="fecharModalExtrato()">Cancelar</button>
-                <button type="submit" class="btn-submit">Analisar com IA</button>
+                <button type="submit" class="btn-submit">Analisar com I.A</button>
             </div>
         </form>
     </div>

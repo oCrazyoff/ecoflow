@@ -86,8 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $transacoes = json_decode($resposta_ia, true);
 
         if (!is_array($transacoes)) {
-            $erro_php = json_last_error_msg();
-            $_SESSION['resposta'] = "A I.A retornou um formato inesperado.";
+            $_SESSION['resposta'] = "Erro ao processar as informações do extrato. Formato inválido.";
             header($redirecionamento);
             exit;
         }
@@ -96,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Validação de Duplicidade, Ano e Inserção
         // =========================================================================
 
-        // Preparamos as queries fora do loop para manter a performance alta
+        // queries fora do loop para manter a performance alta
         $stmt_check_renda = $conexao->prepare("SELECT id FROM rendas WHERE usuario_id = ? AND data = ? AND valor = ?");
         $stmt_check_despesa = $conexao->prepare("SELECT id FROM despesas WHERE usuario_id = ? AND data = ? AND valor = ?");
 
