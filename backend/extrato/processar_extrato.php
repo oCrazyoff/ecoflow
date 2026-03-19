@@ -57,16 +57,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $transacoes = json_decode($resposta_ia, true);
 
         if (!is_array($transacoes)) {
-            $_SESSION['resposta'] = "Erro ao processar as informações do extrato. Formato inválido.";
+            $erro_php = json_last_error_msg();
+            $_SESSION['resposta'] = "Erro JSON ($erro_php). A IA retornou um formato inesperado.";
             header($redirecionamento);
             exit;
+        }
+
+        // =========================================================================
+        // REVIVER A CONEXÃO COM O BANCO (Correção do "Has gone away")
+        // =========================================================================
+        // O @ oculta o aviso caso a conexão já esteja morta
+        if (!@$conexao->ping()) {
+            // A conexão morreu!
+            $conexao = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+            // Garante que a acentuação não vai quebrar
+            $conexao->set_charset("utf8mb4");
         }
 
         // =========================================================================
         // Validação de Duplicidade, Ano e Inserção
         // =========================================================================
 
-        // queries fora do loop para manter a performance alta
+        // Preparamos as queries fora do loop para manter a performance alta
         $stmt_check_renda = $conexao->prepare("SELECT id FROM rendas WHERE usuario_id = ? AND data = ? AND valor = ?");
         $stmt_check_despesa = $conexao->prepare("SELECT id FROM despesas WHERE usuario_id = ? AND data = ? AND valor = ?");
 
