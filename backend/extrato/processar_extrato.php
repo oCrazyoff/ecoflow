@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // O @ oculta o aviso caso a conexão já esteja morta
         if (!@$conexao->ping()) {
             // A conexão morreu!
-            $conexao = new mysqli($db_host, $db_user, $db_pass, $db_name);
+            $conexao = new mysqli($host, $username, $password, $db_name);
 
             // Garante que a acentuação não vai quebrar
             $conexao->set_charset("utf8mb4");
