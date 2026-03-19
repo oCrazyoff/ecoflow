@@ -34,12 +34,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // =========================================================================
         // FILTRAR E ESTRUTURAR
         // =========================================================================
+
         $resposta_ia = analisarExtrato($texto_extrato);
 
         if (empty($resposta_ia)) {
             $_SESSION['resposta'] = "A Inteligência Artificial não respondeu. Tente novamente.";
             header($redirecionamento);
             exit;
+        }
+
+        $banco_ativo = false;
+
+        try {
+            // Tenta ver se o banco ainda está lá. 
+            // Se o PHP reclamar que o objeto já está fechado, o 'catch' segura o erro.
+            if ($conexao && @$conexao->ping()) {
+                $banco_ativo = true;
+            }
+        } catch (Throwable $e) {
+            // Capturou o erro "mysqli object is already closed" silenciosamente
+            $banco_ativo = false;
+        }
+
+        // Se o banco não está ativo, é criado uma nova conexão usando a memória
+        if (!$banco_ativo) {
+
+            global $host, $username, $password, $dbname;
+
+            $conexao = new mysqli($host, $username, $password, $dbname);
+
+            if ($conexao->connect_error) {
+                $_SESSION['resposta'] = "Erro interno: Fale com o suporte ou tente novamente.";
+                header($redirecionamento);
+                exit;
+            }
+            $conexao->set_charset("utf8mb4");
         }
 
         // Decodifica a resposta da IA diretamente para array
@@ -57,7 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $transacoes = json_decode($resposta_ia, true);
 
         if (!is_array($transacoes)) {
-            $_SESSION['resposta'] = "Erro ao processar as informações do extrato. Formato inválido.";
+            $erro_php = json_last_error_msg();
+            $_SESSION['resposta'] = "A I.A retornou um formato inesperado.";
             header($redirecionamento);
             exit;
         }
@@ -66,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Validação de Duplicidade, Ano e Inserção
         // =========================================================================
 
-        // queries fora do loop para manter a performance alta
+        // Preparamos as queries fora do loop para manter a performance alta
         $stmt_check_renda = $conexao->prepare("SELECT id FROM rendas WHERE usuario_id = ? AND data = ? AND valor = ?");
         $stmt_check_despesa = $conexao->prepare("SELECT id FROM despesas WHERE usuario_id = ? AND data = ? AND valor = ?");
 
@@ -135,9 +165,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['resposta'] = "Extrato lido! $cadastrados lançamentos salvos e $ignorados ignorados (duplicados ou fora de $ano_atual).";
         header($redirecionamento);
         exit;
-    } catch (Exception $erro) {
-        // Tratamento de erro seguro
-        $_SESSION['resposta'] = "Erro inesperado ao processar o extrato. Tente novamente.";
+    } catch (Throwable $erro) {
+        // Agora, se der erro, ele mostra na tela em vez de dar Erro 500
+        $_SESSION['resposta'] = "Erro inesperado. Tente novamente ou contate o suporte";
         header($redirecionamento);
         exit;
     }
