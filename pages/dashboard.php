@@ -155,13 +155,21 @@ if ($expected_title_type !== null) {
     <header class="header-dashboard">
         <div class="txt-header">
             <h2>Dashboard</h2>
-            <p>Saldo <span class="text-verde">•</span> <?= formatarReais($saldo) ?></p>
         </div>
         <div class="opt-header">
+            <button id="btn-extrato" onclick="mostrarModalExtrato()">
+                <i class="bi bi-upload"></i>
+                <div class="txt-btn"><span>Importar</span> Extrato</div>
+            </button>
             <?php require_once "includes/seletor_mes.php" ?>
         </div>
     </header>
     <div class="container-cards">
+        <div class="card">
+            <p>Saldo</p>
+            <h3><?= formatarReais($saldo) ?></h3>
+            <i class="bi bi-piggy-bank"></i>
+        </div>
         <div class="card">
             <p>Total de Rendas</p>
             <h3><?= formatarReais(totalRendas()) ?></h3>
@@ -312,6 +320,10 @@ if ($expected_title_type !== null) {
         </div>
     </div>
 </main>
+
+<!-- modal importar extrato -->
+<?php require_once "includes/modal_extrato.php" ?>
+
 <?php
 // Consulta total de despesas por categoria usando JOIN para obter o nome real
 if (isset($m) && $m > 0 && $m < 13) {

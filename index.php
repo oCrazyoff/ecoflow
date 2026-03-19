@@ -32,6 +32,9 @@ $routes = [
     'alterar_senha_perfil' => 'backend/editar/senha_perfil.php',
     'alterar_info_perfil' => 'backend/editar/info_perfil.php',
 
+    // rotas das funções da dashboard
+    'processar_extrato' => 'backend/extrato/processar_extrato.php',
+
     // rotas de busca
     'buscar_rendas' => 'backend/buscar/rendas.php',
     'buscar_despesas' => 'backend/buscar/despesas.php',

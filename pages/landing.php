@@ -1,6 +1,6 @@
 <?php
 $n_valida = true;
-require_once "includes/layout/inicio.php"
+require_once "includes/layout/inicio.php";
 ?>
 <header class="sticky top-0 left-0 bg-white py-2 h-[4rem] border-b border-borda shadow-lg">
     <div class="interface h-full flex items-center justify-between">
