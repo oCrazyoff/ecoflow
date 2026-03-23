@@ -52,11 +52,43 @@
       & i {
         @apply absolute flex items-center justify-center right-[1.5rem] top-[1.5rem] text-2xl text-verde bg-verde/10 rounded-lg w-10 h-10;
       }
+
+      &.saldo {
+        @apply border-emerald-300;
+
+        & i {
+          @apply bg-emerald-300/20 text-emerald-400;
+        }
+      }
+
+      &.rendas {
+        @apply border-blue-300;
+
+        & i {
+          @apply bg-blue-300/20 text-blue-400;
+        }
+      }
+
+      &.despesas-pa {
+        @apply border-red-300;
+
+        & i {
+          @apply bg-red-300/20 text-red-400;
+        }
+      }
+
+      &.despesas-pe {
+        @apply border-amber-300;
+
+        & i {
+          @apply bg-amber-300/20 text-amber-400;
+        }
+      }
     }
   }
 
   .meio-dashboard {
-    @apply grid grid-cols-1 lg:grid-cols-4 gap-5 px-5 pb-5;
+    @apply grid grid-cols-1 lg:grid-cols-6 gap-5 px-5 pb-5;
 
     & .card {
       @apply bg-white rounded-xl border border-borda p-[1.5rem] h-max;
@@ -90,6 +122,14 @@
           @apply font-bold;
         }
       }
+    }
+
+    & .container-esquerda {
+      @apply col-span-1 lg:col-span-4;
+    }
+
+    & .container-direita {
+      @apply col-span-1 lg:col-span-2;
     }
   }
 

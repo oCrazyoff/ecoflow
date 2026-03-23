@@ -165,22 +165,22 @@ if ($expected_title_type !== null) {
         </div>
     </header>
     <div class="container-cards">
-        <div class="card">
+        <div class="card saldo">
             <p>Saldo</p>
             <h3><?= formatarReais($saldo) ?></h3>
             <i class="bi bi-piggy-bank"></i>
         </div>
-        <div class="card">
+        <div class="card rendas">
             <p>Total de Rendas</p>
             <h3><?= formatarReais(totalRendas()) ?></h3>
             <i class="bi bi-cash-stack"></i>
         </div>
-        <div class="card">
+        <div class="card despesas-pa">
             <p>Despesas Pagas</p>
             <h3><?= formatarReais(despesasPagas()) ?></h3>
             <i class="bi bi-graph-down-arrow"></i>
         </div>
-        <div class="card">
+        <div class="card despesas-pe">
             <p>Despesas Pendentes</p>
             <h3><?= formatarReais(despesasPendentes()) ?></h3>
             <i class="bi bi-currency-dollar"></i>
@@ -188,7 +188,7 @@ if ($expected_title_type !== null) {
     </div>
     <div class="meio-dashboard">
         <div class="block lg:hidden"><?php require "includes/dashboard/assistente_ia.php" ?></div>
-        <div class="card col-span-1 lg:col-span-3">
+        <div class="container-esquerda card">
             <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
                 <h3>Análise Financeira</h3>
                 <div>
