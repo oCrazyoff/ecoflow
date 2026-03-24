@@ -23,6 +23,7 @@ $routes = [
     'despesas' => 'pages/despesas.php',
     'perfil' => 'pages/perfil.php',
     'categorias' => 'pages/categorias.php',
+    'mais' => 'pages/mais.php',
 
     // paginas do adm
     'usuarios' => 'pages/adm/usuarios.php',

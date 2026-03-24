@@ -23,4 +23,8 @@
         <i class="bi bi-bell"></i>
         <span>Avisos</span>
     </a>
+    <a class="block lg:hidden <?= ($rota === 'mais') ? 'atual' : '' ?>" href="mais<?= (isset($m) ? '?m=' . $m : '') ?>">
+        <i class="bi bi-list"></i>
+        <span>Mais</span>
+    </a>
 <?php endif; ?>
