@@ -76,10 +76,10 @@ function verificarRecorrentes(int $userId): void
         // ========== PARTE 2: PROCESSAR AS DESPESAS RECORRENTES ==========
 
         $sqlDespesas = "
-            SELECT descricao, valor, categoria, MIN(data) as primeira_data
+            SELECT descricao, valor, categoria_id, MIN(data) as primeira_data
             FROM despesas
             WHERE usuario_id = ? AND YEAR(data) = ? AND recorrente = 1
-            GROUP BY descricao, valor, categoria
+            GROUP BY descricao, valor, categoria_id
         ";
 
         $stmtDespesas = $conexao->prepare($sqlDespesas);
@@ -112,9 +112,9 @@ function verificarRecorrentes(int $userId): void
 
                 if ($stmtCheckD->num_rows === 0) {
 
-                    $sqlInsertD = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria, data) VALUES (?, ?, ?, 0, 1, ?, ?)";
+                    $sqlInsertD = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data) VALUES (?, ?, ?, 0, 1, ?, ?)";
                     $stmtInsertD = $conexao->prepare($sqlInsertD);
-                    $stmtInsertD->bind_param("isdis", $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria'], $dataVerificar);
+                    $stmtInsertD->bind_param("isdis", $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria_id'], $dataVerificar);
 
                     if (!$stmtInsertD->execute()) {
                         throw new Exception("Erro ao inserir Despesa: " . $stmtInsertD->error);
