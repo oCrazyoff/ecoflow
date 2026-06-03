@@ -55,6 +55,8 @@ $routes = [
     'editar_despesas' => 'backend/editar/despesas.php',
     'editar_usuarios' => 'backend/editar/usuarios.php',
     'trocar_status_despesa' => 'backend/editar/status_despesa.php',
+    'trocar_recorrente_despesa' => 'backend/editar/recorrente_despesa.php',
+    'trocar_recorrente_renda' => 'backend/editar/recorrente_renda.php',
     'editar_avisos' => 'backend/editar/avisos.php',
     'editar_categorias' => 'backend/editar/categorias.php',
 

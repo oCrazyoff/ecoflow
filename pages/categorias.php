@@ -9,6 +9,10 @@ $stmt->bind_param('i', $_SESSION['id']);
 $stmt->execute();
 $result = $stmt->get_result();
 
+$categorias = [];
+while ($row = $result->fetch_assoc()) {
+    $categorias[] = $row;
+}
 ?>
 <main class="main-tabela">
     <div class="header-tabela">
@@ -19,10 +23,34 @@ $result = $stmt->get_result();
             </button>
         </div>
     </div>
-    <?php if ($result->num_rows > 0) : ?>
+    <?php if (count($categorias) > 0) : ?>
         <div class="conteudo-tabela">
             <h3>Histórico de Categorias</h3>
-            <div class="container-table">
+            
+            <!-- Mobile Cards -->
+            <div class="mobile-cards md:hidden flex flex-col gap-4">
+                <?php foreach ($categorias as $row) : ?>
+                    <div class="bg-white border border-borda rounded-lg p-4 flex justify-between items-center">
+                        <div class="font-bold text-lg text-texto"><?= htmlspecialchars($row['nome']) ?></div>
+                        <div class="acoes flex gap-3 text-xl">
+                            <button class="btn-edita text-blue-500 w-10 h-10 rounded-lg cursor-pointer hover:bg-gray-200 flex items-center justify-center"
+                                onclick="abrirEditarModal('categorias', <?= htmlspecialchars($row['id']) ?>)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form action="deletar_categorias" method="POST" class="m-0 flex">
+                                <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                <button class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta" type="submit">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Desktop Table -->
+            <div class="container-table hidden md:block">
                 <table>
                     <thead>
                         <tr>
@@ -31,7 +59,7 @@ $result = $stmt->get_result();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()) : ?>
+                        <?php foreach ($categorias as $row) : ?>
                             <tr>
                                 <td class="font-bold"><?= htmlspecialchars($row['nome']) ?></td>
                                 <td class="acoes">
@@ -48,7 +76,7 @@ $result = $stmt->get_result();
                                     </form>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

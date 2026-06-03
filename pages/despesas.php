@@ -14,6 +14,20 @@ if (isset($m) && $m > 0 && $m < 13) {
 }
 $stmt->execute();
 $result = $stmt->get_result();
+
+$despesas = [];
+while ($row = $result->fetch_assoc()) {
+    $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
+    $stmt_categoria = $conexao->prepare($sql_categoria);
+    $stmt_categoria->bind_param("i", $row['categoria_id']);
+    $stmt_categoria->execute();
+    $stmt_categoria->bind_result($nome_categoria);
+    $stmt_categoria->fetch();
+    $stmt_categoria->close();
+    
+    $row['nome_categoria'] = $nome_categoria;
+    $despesas[] = $row;
+}
 ?>
 <main class="main-tabela">
     <div class="header-tabela">
@@ -24,10 +38,71 @@ $result = $stmt->get_result();
                 <span>Nova Despesa</span></button>
         </div>
     </div>
-    <?php if ($result->num_rows > 0) : ?>
+    <?php if (count($despesas) > 0) : ?>
         <div class="conteudo-tabela">
             <h3>Histórico de Despesas</h3>
-            <div class="container-table">
+            
+            <!-- Mobile Cards -->
+            <div class="mobile-cards md:hidden flex flex-col gap-4">
+                <?php foreach ($despesas as $row) : ?>
+                    <div class="bg-white border border-borda rounded-lg p-4 flex flex-col gap-3">
+                        <div class="flex justify-between items-start">
+                            <div class="font-bold text-lg text-texto"><?= htmlspecialchars($row['descricao']) ?></div>
+                            <div class="flex gap-2 text-xl">
+                                <button class="text-blue-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center"
+                                    onclick="abrirEditarModal('despesas', <?= htmlspecialchars($row['id']) ?>)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form action="deletar_despesas" method="POST" class="m-0 flex">
+                                    <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                    <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                    <button class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta" type="submit">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 -mt-2">
+                            <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded"><?= htmlspecialchars($row['nome_categoria']) ?></span>
+                            <span>&bull;</span>
+                            <span><?= htmlspecialchars(formatarData($row['data'])) ?></span>
+                            <span>&bull;</span>
+                            <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)" class="flex items-center justify-center cursor-pointer">
+                                <?php if ($row['recorrente'] == 1): ?>
+                                    <span class="bg-teal-50 text-teal-600 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
+                                        <i class="bi bi-arrow-repeat"></i> Recorrente
+                                    </span>
+                                <?php else: ?>
+                                    <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
+                                        Não Recorrente
+                                    </span>
+                                <?php endif; ?>
+                            </button>
+                        </div>
+                        
+                        <hr class="border-borda my-1">
+                        
+                        <div class="flex justify-between items-center mt-1">
+                            <div>
+                                <button data-id="<?= $row['id'] ?>" onclick="trocarStatus(this)">
+                                    <?php if ($row['status'] == 0): ?>
+                                        <span class="btn-pendente text-xs md:text-base">Pendente</span>
+                                    <?php else: ?>
+                                        <span class="btn-pago text-xs md:text-base">Pago</span>
+                                    <?php endif; ?>
+                                </button>
+                            </div>
+                            <div class="text-red-500 font-bold whitespace-nowrap text-lg">
+                                - <?= htmlspecialchars(formatarReais($row['valor'])) ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Desktop Table -->
+            <div class="container-table hidden md:block">
                 <table>
                     <thead>
                         <tr>
@@ -41,7 +116,7 @@ $result = $stmt->get_result();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()) : ?>
+                        <?php foreach ($despesas as $row) : ?>
                             <tr>
                                 <td class="font-bold"><?= htmlspecialchars($row['descricao']) ?></td>
                                 <td>
@@ -60,24 +135,21 @@ $result = $stmt->get_result();
                                 <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?>
                                 </td>
                                 <td>
-                                    <?php
-                                    // buscando o nome da categoria
-                                    $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
-                                    $stmt_categoria = $conexao->prepare($sql_categoria);
-                                    $stmt_categoria->bind_param("i", $row['categoria_id']);
-                                    $stmt_categoria->execute();
-                                    $stmt_categoria->bind_result($nome_categoria);
-                                    $stmt_categoria->fetch();
-                                    $stmt_categoria->close();
-
-                                    echo $nome_categoria;
-                                    ?>
+                                    <?= htmlspecialchars($row['nome_categoria']) ?>
                                 </td>
                                 <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                                 <td>
-                                    <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
-                                        <?= (($row['recorrente'] == 0) ? 'Não Recorrente' : 'Recorrente') ?>
-                                    </span>
+                                    <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)">
+                                        <?php if ($row['recorrente'] == 1): ?>
+                                            <span class="whitespace-nowrap w-full border border-borda bg-teal-50 text-teal-600 rounded-full px-5 py-1 btn-recorrente-desktop">
+                                                Recorrente
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="whitespace-nowrap w-full border border-borda bg-gray-100 text-gray-500 rounded-full px-5 py-1 btn-recorrente-desktop">
+                                                Não Recorrente
+                                            </span>
+                                        <?php endif; ?>
+                                    </button>
                                 </td>
                                 <td class="acoes">
                                     <button class="btn-edita"
@@ -93,7 +165,7 @@ $result = $stmt->get_result();
                                     </form>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -111,6 +183,38 @@ $result = $stmt->get_result();
     <?php endif; ?>
 </main>
 <script>
+    function trocarRecorrente(botao) {
+        const id = botao.dataset.id;
+        fetch("trocar_recorrente_despesa", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const span = botao.querySelector("span");
+                    if (span.classList.contains('btn-recorrente-mobile')) {
+                        if (data.novo_recorrente == 1) {
+                            span.className = "bg-teal-50 text-teal-600 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile";
+                            span.innerHTML = '<i class="bi bi-arrow-repeat"></i> Recorrente';
+                        } else {
+                            span.className = "bg-gray-100 text-gray-500 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile";
+                            span.innerHTML = 'Não Recorrente';
+                        }
+                    } else {
+                        if (data.novo_recorrente == 1) {
+                            span.className = "whitespace-nowrap w-full border border-borda bg-teal-50 text-teal-600 rounded-full px-5 py-1 btn-recorrente-desktop";
+                            span.textContent = "Recorrente";
+                        } else {
+                            span.className = "whitespace-nowrap w-full border border-borda bg-gray-100 text-gray-500 rounded-full px-5 py-1 btn-recorrente-desktop";
+                            span.textContent = "Não Recorrente";
+                        }
+                    }
+                }
+            });
+    }
+
     function trocarStatus(botao) {
 
         const id = botao.dataset.id;
@@ -131,10 +235,10 @@ $result = $stmt->get_result();
                     const span = botao.querySelector("span");
 
                     if (data.novo_status == 1) {
-                        span.className = "btn-pago";
+                        span.className = "btn-pago text-xs md:text-base";
                         span.textContent = "Pago";
                     } else {
-                        span.className = "btn-pendente";
+                        span.className = "btn-pendente text-xs md:text-base";
                         span.textContent = "Pendente";
                     }
                 }

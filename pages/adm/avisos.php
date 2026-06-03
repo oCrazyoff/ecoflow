@@ -15,6 +15,21 @@ $stmt_n_vistos->execute();
 $stmt_n_vistos->bind_result($qtd_usuarios);
 $stmt_n_vistos->fetch();
 $stmt_n_vistos->close();
+
+$avisos = [];
+while ($row = $result->fetch_assoc()) {
+    $sql_vistos = "SELECT COUNT(*) FROM usuarios_avisos_vistos WHERE aviso_id = ?";
+    $stmt_vistos = $conexao->prepare($sql_vistos);
+    $stmt_vistos->bind_param("i", $row['id']);
+    $stmt_vistos->execute();
+    $stmt_vistos->bind_result($qtd_vistos);
+    $stmt_vistos->fetch();
+    $stmt_vistos->close();
+
+    $row['qtd_vistos'] = $qtd_vistos;
+    $row['qtd_n_vistos'] = $qtd_usuarios - $qtd_vistos;
+    $avisos[] = $row;
+}
 ?>
 <main class="main-tabela">
     <div class="header-tabela">
@@ -29,7 +44,50 @@ $stmt_n_vistos->close();
     <?php if ($result->num_rows > 0) : ?>
         <div class="conteudo-tabela">
             <h3>Histórico de Avisos</h3>
-            <div class="container-table">
+
+            <!-- Mobile Cards -->
+            <div class="mobile-cards md:hidden flex flex-col gap-4">
+                <?php foreach ($avisos as $row) : ?>
+                    <div class="bg-white border border-borda rounded-lg p-4 flex flex-col gap-3">
+                        <div class="flex justify-between items-start">
+                            <div class="font-bold text-lg text-texto"><?= htmlspecialchars($row['titulo']) ?></div>
+                            <div class="text-gray-500 text-sm whitespace-nowrap">
+                                <?= htmlspecialchars(formatarData($row['data'])) ?>
+                            </div>
+                        </div>
+                        <div class="text-texto text-sm truncate max-w-full -mt-2">
+                            <?= htmlspecialchars($row['conteudo']) ?>
+                        </div>
+                        
+                        <hr class="border-borda my-1">
+                        
+                        <div class="flex justify-between items-center text-sm">
+                            <div class="flex gap-2">
+                                <button class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full flex items-center gap-1 font-medium cursor-pointer hover:bg-indigo-100" onclick="abrirVisualizar('<?= $row['id'] ?>')">
+                                    <i class="bi bi-eye"></i> <?= htmlspecialchars($row['qtd_vistos']) ?>
+                                </button>
+                                <button class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full flex items-center gap-1 font-medium cursor-pointer hover:bg-gray-200" onclick="abrirVisualizar('<?= $row['id'] ?>')">
+                                    <i class="bi bi-eye-slash"></i> <?= htmlspecialchars($row['qtd_n_vistos']) ?>
+                                </button>
+                            </div>
+                            <div class="flex gap-4 text-xl">
+                                <button class="text-teal-600 hover:text-teal-800 cursor-pointer p-1 flex items-center justify-center" onclick="abrirEditarModal('avisos', <?= htmlspecialchars($row['id']) ?>)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form action="deletar_avisos" method="POST" class="m-0 flex">
+                                    <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                    <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 cursor-pointer p-1 flex items-center justify-center btn-deleta">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="container-table hidden md:block">
                 <table>
                     <thead>
                         <tr>
@@ -42,20 +100,7 @@ $stmt_n_vistos->close();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()) : ?>
-                            <?php
-                            // puxando quantos vistos tem
-                            $sql_vistos = "SELECT COUNT(*) FROM usuarios_avisos_vistos WHERE aviso_id = ?";
-                            $stmt_vistos = $conexao->prepare($sql_vistos);
-                            $stmt_vistos->bind_param("i", $row['id']);
-                            $stmt_vistos->execute();
-                            $stmt_vistos->bind_result($qtd_vistos);
-                            $stmt_vistos->fetch();
-                            $stmt_vistos->close();
-
-                            // não vistos
-                            $qtd_n_vistos = $qtd_usuarios - $qtd_vistos;
-                            ?>
+                        <?php foreach ($avisos as $row) : ?>
                             <tr>
                                 <td class="font-bold"><?= htmlspecialchars($row['titulo']) ?></td>
                                 <td class="truncate max-w-50">
@@ -63,13 +108,13 @@ $stmt_n_vistos->close();
                                 <td>
                                     <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
                                         <i class="bi bi-eye"></i>
-                                        <?= htmlspecialchars($qtd_vistos) ?>
+                                        <?= htmlspecialchars($row['qtd_vistos']) ?>
                                     </span>
                                 </td>
                                 <td>
                                     <span class="whitespace-nowrap w-full border border-borda rounded-full px-5 py-1">
                                         <i class="bi bi-eye-slash"></i>
-                                        <?= htmlspecialchars($qtd_n_vistos) ?>
+                                        <?= htmlspecialchars($row['qtd_n_vistos']) ?>
                                     </span>
                                 </td>
                                 <td>
@@ -93,7 +138,7 @@ $stmt_n_vistos->close();
                                     </form>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

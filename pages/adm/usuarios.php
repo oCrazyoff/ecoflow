@@ -1,13 +1,18 @@
-<?php
-$titulo = "Usuários";
-require_once "includes/layout/inicio.php";
+'<?php
+    $titulo = "Usuários";
+    require_once "includes/layout/inicio.php";
 
-//puxando todos os usuarios
-$sql = "SELECT id, nome, email, cargo, ultima_verificacao, relatorio_anual_pendente FROM usuarios";
-$stmt = $conexao->prepare($sql);
-$stmt->execute();
-$result = $stmt->get_result();
-?>
+    //puxando todos os usuarios
+    $sql = "SELECT id, nome, email, cargo, ultima_verificacao, relatorio_anual_pendente FROM usuarios";
+    $stmt = $conexao->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $usuarios = [];
+    while ($row = $result->fetch_assoc()) {
+        $usuarios[] = $row;
+    }
+    ?>
 <main class="main-tabela">
     <div class="header-tabela">
         <h2>Usuários</h2>
@@ -18,10 +23,90 @@ $result = $stmt->get_result();
             </button>
         </div>
     </div>
-    <?php if ($result->num_rows > 0) : ?>
+    <?php if (count($usuarios) > 0) : ?>
         <div class="conteudo-tabela">
             <h3>Histórico de Usuários</h3>
-            <div class="container-table">
+
+            <!-- Mobile Cards -->
+            <div class="mobile-cards md:hidden flex flex-col gap-4">
+                <?php foreach ($usuarios as $row) : ?>
+                    <div class="bg-white border border-borda rounded-lg p-4 flex flex-col gap-3">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-lg">
+                                    <?= strtoupper(substr($row['nome'], 0, 1)) ?>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-texto text-base"><?= htmlspecialchars($row['nome']) ?></div>
+                                    <div class="text-sm text-gray-500"><?= htmlspecialchars($row['email']) ?></div>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full whitespace-nowrap border border-blue-100">
+                                    <?= (($row['cargo'] == 0) ? 'Comum' : 'Adm') ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr class="border-borda my-1">
+
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[10px] text-gray-400 font-bold tracking-wider mb-0.5">ÚLTIMO LOGIN</div>
+                                <div class="text-sm text-texto">
+                                    <?php
+                                    // lógica de dias atras
+                                    $ultimo_login = $row['ultima_verificacao'];
+
+                                    if ($ultimo_login) {
+                                        $ultimo_ts = strtotime($ultimo_login);
+                                        $hoje_ts = strtotime(date('Y-m-d'));
+                                        $dias_atras = ($hoje_ts - $ultimo_ts) / 86400;
+                                        $dias_atras = round($dias_atras) + 1;
+
+                                        if ($dias_atras <= 30) {
+                                            if ($dias_atras == 0) {
+                                                echo "Hoje";
+                                            } elseif ($dias_atras == 1) {
+                                                echo "Ontem";
+                                            } else {
+                                                echo intval($dias_atras) . " dias atrás";
+                                            }
+                                        } elseif ($dias_atras >= 31 && $dias_atras <= 365) {
+                                            $meses_atras = floor($dias_atras / 30);
+                                            echo $meses_atras . ($meses_atras == 1 ? " mês atrás" : " meses atrás");
+                                        } elseif ($dias_atras > 365) {
+                                            echo "Ano passado";
+                                        }
+                                    } else {
+                                        echo "Nunca acessou";
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+
+                            <?php if ($row['id'] != 14 && $row['id'] != $_SESSION['id']): ?>
+                                <div class="flex gap-2 text-lg">
+                                    <button class="text-gray-500 hover:bg-gray-100 rounded p-1 cursor-pointer flex items-center justify-center"
+                                        onclick="abrirEditarModal('usuarios', <?= htmlspecialchars($row['id']) ?>)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form action="deletar_usuarios" method="POST" class="m-0 flex">
+                                        <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                        <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                        <button class="text-gray-500 hover:bg-gray-100 rounded p-1 cursor-pointer flex items-center justify-center btn-deleta" type="submit">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Desktop Table -->
+            <div class="container-table hidden md:block">
                 <table>
                     <thead>
                         <tr>
@@ -34,7 +119,7 @@ $result = $stmt->get_result();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()) : ?>
+                        <?php foreach ($usuarios as $row) : ?>
                             <tr>
                                 <td class="font-bold"><?= htmlspecialchars($row['nome']) ?></td>
                                 <td class="whitespace-nowrap">
@@ -100,7 +185,7 @@ $result = $stmt->get_result();
                                     </td>
                                 <?php endif; ?>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

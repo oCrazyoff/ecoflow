@@ -227,12 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (data.sucesso) {
-                // Animação de remoção da linha
-                const tr = form.closest("tr");
-                if (tr) {
-                    tr.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-                    tr.style.opacity = "0";
-                    tr.style.transform = "translateX(-20px)";
+                // Animação de remoção da linha ou card
+                const elemento = form.closest("tr") || form.closest(".bg-white.rounded-lg");
+                if (elemento) {
+                    elemento.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+                    elemento.style.opacity = "0";
+                    elemento.style.transform = "translateX(-20px)";
 
                     // Aguarda a animação e então recarrega o conteúdo
                     setTimeout(async () => {
