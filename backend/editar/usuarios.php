@@ -23,21 +23,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Validar CSRF
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token de segurança inválido!";
+        $msg = "Token de segurança inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 
     // Validar o ID (que veio do GET)
     if (!$id) {
-        $_SESSION['resposta'] = "ID de usuário inválido para edição.";
+        $msg = "ID de usuário inválido para edição.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 
     // Validar campos obrigatórios (Nome, Email e Cargo)
     if (empty($nome) || empty($email) || $cargo === '') {
-        $_SESSION['resposta'] = "Nome, e-mail e cargo são obrigatórios!";
+        $msg = "Nome, e-mail e cargo são obrigatórios!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -47,7 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // validar email
     if (validarEmail($email) == false) {
-        $_SESSION['resposta'] = "Formato de e-mail inválido!";
+        $msg = "Formato de e-mail inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -55,7 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar a SENHA (Apenas se ela foi informada)
     if (!empty($senha)) {
         if (validarSenha($senha) == false) {
-            $_SESSION['resposta'] = "Senha inválida! Se informada, deve seguir os critérios.";
+            $msg = "Senha inválida! Se informada, deve seguir os critérios.";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
             header($redirecionamento);
             exit;
         }
@@ -63,7 +73,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // validando o carog
     if ($cargo !== '0' && $cargo !== '1') {
-        $_SESSION['resposta'] = "Cargo inválido! (Deve ser 0 ou 1)";
+        $msg = "Cargo inválido! (Deve ser 0 ou 1)";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -77,8 +89,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $_SESSION['resposta'] = "Este e-mail já está em uso por outro usuário!";
+            $msg = "Este e-mail já está em uso por outro usuário!";
+            $_SESSION['resposta'] = $msg;
             $stmt->close();
+            if (isAjax()) responderJSON(false, $msg);
             header($redirecionamento);
             exit;
         }
@@ -100,9 +114,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Executar e tratar a resposta
         if ($stmtUpdate->execute()) {
             if ($stmtUpdate->affected_rows > 0) {
-                $_SESSION['resposta'] = "Usuário atualizado com sucesso!";
+                $msg = "Usuário atualizado com sucesso!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             } else {
-                $_SESSION['resposta'] = "Nenhum dado foi alterado.";
+                $msg = "Nenhum dado foi alterado.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             }
         } else {
             throw new Exception("Não foi possível executar a atualização.");
@@ -112,7 +130,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header($redirecionamento);
         exit;
     } catch (Exception $erro) {
-        $_SESSION['resposta'] = "Ocorreu um erro inesperado. Tente novamente.";
+        $msg = "Ocorreu um erro inesperado. Tente novamente.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -124,7 +144,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $redirecionamento = "Location: " . BASE_URL . "usuarios";
     }
 
-    $_SESSION['resposta'] = "Método de requisição inválido!";
+    $msg = "Método de requisição inválido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header($redirecionamento);
     exit;
 }

@@ -83,8 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $transacoes = json_decode($resposta_ia, true);
         }
 
-        $transacoes = json_decode($resposta_ia, true);
-
         if (!is_array($transacoes)) {
             $_SESSION['resposta'] = "Erro ao processar as informações do extrato. Formato inválido.";
             header($redirecionamento);

@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!$id) {
-        $_SESSION['resposta'] = "ID da despesa inválido!";
+        $msg = "ID da despesa inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -30,7 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar a descrição
     $descricao = validarDescricao($descricao);
     if ($descricao == false) {
-        $_SESSION['resposta'] = "Descrição inválida!";
+        $msg = "Descrição inválida!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -38,7 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar o valor
     $valor = validarValor($valor);
     if ($valor === false) {
-        $_SESSION['resposta'] = "Valor inválido!";
+        $msg = "Valor inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -46,7 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Verificar token CSRF
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token Inválido";
+        $msg = "Token Inválido";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -58,12 +66,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                $_SESSION['resposta'] = "Despesa atualizada com sucesso!";
+                $msg = "Despesa atualizada com sucesso!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             } else {
-                $_SESSION['resposta'] = "Nenhuma alteração foi feita ou você não tem permissão para editar.";
+                $msg = "Nenhuma alteração foi feita ou você não tem permissão para editar.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             }
         } else {
-            $_SESSION['resposta'] = "Ocorreu um erro ao atualizar a despesa!";
+            $msg = "Ocorreu um erro ao atualizar a despesa!";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
         }
 
         $stmt->close();
@@ -71,12 +85,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     } catch (Exception $erro) {
         error_log($erro->getMessage());
-        $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
+        $msg = "Erro inesperado. Tente novamente.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 } else {
-    $_SESSION['resposta'] = "Método de solicitação ínvalido!";
+    $msg = "Método de solicitação ínvalido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header("Location: " . BASE_URL . "despesas");
     exit;
 }

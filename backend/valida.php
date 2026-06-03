@@ -12,6 +12,7 @@ $rota = $rota ?? false;
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {
     session_unset();
     session_destroy();
+    if (isAjax()) responderJSON(false, "Sessão expirada. Faça login novamente.");
     header("Location: " . BASE_URL . "login");
     exit();
 } else {
@@ -29,6 +30,7 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
         if (($nome === null) || ($email === null) || ($cargo === null)) {
             session_unset();
             session_destroy();
+            if (isAjax()) responderJSON(false, "Sessão inválida.");
             header("Location: " . BASE_URL . "login");
             exit();
         } else {
@@ -41,6 +43,7 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
         }
     } else {
         $_SESSION['resposta'] = "Erro inesperado!";
+        if (isAjax()) responderJSON(false, "Erro inesperado!");
         header("Location: " . BASE_URL . "login");
         exit();
     }
@@ -54,6 +57,7 @@ $pendente = $_SESSION['relatorio_pendente'] ?? false;
 // Bloqueia navegação se tiver relatório pendente (exceto na tela de relatório)
 if ($pendente && $rota !== 'relatorio' && $rota !== 'finalizar_relatorio') {
     $_SESSION['resposta'] = "Gere um relatório primeiro!";
+    if (isAjax()) responderJSON(false, "Gere um relatório primeiro!");
     header("Location: " . BASE_URL . "relatorio");
     exit();
 }
@@ -75,6 +79,7 @@ if ($_SESSION['cargo'] == 0) {
         $rota == 'deletar_usuarios'
     ) {
         $_SESSION['resposta'] = "Acesso negado!";
+        if (isAjax()) responderJSON(false, "Acesso negado!");
         header("Location:" . BASE_URL . "dashboard");
         exit();
     }

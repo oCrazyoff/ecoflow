@@ -19,14 +19,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Verificar token CSRF
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token de segurança inválido!";
+        $msg = "Token de segurança inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 
     // Verificar se algum campo está vazio (cargo não pode estar vazio)
     if (empty($nome) || empty($email) || empty($senha) || $cargo === '') {
-        $_SESSION['resposta'] = "Por favor, preencha todos os campos!";
+        $msg = "Por favor, preencha todos os campos!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -36,21 +40,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Validar o e-mail
     if (validarEmail($email) == false) {
-        $_SESSION['resposta'] = "Formato de e-mail inválido!";
+        $msg = "Formato de e-mail inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 
     // validar senha
     if (validarSenha($senha) == false) {
-        $_SESSION['resposta'] = "Senha inválida!";
+        $msg = "Senha inválida!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 
     // validando cargo
     if ($cargo !== '0' && $cargo !== '1') {
-        $_SESSION['resposta'] = "Cargo inválido! (Deve ser 0 ou 1)";
+        $msg = "Cargo inválido! (Deve ser 0 ou 1)";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -65,8 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $_SESSION['resposta'] = "Este e-mail já está cadastrado!";
+            $msg = "Este e-mail já está cadastrado!";
+            $_SESSION['resposta'] = $msg;
             $stmt->close();
+            if (isAjax()) responderJSON(false, $msg);
             header($redirecionamento);
             exit;
         }
@@ -80,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmtInsert->bind_param("sssi", $nome, $email, $senha_hash, $cargo_int);
 
         if ($stmtInsert->execute()) {
-            -$novo_usuario_id = $conexao->insert_id;
+            $novo_usuario_id = $conexao->insert_id;
             $categorias_padrao = ['Casa', 'Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Cartão', 'Outro'];
 
             $stmt_cat = $conexao->prepare("INSERT INTO categorias (usuario_id, nome) VALUES (?, ?)");
@@ -91,14 +103,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt_cat->close();
             // ----------------------------------------
 
-            $_SESSION['resposta'] = "Usuário cadastrado com sucesso!";
+            $msg = "Usuário cadastrado com sucesso!";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(true, $msg);
             header($redirecionamento);
             exit;
         } else {
             throw new Exception("Não foi possível executar o cadastro.");
         }
     } catch (Exception $erro) {
-        $_SESSION['resposta'] = "Ocorreu um erro inesperado. Tente novamente mais tarde.";
+        $msg = "Ocorreu um erro inesperado. Tente novamente mais tarde.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -110,7 +126,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $redirecionamento = "Location: " . BASE_URL . "usuarios";
     }
 
-    $_SESSION['resposta'] = "Método de requisição inválido!";
+    $msg = "Método de requisição inválido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header($redirecionamento);
     exit;
 }

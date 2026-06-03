@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!$id) {
-        $_SESSION['resposta'] = "ID inválido para exclusão.";
+        $msg = "ID inválido para exclusão.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -21,7 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token de segurança inválido!";
+        $msg = "Token de segurança inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -33,12 +37,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                $_SESSION['resposta'] = "Despesa excluída com sucesso!";
+                $msg = "Despesa excluída com sucesso!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             } else {
-                $_SESSION['resposta'] = "Não foi possível excluir a despesa. Verifique as permissões.";
+                $msg = "Não foi possível excluir a despesa. Verifique as permissões.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(false, $msg);
             }
         } else {
-            $_SESSION['resposta'] = "Ocorreu um erro ao tentar excluir a despesa.";
+            $msg = "Ocorreu um erro ao tentar excluir a despesa.";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
         }
 
         $stmt->close();
@@ -47,13 +57,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } catch (Exception $erro) {
         error_log($erro->getMessage());
-        $_SESSION['resposta'] = "Erro inesperado no servidor. Tente novamente.";
+        $msg = "Erro inesperado no servidor. Tente novamente.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 } else {
     // Redireciona se o método não for POST
-    $_SESSION['resposta'] = "Método de solicitação inválido.";
+    $msg = "Método de solicitação inválido.";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header("Location: " . BASE_URL . "despesas");
     exit;
 }

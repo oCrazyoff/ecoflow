@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!$id) {
-        $_SESSION['resposta'] = "ID da renda inválido!";
+        $msg = "ID da renda inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -28,7 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar a descrição
     $descricao = validarDescricao($descricao);
     if ($descricao == false) {
-        $_SESSION['resposta'] = "Descrição inválida!";
+        $msg = "Descrição inválida!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -36,7 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar o valor
     $valor = validarValor($valor);
     if ($valor === false) {
-        $_SESSION['resposta'] = "Valor inválido!";
+        $msg = "Valor inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -44,7 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Verificar token CSRF
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token Inválido";
+        $msg = "Token Inválido";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -56,12 +64,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                $_SESSION['resposta'] = "Renda atualizada com sucesso!";
+                $msg = "Renda atualizada com sucesso!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             } else {
-                $_SESSION['resposta'] = "Nenhuma alteração foi feita.";
+                $msg = "Nenhuma alteração foi feita.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             }
         } else {
-            $_SESSION['resposta'] = "Ocorreu um erro ao atualizar a renda!";
+            $msg = "Ocorreu um erro ao atualizar a renda!";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
         }
 
         $stmt->close();
@@ -69,12 +83,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
 
     } catch (Exception $erro) {
-        $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
+        $msg = "Erro inesperado. Tente novamente.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 } else {
-    $_SESSION['resposta'] = "Método de solicitação ínvalido!";
+    $msg = "Método de solicitação ínvalido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header("Location: " . BASE_URL . "rendas");
     exit;
 }

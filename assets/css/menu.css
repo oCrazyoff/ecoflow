@@ -15,7 +15,11 @@
         @apply flex items-center justify-between border-b border-borda;
 
         & button {
-          @apply cursor-pointer;
+          @apply px-5 py-1 rounded-lg cursor-pointer;
+
+          &:hover {
+            @apply bg-gray-200;
+          }
         }
       }
 
@@ -53,13 +57,15 @@
     }
 
     &.retraido {
-      @apply min-w-auto;
+      @apply min-w-20;
 
       & .topo-logo {
         @apply flex items-center justify-center w-full;
 
         & button {
-          @apply rotate-180;
+          & i {
+            @apply rotate-180;
+          }
         }
 
         & h1 {
@@ -70,6 +76,10 @@
       & .topo-menu nav a span,
       .baixo-menu a span {
         @apply hidden;
+      }
+
+      & .topo-menu nav a {
+        @apply justify-center;
       }
     }
   }

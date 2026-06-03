@@ -17,7 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // validar o nome
     $nome = validarDescricao($nome);
     if ($nome == false) {
-        $_SESSION['resposta'] = "Nome inválido!";
+        $msg = "Nome inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -25,7 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Verificar token CSRF
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token Inválido";
+        $msg = "Token Inválido";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -36,27 +40,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("is", $usuario_id, $nome);
 
         if ($stmt->execute()) {
-            $_SESSION['resposta'] = "Categoria cadastrada com sucesso!";
-            header($redirecionamento);
+            $msg = "Categoria cadastrada com sucesso!";
+            $_SESSION['resposta'] = $msg;
             $stmt->close();
+            if (isAjax()) responderJSON(true, $msg);
+            header($redirecionamento);
             exit;
         } else {
-            $_SESSION['resposta'] = "Ocorreu um erro!";
-            header($redirecionamento);
+            $msg = "Ocorreu um erro!";
+            $_SESSION['resposta'] = $msg;
             $stmt->close();
+            if (isAjax()) responderJSON(false, $msg);
+            header($redirecionamento);
             exit;
         }
     } catch (Exception $erro) {
         // Caso houver erro ele retorna
         switch ($erro->getCode()) {
             default:
-                $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
+                $msg = "Erro inesperado. Tente novamente.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(false, $msg);
                 header($redirecionamento);
                 exit;
         }
     }
 } else {
-    $_SESSION['resposta'] = "Método de solicitação ínvalido!";
+    $msg = "Método de solicitação ínvalido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
 }
 
 header("Location: " . BASE_URL . "categorias");

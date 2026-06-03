@@ -648,6 +648,11 @@
     --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .transition {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
   .hover\:bg-gray-200 {
     &:hover {
       @media (hover: hover) {
@@ -1194,6 +1199,12 @@
         border-color: var(--color-borda);
         & button {
           cursor: pointer;
+          border-radius: var(--radius-lg);
+          padding-inline: calc(var(--spacing) * 5);
+          padding-block: calc(var(--spacing) * 1);
+          &:hover {
+            background-color: var(--color-gray-200);
+          }
         }
       }
       & nav {
@@ -1254,14 +1265,16 @@
       }
     }
     &.retraido {
-      min-width: auto;
+      min-width: calc(var(--spacing) * 20);
       & .topo-logo {
         display: flex;
         width: 100%;
         align-items: center;
         justify-content: center;
         & button {
-          rotate: 180deg;
+          & i {
+            rotate: 180deg;
+          }
         }
         & h1 {
           display: none;
@@ -1269,6 +1282,9 @@
       }
       & .topo-menu nav a span, .baixo-menu a span {
         display: none;
+      }
+      & .topo-menu nav a {
+        justify-content: center;
       }
     }
   }

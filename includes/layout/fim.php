@@ -2,6 +2,7 @@
 <?php include __DIR__ . "/../div_erro.php"; ?>
 <script src="<?= BASE_URL . "assets/js/toggle_menu.js" ?>"></script>
 <script src="<?= BASE_URL . "assets/js/loading.js" ?>"></script>
+<script src="<?= BASE_URL . "assets/js/crud_ajax.js" ?>"></script>
 <?php
 // buscando avisos pendentes
 $sql = "SELECT id, titulo, conteudo FROM avisos";

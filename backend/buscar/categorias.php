@@ -9,8 +9,9 @@ if (!$id) {
     echo json_encode(['erro' => 'ID inválido']);
     exit;
 } else {
-    $stmt = $conexao->prepare("SELECT nome FROM categorias WHERE id = ?");
-    $stmt->bind_param("i", $id);
+    $usuario_id = $_SESSION['id'];
+    $stmt = $conexao->prepare("SELECT nome FROM categorias WHERE id = ? AND usuario_id = ?");
+    $stmt->bind_param("ii", $id, $usuario_id);
     $stmt->execute();
     $resultado = $stmt->get_result();
 

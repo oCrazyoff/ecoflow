@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!$id) {
-        $_SESSION['resposta'] = "ID do aviso inválido!";
+        $msg = "ID do aviso inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -25,7 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Validar o nome
     $nome = validarDescricao($nome);
     if ($nome == false) {
-        $_SESSION['resposta'] = "Nome inválido!";
+        $msg = "Nome inválido!";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -33,7 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Verificar token CSRF
     $csrf = trim(strip_tags($_POST["csrf"]));
     if (validarCSRF($csrf) == false) {
-        $_SESSION['resposta'] = "Token Inválido";
+        $msg = "Token Inválido";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
@@ -45,24 +51,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                $_SESSION['resposta'] = "Categoria atualizada com sucesso!";
+                $msg = "Categoria atualizada com sucesso!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             } else {
-                $_SESSION['resposta'] = "Nenhuma alteração foi feita.";
+                $msg = "Nenhuma alteração foi feita.";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(true, $msg);
             }
         } else {
-            $_SESSION['resposta'] = "Ocorreu um erro ao atualizar a categoria!";
+            $msg = "Ocorreu um erro ao atualizar a categoria!";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
         }
 
         $stmt->close();
         header($redirecionamento);
         exit;
     } catch (Exception $erro) {
-        $_SESSION['resposta'] = "Erro inesperado. Tente novamente.";
+        $msg = "Erro inesperado. Tente novamente.";
+        $_SESSION['resposta'] = $msg;
+        if (isAjax()) responderJSON(false, $msg);
         header($redirecionamento);
         exit;
     }
 } else {
-    $_SESSION['resposta'] = "Método de solicitação ínvalido!";
+    $msg = "Método de solicitação ínvalido!";
+    $_SESSION['resposta'] = $msg;
+    if (isAjax()) responderJSON(false, $msg);
     header("Location: " . BASE_URL . "categorias");
     exit;
 }

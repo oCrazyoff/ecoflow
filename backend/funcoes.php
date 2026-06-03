@@ -102,3 +102,25 @@ function validarValor($valor)
 
     return (float)$valor;
 }
+
+/**
+ * Verifica se a requisição é AJAX (XMLHttpRequest)
+ */
+function isAjax(): bool
+{
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+}
+
+/**
+ * Responde com JSON e encerra a execução
+ */
+function responderJSON(bool $sucesso, string $mensagem): void
+{
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'sucesso' => $sucesso,
+        'mensagem' => $mensagem
+    ]);
+    exit;
+}
