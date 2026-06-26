@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../valida.php';
-require_once __DIR__ . '/../../api/deepseek.php';
+require_once __DIR__ . '/../../api/ia.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $usuario_id = $_SESSION['id'];

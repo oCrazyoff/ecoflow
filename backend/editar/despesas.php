@@ -65,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("ssiiisii", $descricao, $valor, $status, $recorrente, $categoria, $data, $id, $usuario_id);
 
         if ($stmt->execute()) {
+            limparInsightsCache();
             if ($stmt->affected_rows > 0) {
                 $msg = "Despesa atualizada com sucesso!";
                 $_SESSION['resposta'] = $msg;

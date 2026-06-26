@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("ii", $id, $usuario_id);
 
         if ($stmt->execute()) {
+            limparInsightsCache();
             if ($stmt->affected_rows > 0) {
                 $msg = "Despesa excluída com sucesso!";
                 $_SESSION['resposta'] = $msg;

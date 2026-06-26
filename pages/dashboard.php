@@ -1,7 +1,7 @@
 <?php
 $titulo = "Dashboard";
 require_once "includes/layout/inicio.php";
-require_once "api/deepseek.php";
+require_once "api/ia.php";
 
 function totalRendas()
 {

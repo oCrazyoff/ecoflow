@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("ssisii", $descricao, $valor, $recorrente, $data, $id, $usuario_id);
 
         if ($stmt->execute()) {
+            limparInsightsCache();
             if ($stmt->affected_rows > 0) {
                 $msg = "Renda atualizada com sucesso!";
                 $_SESSION['resposta'] = $msg;

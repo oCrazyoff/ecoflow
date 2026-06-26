@@ -124,3 +124,15 @@ function responderJSON(bool $sucesso, string $mensagem): void
     ]);
     exit;
 }
+
+function limparInsightsCache() {
+    global $conexao;
+    $usuario_id = $_SESSION['id'] ?? 0;
+    if ($usuario_id > 0) {
+        $sql = "DELETE FROM insights WHERE usuario_id = ?";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("i", $usuario_id);
+        $stmt->execute();
+        $stmt->close();
+    }
+}

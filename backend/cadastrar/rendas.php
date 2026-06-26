@@ -53,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("issis", $usuario_id, $descricao, $valor, $recorrente, $data);
 
         if ($stmt->execute()) {
+            limparInsightsCache();
             $msg = "Renda cadastrada com sucesso!";
             $_SESSION['resposta'] = $msg;
             $stmt->close();

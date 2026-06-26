@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("issiiis", $usuario_id, $descricao, $valor, $status, $recorrente, $categoria, $data);
 
         if ($stmt->execute()) {
+            limparInsightsCache();
             $msg = "Despesa cadastrada com sucesso!";
             $_SESSION['resposta'] = $msg;
             $stmt->close();

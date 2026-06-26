@@ -17,6 +17,7 @@ $sql2 = "UPDATE rendas SET recorrente = ? WHERE id = ?";
 $stmt2 = $conexao->prepare($sql2);
 $stmt2->bind_param("ii", $novo_recorrente, $id);
 $stmt2->execute();
+limparInsightsCache();
 
 echo json_encode([
     "sucesso" => true,
