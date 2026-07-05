@@ -3,21 +3,49 @@
     @apply fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
 
     & #form-container {
-      @apply bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw];
+      @apply bg-white shadow-lg p-6 rounded-xl w-2xl max-w-[95vw];
 
       & #modal-form {
         @apply max-h-[80dvh] overflow-auto px-1;
 
         & label {
-          @apply inline-block mt-3;
+          @apply inline-block mt-2 text-sm font-medium text-gray-600;
+        }
+
+        & .modal-section {
+          @apply bg-gray-50 rounded-lg p-4 mt-3 border border-borda;
+
+          & .modal-section-title {
+            @apply text-sm font-bold text-gray-800 mb-3;
+          }
+
+          & label {
+            @apply mt-0 mb-1;
+          }
+        }
+
+        & .toggle-group {
+          @apply flex border border-borda rounded-lg overflow-hidden bg-white;
+
+          & .toggle-btn {
+            @apply flex-1 py-2 px-3 text-sm text-center cursor-pointer bg-white text-gray-500 border-0 rounded-none;
+
+            &:hover {
+              @apply bg-gray-100;
+            }
+
+            &.active {
+              @apply bg-gray-100 text-gray-800 font-semibold;
+            }
+          }
         }
 
         & button {
-          @apply text-white px-4 py-2 cursor-pointer rounded-lg;
+          @apply px-4 py-2 cursor-pointer rounded-lg;
         }
 
         & .btn-submit {
-          @apply bg-verde;
+          @apply bg-verde text-white;
 
           &:hover {
             @apply bg-verde-hover;
@@ -30,6 +58,10 @@
           &:hover {
             @apply bg-gray-200;
           }
+        }
+
+        & .btn-cancelar-link {
+          @apply bg-transparent text-verde font-medium hover:underline border-0 p-0;
         }
       }
 

@@ -10,7 +10,7 @@ if (!$id) {
     exit;
 } else {
     $usuario_id = $_SESSION['id'];
-    $stmt = $conexao->prepare("SELECT descricao, valor, recorrente, DATE(data) AS data, categoria_id, status FROM despesas WHERE id = ? AND usuario_id = ?");
+    $stmt = $conexao->prepare("SELECT descricao, valor, recorrente, DATE(data) AS data, categoria_id, status, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE id = ? AND usuario_id = ?");
     $stmt->bind_param("ii", $id, $usuario_id);
     $stmt->execute();
     $resultado = $stmt->get_result();

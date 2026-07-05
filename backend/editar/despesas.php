@@ -29,6 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $categoria = trim(strip_tags($_POST['categoria_id']));
     $data = trim(strip_tags($_POST['data']));
 
+    // Campos de parcelas
+    $editar_todas = isset($_POST['editar_todas']) ? intval($_POST['editar_todas']) : 0;
+    $parcela_grupo = isset($_POST['parcela_grupo']) ? trim(strip_tags($_POST['parcela_grupo'])) : '';
+
     // Validar a descrição
     $descricao = validarDescricao($descricao);
     if ($descricao == false) {
@@ -60,25 +64,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
-        $sql = "UPDATE despesas SET descricao = ?, valor = ?, status = ?, recorrente = ?, categoria_id = ?, data = ? WHERE id = ? AND usuario_id = ?";
-        $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("ssiiisii", $descricao, $valor, $status, $recorrente, $categoria, $data, $id, $usuario_id);
+        // Verifica se deve editar todas as parcelas do grupo
+        if ($editar_todas == 1 && !empty($parcela_grupo)) {
+            // Atualiza todas as despesas do mesmo grupo de parcelas
+            // Mantém a descrição base (remove o sufixo de parcela existente e re-aplica)
+            // Atualiza valor, status, recorrente e categoria em todas
+            $sql = "UPDATE despesas SET valor = ?, status = ?, recorrente = ?, categoria_id = ? WHERE parcela_grupo = ? AND usuario_id = ?";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param("siiisi", $valor, $status, $recorrente, $categoria, $parcela_grupo, $usuario_id);
 
-        if ($stmt->execute()) {
-            limparInsightsCache();
-            if ($stmt->affected_rows > 0) {
-                $msg = "Despesa atualizada com sucesso!";
-                $_SESSION['resposta'] = $msg;
-                if (isAjax()) responderJSON(true, $msg);
+            if ($stmt->execute()) {
+                limparInsightsCache();
+                if ($stmt->affected_rows > 0) {
+                    $msg = "Todas as parcelas foram atualizadas com sucesso!";
+                    $_SESSION['resposta'] = $msg;
+                    if (isAjax()) responderJSON(true, $msg);
+                } else {
+                    $msg = "Nenhuma alteração foi feita ou você não tem permissão para editar.";
+                    $_SESSION['resposta'] = $msg;
+                    if (isAjax()) responderJSON(true, $msg);
+                }
             } else {
-                $msg = "Nenhuma alteração foi feita ou você não tem permissão para editar.";
+                $msg = "Ocorreu um erro ao atualizar as parcelas!";
                 $_SESSION['resposta'] = $msg;
-                if (isAjax()) responderJSON(true, $msg);
+                if (isAjax()) responderJSON(false, $msg);
             }
         } else {
-            $msg = "Ocorreu um erro ao atualizar a despesa!";
-            $_SESSION['resposta'] = $msg;
-            if (isAjax()) responderJSON(false, $msg);
+            // Edição individual (padrão)
+            $sql = "UPDATE despesas SET descricao = ?, valor = ?, status = ?, recorrente = ?, categoria_id = ?, data = ? WHERE id = ? AND usuario_id = ?";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param("ssiiisii", $descricao, $valor, $status, $recorrente, $categoria, $data, $id, $usuario_id);
+
+            if ($stmt->execute()) {
+                limparInsightsCache();
+                if ($stmt->affected_rows > 0) {
+                    $msg = "Despesa atualizada com sucesso!";
+                    $_SESSION['resposta'] = $msg;
+                    if (isAjax()) responderJSON(true, $msg);
+                } else {
+                    $msg = "Nenhuma alteração foi feita ou você não tem permissão para editar.";
+                    $_SESSION['resposta'] = $msg;
+                    if (isAjax()) responderJSON(true, $msg);
+                }
+            } else {
+                $msg = "Ocorreu um erro ao atualizar a despesa!";
+                $_SESSION['resposta'] = $msg;
+                if (isAjax()) responderJSON(false, $msg);
+            }
         }
 
         $stmt->close();

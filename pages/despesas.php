@@ -4,11 +4,11 @@ require_once "includes/layout/inicio.php";
 
 // puxando todas as despesas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('ii', $_SESSION['id'], $m);
 } else {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('i', $_SESSION['id']);
 }
@@ -68,17 +68,23 @@ while ($row = $result->fetch_assoc()) {
                             <span>&bull;</span>
                             <span><?= htmlspecialchars(formatarData($row['data'])) ?></span>
                             <span>&bull;</span>
-                            <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)" class="flex items-center justify-center cursor-pointer">
-                                <?php if ($row['recorrente'] == 1): ?>
-                                    <span class="bg-teal-50 text-teal-600 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
-                                        <i class="bi bi-arrow-repeat"></i> Recorrente
-                                    </span>
-                                <?php else: ?>
-                                    <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
-                                        Não Recorrente
-                                    </span>
-                                <?php endif; ?>
-                            </button>
+                            <?php if (!empty($row['parcela_numero']) && !empty($row['parcela_total'])): ?>
+                                <span class="bg-purple-50 text-purple-600 px-2 py-0.5 rounded flex items-center gap-1">
+                                    <i class="bi bi-layers"></i> Parcelada (<?= $row['parcela_numero'] ?>/<?= $row['parcela_total'] ?>)
+                                </span>
+                            <?php else: ?>
+                                <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)" class="flex items-center justify-center cursor-pointer">
+                                    <?php if ($row['recorrente'] == 1): ?>
+                                        <span class="bg-teal-50 text-teal-600 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
+                                            <i class="bi bi-arrow-repeat"></i> Recorrente
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded flex items-center gap-1 btn-recorrente-mobile">
+                                            Única
+                                        </span>
+                                    <?php endif; ?>
+                                </button>
+                            <?php endif; ?>
                         </div>
                         
                         <hr class="border-borda my-1">
@@ -111,7 +117,7 @@ while ($row = $result->fetch_assoc()) {
                             <th>Valor</th>
                             <th>Categoria</th>
                             <th>Data</th>
-                            <th>Recorrente</th>
+                            <th>Tipo</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -139,17 +145,23 @@ while ($row = $result->fetch_assoc()) {
                                 </td>
                                 <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                                 <td>
-                                    <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)">
-                                        <?php if ($row['recorrente'] == 1): ?>
-                                            <span class="whitespace-nowrap w-full border border-borda bg-teal-50 text-teal-600 rounded-full px-5 py-1 btn-recorrente-desktop">
-                                                Recorrente
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="whitespace-nowrap w-full border border-borda bg-gray-100 text-gray-500 rounded-full px-5 py-1 btn-recorrente-desktop">
-                                                Não Recorrente
-                                            </span>
-                                        <?php endif; ?>
-                                    </button>
+                                    <?php if (!empty($row['parcela_numero']) && !empty($row['parcela_total'])): ?>
+                                        <span class="whitespace-nowrap w-full border border-borda bg-purple-50 text-purple-600 rounded-full px-5 py-1">
+                                            <i class="bi bi-layers"></i> Parcelada (<?= $row['parcela_numero'] ?>/<?= $row['parcela_total'] ?>)
+                                        </span>
+                                    <?php else: ?>
+                                        <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)">
+                                            <?php if ($row['recorrente'] == 1): ?>
+                                                <span class="whitespace-nowrap w-full border border-borda bg-teal-50 text-teal-600 rounded-full px-5 py-1 btn-recorrente-desktop">
+                                                    Recorrente
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="whitespace-nowrap w-full border border-borda bg-gray-100 text-gray-500 rounded-full px-5 py-1 btn-recorrente-desktop">
+                                                    Única
+                                                </span>
+                                            <?php endif; ?>
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="acoes">
                                     <button class="btn-edita"

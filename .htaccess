@@ -1,6 +1,14 @@
 <FilesMatch "\.env$">
-    Order allow,deny
-    Deny from all
+    <IfModule mod_authz_core.c>
+        # Regra para o seu XAMPP local (Apache 2.4+)
+        Require all denied
+    </IfModule>
+    
+    <IfModule !mod_authz_core.c>
+        # Regra para o seu host antigo (Apache 2.2)
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
 
 RewriteEngine On

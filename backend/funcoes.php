@@ -73,7 +73,7 @@ function validarDescricao(string $descricao)
     $descricao = trim($descricao);
 
     // Regex: apenas letras, números, espaços, parênteses e dois pontos
-    if (!preg_match('/^[A-Za-zÀ-ú0-9\s():]+$/u', $descricao)) {
+    if (!preg_match('/^[A-Za-zÀ-ú0-9\s():\\/]+$/u', $descricao)) {
         return false;
     }
 
