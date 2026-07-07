@@ -1,4 +1,7 @@
 @layer components {
+  /* ═══════════════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════════════ */
   .header-dashboard {
     @apply flex items-center justify-between gap-2 bg-white border-b border-borda p-4;
 
@@ -35,109 +38,105 @@
     }
   }
 
-  .container-cards {
-    @apply grid grid-cols-1 lg:grid-cols-4 gap-5 p-5;
+  /* ═══════════════════════════════════════════════
+     1. COMPARAÇÃO COM MÊS ANTERIOR
+     ═══════════════════════════════════════════════ */
+  .comparacao-section {
+    @apply grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 pb-0;
+  }
+
+  .comp-card {
+    @apply relative bg-white rounded-xl border border-borda p-4 lg:p-5 opacity-0;
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
+
+  .comp-header {
+    @apply flex items-center justify-between mb-2;
+  }
+
+  .comp-label {
+    @apply text-sm text-texto-opaco font-medium;
+  }
+
+  .comp-icon {
+    @apply flex items-center justify-center w-8 h-8 lg:w-9 lg:h-9 rounded-lg text-base lg:text-lg;
+  }
+
+  .comp-icon-emerald {
+    @apply bg-emerald-100 text-emerald-500;
+  }
+
+  .comp-icon-red {
+    @apply bg-red-100 text-red-500;
+  }
+
+  .comp-icon-blue {
+    @apply bg-blue-100 text-blue-500;
+  }
+
+  .comp-icon-violet {
+    @apply bg-violet-100 text-violet-500;
+  }
+
+  .comp-valor {
+    @apply block text-lg lg:text-xl font-bold mb-1;
+  }
+
+  .comp-variacao {
+    @apply inline-block text-xs font-semibold px-2 py-0.5 rounded-full;
+  }
+
+  /* ═══════════════════════════════════════════════
+     GRID PRINCIPAL DA DASHBOARD
+     ═══════════════════════════════════════════════ */
+  .dashboard-content {
+    @apply grid grid-cols-1 lg:grid-cols-6 gap-5 p-5;
 
     & .card {
-      @apply relative bg-white rounded-xl border border-borda p-[1.5rem];
+      @apply bg-white rounded-xl border border-borda p-5 h-full;
+
+      & h3 {
+        @apply text-lg font-bold mb-4 flex items-center gap-2;
+
+        & i {
+          @apply text-verde;
+        }
+      }
+    }
+  }
+
+  /* ═══════════════════════════════════════════════
+     ASSISTENTE IA (mantido do original)
+     ═══════════════════════════════════════════════ */
+  .dash-ia-mobile {
+    @apply px-5 pt-5;
+
+    & .assistente-ia {
+      @apply flex flex-col gap-3 justify-center border !border-verde/30 bg-white rounded-xl border border-borda p-5 h-full;
+
+      & h3 {
+        @apply !m-0 text-lg font-bold mb-4 flex items-center gap-2;
+
+        & i {
+          @apply text-verde;
+        }
+      }
+
+      & h4 {
+        @apply font-semibold;
+      }
 
       & p {
         @apply text-texto-opaco;
       }
-
-      & h3 {
-        @apply text-2xl font-bold;
-      }
-
-      & i {
-        @apply absolute flex items-center justify-center right-[1.5rem] top-[1.5rem] text-2xl text-verde bg-verde/10 rounded-lg w-10 h-10;
-      }
-
-      &.saldo {
-        @apply border-emerald-300;
-
-        & i {
-          @apply bg-emerald-300/20 text-emerald-400;
-        }
-      }
-
-      &.rendas {
-        @apply border-blue-300;
-
-        & i {
-          @apply bg-blue-300/20 text-blue-400;
-        }
-      }
-
-      &.despesas-pa {
-        @apply border-red-300;
-
-        & i {
-          @apply bg-red-300/20 text-red-400;
-        }
-      }
-
-      &.despesas-pe {
-        @apply border-amber-300;
-
-        & i {
-          @apply bg-amber-300/20 text-amber-400;
-        }
-      }
-    }
-  }
-
-  .meio-dashboard {
-    @apply grid grid-cols-1 lg:grid-cols-6 gap-5 px-5 pb-5;
-
-    & .card {
-      @apply bg-white rounded-xl border border-borda p-[1.5rem] h-max;
-
-      & h3 {
-        @apply text-xl font-bold mb-5;
-      }
-
-      & .titulo-resumo {
-        @apply font-bold text-texto-opaco;
-      }
-
-      & .item-resumo {
-        @apply flex items-center justify-between px-3 py-2 rounded-xl gap-3 bg-gray-200/60 my-3;
-
-        & .txt-resumo {
-          & h5 {
-            @apply font-bold;
-
-            & span {
-              @apply text-xs font-normal px-2 rounded-full text-white;
-            }
-          }
-
-          & p {
-            @apply font-normal text-sm text-texto-opaco;
-          }
-        }
-
-        & p {
-          @apply font-bold;
-        }
-      }
-    }
-
-    & .container-esquerda {
-      @apply col-span-1 lg:col-span-4;
-    }
-
-    & .container-direita {
-      @apply col-span-1 lg:col-span-2;
     }
   }
 
   & .assistente-ia {
-    @apply flex flex-col gap-3 justify-center border !border-verde/30;
+    @apply flex flex-col gap-3 justify-center border !border-verde/30 bg-white rounded-xl border border-borda p-5 h-full;
 
     & h3 {
-      @apply !m-0;
+      @apply !m-0 text-lg font-bold mb-4 flex items-center gap-2;
 
       & i {
         @apply text-verde;
@@ -150,6 +149,443 @@
 
     & p {
       @apply text-texto-opaco;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════
+     6. ECONOMIA DO MÊS
+     ═══════════════════════════════════════════════ */
+  .eco-card .eco-stats {
+    @apply flex flex-col gap-4;
+  }
+
+  .eco-card .eco-separator {
+    @apply border-t border-borda;
+  }
+
+  .eco-card .eco-item {
+    @apply flex flex-col gap-1;
+  }
+
+  .eco-card .eco-label {
+    @apply text-sm text-texto-opaco;
+  }
+
+  .eco-card .eco-valor {
+    @apply text-xl lg:text-2xl font-bold;
+  }
+
+  .eco-card .eco-receita {
+    @apply text-emerald-500;
+  }
+
+  .eco-card .eco-despesa {
+    @apply text-red-500;
+  }
+
+  .eco-card .eco-positivo {
+    @apply text-verde;
+  }
+
+  .eco-card .eco-negativo {
+    @apply text-red-500;
+  }
+
+  .eco-card .eco-sub {
+    @apply text-xs;
+  }
+
+  .eco-card .eco-resultado {
+    @apply bg-cinza-claro rounded-lg p-4 -mx-1;
+  }
+
+  .eco-card .eco-barra {
+    @apply w-full bg-gray-200 rounded-full h-2.5 my-2 overflow-hidden;
+  }
+
+  .eco-card .eco-barra-fill {
+    @apply h-full rounded-full;
+    animation: growWidth 0.8s ease-out forwards;
+  }
+
+  .eco-card .eco-fill-positivo {
+    @apply bg-verde;
+  }
+
+  .eco-card .eco-fill-negativo {
+    @apply bg-red-400;
+  }
+
+  .eco-card .eco-pct {
+    @apply text-sm text-texto-opaco font-medium;
+  }
+
+  /* ═══════════════════════════════════════════════
+     2. RANKING DE CATEGORIAS
+     ═══════════════════════════════════════════════ */
+  .ranking-list {
+    @apply flex flex-col gap-3;
+  }
+
+  .ranking-item {
+    @apply flex items-center gap-3 opacity-0;
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
+
+  .ranking-pos {
+    @apply text-xl w-8 text-center flex-shrink-0;
+  }
+
+  .ranking-info {
+    @apply flex-1 min-w-0;
+  }
+
+  .ranking-header {
+    @apply flex items-center justify-between mb-1.5 gap-2;
+  }
+
+  .ranking-nome {
+    @apply font-semibold text-sm truncate;
+  }
+
+  .ranking-valores {
+    @apply text-sm font-bold text-right whitespace-nowrap;
+  }
+
+  .ranking-pct {
+    @apply text-texto-opaco font-normal;
+  }
+
+  .ranking-bar {
+    @apply w-full bg-gray-100 rounded-full h-2 overflow-hidden;
+  }
+
+  .ranking-bar-fill {
+    @apply h-full rounded-full;
+    width: 0;
+    animation: growBar 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+
+  /* ═══════════════════════════════════════════════
+     4. DISTRIBUIÇÃO DOS GASTOS
+     ═══════════════════════════════════════════════ */
+  .distrib-bar {
+    @apply flex w-full h-6 rounded-full overflow-hidden mb-5;
+  }
+
+  .distrib-segment {
+    @apply h-full relative cursor-pointer;
+    min-width: 2%;
+
+    &:hover {
+      opacity: 0.8;
+      transform: scaleY(1.15);
+    }
+
+    &:first-child {
+      @apply rounded-l-full;
+    }
+
+    &:last-child {
+      @apply rounded-r-full;
+    }
+  }
+
+  .distrib-legend {
+    @apply flex flex-col gap-2.5;
+  }
+
+  .distrib-item {
+    @apply flex items-center gap-2.5 text-sm;
+  }
+
+  .distrib-color {
+    @apply w-3 h-3 rounded-sm flex-shrink-0;
+  }
+
+  .distrib-nome {
+    @apply font-semibold;
+  }
+
+  .distrib-info {
+    @apply text-texto-opaco ml-auto;
+  }
+
+  /* ═══════════════════════════════════════════════
+     3. CALENDÁRIO FINANCEIRO
+     ═══════════════════════════════════════════════ */
+  .cal-legend {
+    @apply flex flex-wrap gap-3 mb-4 text-xs;
+  }
+
+  .cal-legend-item {
+    @apply flex items-center gap-1.5 text-texto-opaco;
+  }
+
+  .cal-dot-leg {
+    @apply w-2.5 h-2.5 rounded-full inline-block;
+  }
+
+  .cal-grid {
+    @apply grid grid-cols-7 gap-1;
+  }
+
+  .cal-header {
+    @apply text-center text-xs font-semibold text-texto-opaco py-1;
+  }
+
+  .cal-empty {
+    @apply min-h-10;
+  }
+
+  .cal-day {
+    @apply flex flex-col items-center justify-start p-1 min-h-10 rounded-lg text-sm cursor-default;
+
+    &:hover {
+      @apply bg-gray-50;
+    }
+  }
+
+  .cal-hoje {
+    @apply bg-verde/10 font-bold ring-1 ring-verde/30;
+  }
+
+  .cal-num {
+    @apply text-xs font-medium;
+  }
+
+  .cal-dots {
+    @apply flex gap-0.5 mt-0.5 flex-wrap justify-center;
+  }
+
+  .cal-dot {
+    @apply w-1.5 h-1.5 rounded-full;
+  }
+
+  .cal-receita {
+    @apply bg-emerald-400;
+  }
+
+  .cal-despesa {
+    @apply bg-red-400;
+  }
+
+  .cal-parcela {
+    @apply bg-amber-400;
+  }
+
+  .cal-recorrente {
+    @apply bg-blue-400;
+  }
+
+  /* ═══════════════════════════════════════════════
+     5. HISTÓRICO 6 MESES
+     ═══════════════════════════════════════════════ */
+  .historico-chart-container {
+    @apply relative w-full;
+  }
+
+  /* ═══════════════════════════════════════════════
+     9. GASTO POR SEMANA
+     ═══════════════════════════════════════════════ */
+  .semana-list {
+    @apply flex flex-col gap-3;
+  }
+
+  .semana-item {
+    @apply p-3 rounded-lg bg-gray-50 border border-transparent;
+  }
+
+  .semana-destaque {
+    @apply !bg-amber-50 !border-amber-200;
+  }
+
+  .semana-header {
+    @apply flex items-center justify-between mb-2;
+  }
+
+  .semana-label {
+    @apply font-semibold text-sm;
+  }
+
+  .semana-periodo {
+    @apply text-xs text-texto-opaco ml-1;
+  }
+
+  .semana-valor {
+    @apply font-bold text-sm;
+  }
+
+  .semana-bar {
+    @apply w-full bg-gray-200 rounded-full h-1.5 overflow-hidden;
+  }
+
+  .semana-bar-fill {
+    @apply h-full rounded-full bg-verde;
+    width: 0;
+    animation: growBar 0.6s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+
+  .semana-fill-max {
+    @apply !bg-amber-400;
+  }
+
+  /* ═══════════════════════════════════════════════
+     8. RESUMO DAS PARCELAS
+     ═══════════════════════════════════════════════ */
+  .parcelas-grid {
+    @apply grid grid-cols-2 gap-3;
+  }
+
+  .parcela-stat {
+    @apply flex items-center gap-3 p-3 bg-gray-50 rounded-lg;
+  }
+
+  .parcela-icon {
+    @apply flex items-center justify-center w-9 h-9 rounded-lg text-lg flex-shrink-0;
+  }
+
+  .parcela-info {
+    @apply flex flex-col min-w-0;
+  }
+
+  .parcela-num {
+    @apply font-bold text-sm truncate;
+  }
+
+  .parcela-label {
+    @apply text-xs text-texto-opaco;
+  }
+
+  /* ═══════════════════════════════════════════════
+     7. RECORDES DO MÊS
+     ═══════════════════════════════════════════════ */
+  .recordes-list {
+    @apply flex flex-col gap-3;
+  }
+
+  .recorde-item {
+    @apply flex items-center gap-3 p-3 bg-gray-50 rounded-lg;
+  }
+
+  .recorde-icon {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg text-lg flex-shrink-0;
+  }
+
+  .recorde-info {
+    @apply flex flex-col min-w-0;
+  }
+
+  .recorde-label {
+    @apply text-xs text-texto-opaco uppercase tracking-wide;
+  }
+
+  .recorde-desc {
+    @apply font-semibold text-sm truncate;
+  }
+
+  .recorde-valor {
+    @apply font-bold text-sm;
+  }
+
+  /* ═══════════════════════════════════════════════
+     10. INDICADORES RÁPIDOS
+     ═══════════════════════════════════════════════ */
+  .indicadores-grid {
+    @apply flex flex-col gap-3;
+  }
+
+  .indicador-item {
+    @apply flex items-center gap-3 p-3 bg-gray-50 rounded-lg;
+  }
+
+  .indicador-icon {
+    @apply flex items-center justify-center w-9 h-9 rounded-lg text-base flex-shrink-0;
+  }
+
+  .indicador-info {
+    @apply flex flex-col;
+  }
+
+  .indicador-label {
+    @apply text-xs text-texto-opaco;
+  }
+
+  .indicador-valor {
+    @apply font-bold text-sm;
+  }
+
+  /* ═══════════════════════════════════════════════
+     RESUMO DO MÊS — "Relatório executivo"
+     ═══════════════════════════════════════════════ */
+  .resumo-mes-card {
+    @apply !bg-gradient-to-br !from-white !to-emerald-50/50 !border-verde/20;
+  }
+
+  .resumo-titulo {
+    @apply text-base font-semibold text-texto-opaco mb-4 -mt-1;
+  }
+
+  .resumo-grid {
+    @apply flex flex-col gap-3;
+  }
+
+  .resumo-item {
+    @apply flex items-center justify-between py-2 px-3 rounded-lg;
+  }
+
+  .resumo-item:not(:last-child) {
+    @apply border-b border-borda;
+  }
+
+  .resumo-label {
+    @apply text-sm text-texto-opaco;
+  }
+
+  .resumo-valor {
+    @apply font-bold text-sm text-right;
+  }
+
+  .resumo-destaque {
+    @apply !bg-verde/10 !border-none;
+  }
+
+  .resumo-positivo .resumo-valor {
+    @apply text-verde;
+  }
+
+  .resumo-negativo .resumo-valor {
+    @apply text-red-500;
+  }
+
+  /* ═══════════════════════════════════════════════
+     ANIMAÇÕES
+     ═══════════════════════════════════════════════ */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes growBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: var(--bar-width, 0%);
+    }
+  }
+
+  @keyframes growWidth {
+    from {
+      width: 0;
     }
   }
 }

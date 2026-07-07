@@ -1,80 +1,12 @@
 <?php
 $titulo = "Dashboard";
 require_once "includes/layout/inicio.php";
+require_once "includes/dashboard/queries.php";
 require_once "api/ia.php";
 
-function totalRendas()
-{
-    global $conexao;
-
-    // pega o mês do GET ou usa o mês atual
-    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
-        $mes = $_GET['m'];
-    } else {
-        $mes = date('m'); // Mês atual
-    }
-
-    // filtra apenas pelo mês
-    $sql = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
-    $stmt = $conexao->prepare($sql);
-
-    $stmt->bind_param("ii", $_SESSION['id'], $mes);
-
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-
-    return $valor ?? 0;
-}
-
-function despesasPagas()
-{
-    global $conexao;
-
-    // pega o mês do GET ou usa o mês atual
-    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
-        $mes = $_GET['m'];
-    } else {
-        $mes = date('m'); // Mês atual
-    }
-
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 1 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("ii", $_SESSION['id'], $mes);
-
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-
-    return $valor ?? 0;
-}
-
-function despesasPendentes()
-{
-    global $conexao;
-
-    // pega o mês do GET ou usa o mês atual
-    if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] < 13) {
-        $mes = $_GET['m'];
-    } else {
-        $mes = date('m'); // Mês atual
-    }
-
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 0 AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("ii", $_SESSION['id'], $mes);
-
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-
-    return $valor ?? 0;
-}
-
-// lógica do assistente IA
+// ──────────────────────────────────────────────
+// Lógica do assistente IA (mantida do original)
+// ──────────────────────────────────────────────
 $mes = $_GET['m'] ?? date('m');
 $dia = date('d');
 // $dia = 16;
@@ -150,8 +82,22 @@ if ($expected_title_type !== null) {
         $txt_ia = gerarMeta($mes);
     }
 }
+
+// ──────────────────────────────────────────────
+// Dados da dashboard
+// ──────────────────────────────────────────────
+$tem_dados = (totalRendas() > 0 || totalDespesas() > 0);
+$dados_comparacao = getDadosComparacao();
+$dados_categorias = getCategoriasDespesas();
+$dados_calendario = getCalendarioFinanceiro();
+$dados_historico = getHistorico6Meses();
+$dados_semana = getGastoPorSemana();
+$dados_parcelas = getResumoParcelas();
+$dados_recordes = getRecordes();
+$dados_indicadores = getIndicadores();
 ?>
 <main>
+    <!-- Header -->
     <header class="header-dashboard">
         <div class="txt-header">
             <h2>Dashboard</h2>
@@ -164,247 +110,162 @@ if ($expected_title_type !== null) {
             <?php require_once "includes/seletor_mes.php" ?>
         </div>
     </header>
-    <div class="container-cards">
-        <div class="card saldo">
-            <p>Saldo</p>
-            <h3><?= formatarReais($saldo) ?></h3>
-            <i class="bi bi-piggy-bank"></i>
-        </div>
-        <div class="card rendas">
-            <p>Total de Rendas</p>
-            <h3><?= formatarReais(totalRendas()) ?></h3>
-            <i class="bi bi-cash-stack"></i>
-        </div>
-        <div class="card despesas-pa">
-            <p>Despesas Pagas</p>
-            <h3><?= formatarReais(despesasPagas()) ?></h3>
-            <i class="bi bi-graph-down-arrow"></i>
-        </div>
-        <div class="card despesas-pe">
-            <p>Despesas Pendentes</p>
-            <h3><?= formatarReais(despesasPendentes()) ?></h3>
-            <i class="bi bi-currency-dollar"></i>
-        </div>
-    </div>
-    <div class="meio-dashboard">
-        <div class="block lg:hidden"><?php require "includes/dashboard/assistente_ia.php" ?></div>
-        <div class="container-esquerda card">
-            <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
-                <h3>Análise Financeira</h3>
-                <div>
-                    <canvas class="min-w-full h-auto" id="resumoMensalChart"></canvas>
-                </div>
-            <?php else: ?>
-                <div class="container-mensagem mt-0">
-                    <i class="bi bi-piggy-bank icone">
-                    </i>
-                    <h3 class="titulo">Sem movimentações neste mês</h3>
-                    <p class="paragrafo">
-                        Adicione sua primeira renda ou despesa para começar a acompanhar seus resultados.
-                    </p>
-                    <a href="rendas<?= (isset($m) ? '?m=' . $m : '') ?>" class="btn">
-                        Registrar Renda
-                    </a>
-                </div>
-            <?php endif; ?>
-        </div>
-        <div class="container-direita">
-            <div class="mb-[1.5rem] hidden lg:block"><?php require "includes/dashboard/assistente_ia.php" ?></div>
-            <div class="card">
-                <?php if (totalRendas() > 0 || despesasPagas() > 0 || despesasPendentes() > 0): ?>
-                    <h3>Resumo Financeiro</h3>
-                    <?php
-                    // puxando as 4 maiores rendas do usuario
-                    if (isset($m) && $m > 0 && $m < 13) {
-                        $sql = "SELECT descricao, data, valor 
-                                FROM rendas 
-                                WHERE usuario_id = ?
-                                AND MONTH(data) = ?
-                                AND YEAR(data) = YEAR(CURDATE())
-                                ORDER BY valor 
-                                DESC LIMIT 4";
-                        $stmt = $conexao->prepare($sql);
-                        $stmt->bind_param("is", $_SESSION['id'], $m);
-                    } else {
-                        $sql = "SELECT descricao, data, valor 
-                                FROM rendas 
-                                WHERE usuario_id = ?
-                                AND MONTH(data) = MONTH(CURDATE())
-                                AND YEAR(data) = YEAR(CURDATE())
-                                ORDER BY valor 
-                                DESC LIMIT 5";
-                        $stmt = $conexao->prepare($sql);
-                        $stmt->bind_param("i", $_SESSION['id']);
-                    }
-                    $stmt->execute();
-                    $resultado_rendas = $stmt->get_result();
-                    $stmt->close();
 
-                    if ($resultado_rendas->num_rows > 0): ?>
-                        <h4 class="titulo-resumo">Maiores Rendas</h4>
-                        <?php while ($renda = $resultado_rendas->fetch_assoc()): ?>
-                            <div class="item-resumo">
-                                <div class="txt-resumo">
-                                    <h5><?= htmlspecialchars($renda['descricao']) ?></h5>
-                                    <p><?= htmlspecialchars(formatarData($renda['data'])) ?></p>
-                                </div>
-                                <p class="text-green-500"><?= htmlspecialchars(formatarReais($renda['valor'])) ?></p>
-                            </div>
-                        <?php endwhile; ?>
-                    <?php endif; ?>
-                    <?php
-                    // puxando as 4 maiores despesas do usuario
-                    if (isset($m) && $m > 0 && $m < 13) {
-                        $sql = "SELECT descricao, status, categoria_id, valor
-                                FROM despesas 
-                                WHERE usuario_id = ?
-                                AND MONTH(data) = ?
-                                AND YEAR(data) = YEAR(CURDATE())
-                                ORDER BY valor DESC 
-                                LIMIT 4";
-                        $stmt = $conexao->prepare($sql);
-                        $stmt->bind_param("is", $_SESSION['id'], $m);
-                    } else {
-                        $sql = "SELECT descricao, status, categoria_id, valor
-                                FROM despesas 
-                                WHERE usuario_id = ?
-                                AND MONTH(data) = MONTH(CURDATE())
-                                AND YEAR(data) = YEAR(CURDATE())
-                                ORDER BY valor DESC 
-                                LIMIT 5";
-                        $stmt = $conexao->prepare($sql);
-                        $stmt->bind_param("i", $_SESSION['id']);
-                    }
-                    $stmt->execute();
-                    $resultado_despesas = $stmt->get_result();
-                    $stmt->close();
+    <?php if ($tem_dados): ?>
 
-                    if ($resultado_despesas->num_rows > 0): ?>
-                        <h4 class="titulo-resumo">Maiores Despesas</h4>
-                        <?php while ($despesa = $resultado_despesas->fetch_assoc()): ?>
-                            <div class="item-resumo">
-                                <div class="txt-resumo">
-                                    <h5>
-                                        <?= htmlspecialchars($despesa['descricao']) ?>
-                                        <?php if ($despesa['status'] == 0): ?>
-                                            <span class="bg-yellow-500">Pendente</span>
-                                        <?php else: ?>
-                                            <span class="bg-green-500">Pago</span>
-                                        <?php endif; ?>
-                                    </h5>
-                                    <p>
-                                        <?php
-                                        // buscando o nome da categoria
-                                        $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
-                                        $stmt_categoria = $conexao->prepare($sql_categoria);
-                                        $stmt_categoria->bind_param("i", $despesa['categoria_id']);
-                                        $stmt_categoria->execute();
-                                        $stmt_categoria->bind_result($nome_categoria);
-                                        $stmt_categoria->fetch();
-                                        $stmt_categoria->close();
+        <!-- 1. Comparação com o mês anterior -->
+        <?php require "includes/dashboard/comparacao_mes.php" ?>
 
-                                        echo $nome_categoria;
-                                        ?>
-                                    </p>
-                                </div>
-                                <p class="text-red-500"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
-                            </div>
-                        <?php endwhile; ?>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <div class="container-mensagem flex items-center justify-center h-full mt-0">
-                        <i class="bi bi-cup-hot icone"></i>
+        <!-- IA mobile (aparece primeiro em telas pequenas) -->
+        <div class="dash-ia-mobile block lg:hidden">
+            <?php require "includes/dashboard/assistente_ia.php" ?>
+        </div>
+
+        <!-- Grid principal -->
+        <div class="dashboard-content">
+
+            <!-- Economia do mês (span 4) + IA desktop (span 2) -->
+            <div class="col-span-1 lg:col-span-4">
+                <?php require "includes/dashboard/economia_mes.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-2 hidden lg:block">
+                <?php require "includes/dashboard/assistente_ia.php" ?>
+            </div>
+
+            <!-- Ranking (span 3) + Distribuição (span 3) -->
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/ranking_categorias.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/distribuicao_gastos.php" ?>
+            </div>
+
+            <!-- Calendário (span 3) + Histórico 6 meses (span 3) -->
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/calendario_financeiro.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/historico_6meses.php" ?>
+            </div>
+
+            <!-- Gasto semana (span 2) + Parcelas (span 2) + Recordes (span 2) -->
+            <div class="col-span-1 lg:col-span-2">
+                <?php require "includes/dashboard/gasto_semana.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-2">
+                <?php require "includes/dashboard/resumo_parcelas.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-2">
+                <?php require "includes/dashboard/recordes.php" ?>
+            </div>
+
+            <!-- Indicadores (span 3) + Resumo do mês (span 3) -->
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/indicadores.php" ?>
+            </div>
+            <div class="col-span-1 lg:col-span-3">
+                <?php require "includes/dashboard/resumo_mes.php" ?>
+            </div>
+
+        </div>
+
+    <?php else: ?>
+
+        <!-- Estado vazio -->
+        <div class="dashboard-content">
+            <div class="col-span-1 lg:col-span-4">
+                <div class="card">
+                    <div class="container-mensagem mt-0">
+                        <i class="bi bi-piggy-bank icone"></i>
+                        <h3 class="titulo">Sem movimentações neste mês</h3>
+                        <p class="paragrafo">
+                            Adicione sua primeira renda ou despesa para começar a acompanhar seus resultados.
+                        </p>
+                        <a href="rendas<?= (isset($m) ? '?m=' . $m : '') ?>" class="btn">
+                            Registrar Renda
+                        </a>
                     </div>
-                <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-span-1 lg:col-span-2">
+                <?php require "includes/dashboard/assistente_ia.php" ?>
             </div>
         </div>
-    </div>
+
+    <?php endif; ?>
 </main>
 
 <!-- modal importar extrato -->
 <?php require_once "includes/modal_extrato.php" ?>
 
-<?php
-// Consulta total de despesas por categoria usando JOIN para obter o nome real
-if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT c.nome AS nome_categoria, SUM(d.valor) AS total
-            FROM despesas d
-            JOIN categorias c ON d.categoria_id = c.id
-            WHERE d.usuario_id = ? 
-            AND MONTH(d.data) = ? 
-            AND YEAR(d.data) = YEAR(CURDATE())
-            GROUP BY d.categoria_id, c.nome
-            ORDER BY total DESC
-            LIMIT 5";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("ii", $_SESSION['id'], $m); // Mudei "is" para "ii" pois mês é inteiro
-} else {
-    $sql = "SELECT c.nome AS nome_categoria, SUM(d.valor) AS total
-            FROM despesas d
-            JOIN categorias c ON d.categoria_id = c.id
-            WHERE d.usuario_id = ? 
-            AND MONTH(d.data) = MONTH(CURDATE()) 
-            AND YEAR(d.data) = YEAR(CURDATE())
-            GROUP BY d.categoria_id, c.nome
-            ORDER BY total DESC
-            LIMIT 5";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['id']);
-}
-
-$stmt->execute();
-$resultados = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
-// Monta arrays para o gráfico
-$labels = [];
-$valores = [];
-
-foreach ($resultados as $r) {
-    // Agora pegamos o nome que veio do JOIN
-    $labels[] = $r['nome_categoria'];
-    $valores[] = (float)$r['total'];
-}
-?>
+<?php if ($tem_dados): ?>
 <script>
-    const ctx = document.getElementById('resumoMensalChart');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode($labels) ?>,
-            datasets: [{
-                label: 'R$: ',
-                data: <?= json_encode($valores) ?>,
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.6)',
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 206, 86, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(153, 102, 255, 0.6)',
-                    'rgba(255, 159, 64, 0.6)',
-                    'rgba(100, 181, 246, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(100, 181, 246, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            borderRadius: 8,
-            plugins: {
-                legend: {
-                    display: false
+    // ──────────────────────────────────────────────
+    // Chart.js — Histórico dos últimos 6 meses
+    // ──────────────────────────────────────────────
+    const ctxHistorico = document.getElementById('historicoChart');
+    if (ctxHistorico) {
+        new Chart(ctxHistorico, {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode(array_column($dados_historico, 'mes')) ?>,
+                datasets: [
+                    {
+                        label: 'Receitas',
+                        data: <?= json_encode(array_column($dados_historico, 'receitas')) ?>,
+                        backgroundColor: 'rgba(52, 211, 153, 0.7)',
+                        borderColor: 'rgba(52, 211, 153, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Despesas',
+                        data: <?= json_encode(array_column($dados_historico, 'despesas')) ?>,
+                        backgroundColor: 'rgba(248, 113, 113, 0.7)',
+                        borderColor: 'rgba(248, 113, 113, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                borderRadius: 6,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': R$ ' + context.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                            }
+                        }
+                    }
                 },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
             }
-        }
-    });
+        });
+    }
 </script>
+<?php endif; ?>
 <?php require_once "includes/layout/fim.php" ?>
