@@ -1,8 +1,8 @@
 </body>
 <?php include __DIR__ . "/../div_erro.php"; ?>
-<script src="<?= BASE_URL . "assets/js/toggle_menu.js" ?>"></script>
-<script src="<?= BASE_URL . "assets/js/loading.js" ?>"></script>
-<script src="<?= BASE_URL . "assets/js/crud_ajax.js" ?>"></script>
+<script src="<?= BASE_URL . "assets/js/toggle_menu.js?v=" . time() ?>"></script>
+<script src="<?= BASE_URL . "assets/js/loading.js?v=" . time() ?>"></script>
+<script src="<?= BASE_URL . "assets/js/crud_ajax.js?v=" . time() ?>"></script>
 <?php
 // buscando avisos pendentes
 $sql = "SELECT id, titulo, conteudo FROM avisos";
@@ -22,7 +22,7 @@ while ($aviso = $avisos->fetch_assoc()):
 
     if ($resultado_verificar->num_rows <= 0):
 ?>
-        <script src="<?= BASE_URL . "assets/js/aviso.js" ?>"></script>
+        <script src="<?= BASE_URL . "assets/js/aviso.js?v=" . time() ?>"></script>
     <?php endif; ?>
 <?php endwhile; ?>
 
