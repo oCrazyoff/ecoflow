@@ -30,10 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!empty($email) && !empty($senha)) {
         try {
-            $stmt = $conexao->prepare("SELECT id, nome, email, senha_hash, cargo, ultima_verificacao, relatorio_anual_pendente FROM usuarios WHERE email = ?");
+            $stmt = $conexao->prepare("SELECT id, nome, email, senha_hash, cargo, ultima_verificacao FROM usuarios WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
-            $stmt->bind_result($id, $nome, $email, $senha_db, $cargo, $ultima_verificacao_db, $relatorio_pendente_db);
+            $stmt->bind_result($id, $nome, $email, $senha_db, $cargo, $ultima_verificacao_db);
 
             $usuarioEncontrado = $stmt->fetch();
             $stmt->close();
@@ -58,15 +58,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $hoje = new DateTime();
                     // Garante data válida para usuários antigos/novos
                     $ultimaVerificacao = new DateTime($ultima_verificacao_db ?? '1970-01-01');
-                    $relatorioPendente = (bool)$relatorio_pendente_db;
 
-                    // 1. VERIFICAÇÃO DE INÍCIO DE ANO (Relatório Anual)
+                    // 1. VERIFICAÇÃO DE INÍCIO DE ANO (Relatório Anual e Limpeza)
                     if ($ultimaVerificacao->format('Y') < $hoje->format('Y')) {
-                        $stmtUpdate = $conexao->prepare("UPDATE usuarios SET relatorio_anual_pendente = 1 WHERE id = ?");
-                        $stmtUpdate->bind_param("i", $id);
-                        $stmtUpdate->execute();
-                        $stmtUpdate->close();
-                        $relatorioPendente = true;
+                        require_once __DIR__ . "/../relatorio/gerar_snapshot.php";
+                        processarViradaMultiplosAnos($id, (int)$ultimaVerificacao->format('Y'), (int)$hoje->format('Y'));
                     }
 
                     // 2. VERIFICAÇÃO DE RECORRENTES (Despesas/Rendas)
@@ -86,15 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 // redirecionamento
                 if ($cargo == 0) {
-                    // Usuário Comum: Verifica se precisa ver o relatório anual
-                    if ($relatorioPendente) {
-                        $_SESSION['relatorio_pendente'] = true;
-                        header("Location: " . BASE_URL . "relatorio");
-                        exit;
-                    } else {
-                        header("Location: " . BASE_URL . "dashboard");
-                        exit;
-                    }
+                    header("Location: " . BASE_URL . "dashboard");
+                    exit;
                 } elseif ($cargo == 1) {
                     // Administrador: Vai direto para o dashboard
                     header("Location: " . BASE_URL . "dashboard");

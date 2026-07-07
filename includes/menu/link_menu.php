@@ -14,6 +14,10 @@
     <i class="bi bi-tags"></i>
     <span>Categorias</span>
 </a>
+<a class="<?= ($rota === 'relatorios') ? 'atual' : '' ?>" href="relatorios">
+    <i class="bi bi-journal-text"></i>
+    <span>Relatórios</span>
+</a>
 <?php if ($_SESSION['cargo'] == 1): ?>
     <a class="<?= ($rota === 'usuarios') ? 'atual' : '' ?>" href="usuarios<?= (isset($m) ? '?m=' . $m : '') ?>">
         <i class="bi bi-people"></i>

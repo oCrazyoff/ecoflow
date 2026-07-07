@@ -3,7 +3,7 @@
     require_once "includes/layout/inicio.php";
 
     //puxando todos os usuarios
-    $sql = "SELECT id, nome, email, cargo, ultima_verificacao, relatorio_anual_pendente FROM usuarios";
+    $sql = "SELECT id, nome, email, cargo, ultima_verificacao FROM usuarios";
     $stmt = $conexao->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -114,7 +114,6 @@
                             <th>Email</th>
                             <th>Cargo</th>
                             <th>Último Login</th>
-                            <th>Relatório</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -165,9 +164,6 @@
                                         echo "N/A";
                                     }
                                     ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars(($row['relatorio_anual_pendente'] == 0) ? 'Não' : 'Sim') ?>
                                 </td>
                                 <?php if ($row['id'] != 14 && $row['id'] != $_SESSION['id']): ?>
                                     <td class="acoes">

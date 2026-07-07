@@ -1,74 +1,46 @@
 <?php
-$titulo = "Relatório Anual " . date("Y") - 1;
+$n_valida = false;
+$titulo = "Relatório Anual";
 require_once "includes/layout/inicio.php";
 
-// As funções para os cards de resumo no topo permanecem as mesmas
-function totalRendasAnoPassado()
-{
-    global $conexao;
-    $sql = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND YEAR(data) = YEAR(CURDATE()) - 1";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['id']);
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-    return $valor ?? 0;
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: " . BASE_URL . "relatorios");
+    exit();
 }
 
-function despesasPagasAnoPassado()
-{
-    global $conexao;
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 1 AND YEAR(data) = YEAR(CURDATE()) - 1";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['id']);
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-    return $valor ?? 0;
+$relatorio_id = (int)$_GET['id'];
+
+// Busca o relatório no banco
+$sql = "SELECT ano, dados_json FROM relatorios_anuais WHERE id = ? AND usuario_id = ? AND status = 'GERADO'";
+$stmt = $conexao->prepare($sql);
+$stmt->bind_param("ii", $relatorio_id, $_SESSION['id']);
+$stmt->execute();
+$resultado = $stmt->get_result();
+$stmt->close();
+
+if ($resultado->num_rows === 0) {
+    header("Location: " . BASE_URL . "relatorios");
+    exit();
 }
 
-function despesasPendentesAnoPassado()
-{
-    global $conexao;
-    $sql = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND status = 0 AND YEAR(data) = YEAR(CURDATE()) - 1";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['id']);
-    $stmt->execute();
-    $stmt->bind_result($valor);
-    $stmt->fetch();
-    $stmt->close();
-    return $valor ?? 0;
-}
+$relatorio = $resultado->fetch_assoc();
+$ano = $relatorio['ano'];
+$dados = json_decode($relatorio['dados_json'], true);
 
-// Array para converter número do mês em nome
-$meses = [
-    1 => 'Janeiro',
-    2 => 'Fevereiro',
-    3 => 'Março',
-    4 => 'Abril',
-    5 => 'Maio',
-    6 => 'Junho',
-    7 => 'Julho',
-    8 => 'Agosto',
-    9 => 'Setembro',
-    10 => 'Outubro',
-    11 => 'Novembro',
-    12 => 'Dezembro'
+$totais = $dados['totais'];
+$meses_data = $dados['meses'];
+
+$meses_nomes = [
+    1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril',
+    5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto',
+    9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
 ];
-
-$ano_passado = date('Y') - 1;
 ?>
 <style>
-    /* Estilos para impressão */
     @media print {
-
         .header-dashboard button,
-        #processando,
-        #div-erro,
-        #mensagem-retorno {
-            display: none;
+        .btn-voltar {
+            display: none !important;
         }
 
         .header-dashboard .txt-header {
@@ -80,277 +52,100 @@ $ano_passado = date('Y') - 1;
             grid-template-columns: 1fr;
         }
 
-        span[class*="bg-"],
-        i {
+        span[class*="bg-"], i {
             -webkit-print-color-adjust: exact;
-            /* Para Chrome, Safari, etc. */
             print-color-adjust: exact;
-            /* Padrão */
         }
     }
 </style>
-<!--div processando-->
-<div id="processando"
-    class="hidden fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-    <p class="text-white text-2xl flex gap-1">
-        Processando
-        <span class="animate-bounce">.</span>
-        <span class="animate-bounce animation-delay-200">.</span>
-        <span class="animate-bounce animation-delay-400">.</span>
-    </p>
-</div>
-<!--alerta inicio-->
-<div id="alerta-inicio" class="fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-    <div class="flex flex-col items-center justify-center gap-5 p-5 lg:p-10 rounded-xl w-5/6 lg:w-1/3 bg-yellow-100 border
-        border-yellow-500">
-        <i class="bi bi-exclamation-triangle text-6xl text-yellow-500"></i>
-        <h2 class="text-center text-2xl text-yellow-600 font-bold">Dados não salvos!</h2>
-        <p class="text-center text-lg text-yellow-700">
-            Existem dados do ano passado que não foram salvos. Por favor, revise e salve suas informações antes de
-            gerar o relatório final.
-        </p>
-        <button class="px-5 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600"
-            onclick="fecharAlertaInicio()">Confirmar
-        </button>
-    </div>
-</div>
-
-<!--alerta relatorio-->
-<div id="alerta-relatorio"
-    class="hidden fixed top-0 left-0 flex items-center justify-center bg-black/50 h-full w-full z-500">
-    <div class="flex flex-col items-center justify-center gap-5 p-5 lg:p-10 rounded-xl w-5/6 lg:w-1/3 bg-white border border-borda
-        shadow-xl">
-        <i class="bi bi-exclamation-triangle text-6xl text-verde"></i>
-        <h2 class="text-center text-3xl font-bold">Atenção</h2>
-        <p class="text-center text-lg text-texto-opaco">
-            Ao gerar o relatório, todos os dados do ano passado serão deletados. Esta ação não pode ser
-            desfeita. Deseja continuar?
-        </p>
-        <div class="flex items-center justify-center gap-5 w-full">
-            <button class="px-5 py-2 bg-verde text-white rounded-lg cursor-pointer w-1/2 hover:bg-verde-hover"
-                onclick="gerarRelatorio()">Confirmar
-            </button>
-            <button class="px-5 py-2 bg-white rounded-lg cursor-pointer border border-borda w-1/2 hover:bg-gray-200"
-                onclick="fecharAlertaRelatorio()">Cancelar
-            </button>
-        </div>
-    </div>
-</div>
 <main>
     <header class="header-dashboard px-7 flex-col lg:flex-row">
         <div class="txt-header self-start">
-            <h2>Relatório Anual - <?= $ano_passado ?></h2>
-            <p>Olá, <?= htmlspecialchars($_SESSION['nome']) ?>! Aqui está o resumo detalhado das suas finanças do
-                ano <?= $ano_passado ?>.</p>
+            <a href="<?= BASE_URL ?>relatorios" class="btn-voltar text-sm text-gray-500 hover:text-verde mb-2 inline-block">
+                <i class="bi bi-arrow-left"></i> Voltar para Relatórios
+            </a>
+            <h2>Relatório Anual - <?= $ano ?></h2>
+            <p>Olá, <?= htmlspecialchars($_SESSION['nome']) ?>! Aqui está o resumo detalhado das suas finanças do ano <?= $ano ?>.</p>
         </div>
-        <button class="text-white bg-verde px-5 py-2 rounded-lg cursor-pointer w-full lg:w-auto mt-3 lg:mt-0
-                            hover:bg-verde-hover" onclick="mostrarAlertaRelatorio()">
-            <i class="bi bi-printer mr-3"></i> Exportar PDF
+        <button class="text-white bg-verde px-5 py-2 rounded-lg cursor-pointer w-full lg:w-auto mt-3 lg:mt-0 hover:bg-verde-hover" onclick="window.print()">
+            <i class="bi bi-printer mr-3"></i> Imprimir / Baixar PDF
         </button>
     </header>
 
     <!-- Cards de Resumo Total -->
-    <div class="container-cards">
-        <div class="card">
-            <p>Total de Rendas</p>
-            <h3><?= formatarReais(totalRendasAnoPassado()) ?></h3>
-            <i class="bi bi-cash-stack text-verde bg-verde/10"></i>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-5">
+        <div class="bg-white rounded-xl p-5 border border-borda shadow-sm flex flex-col justify-center items-start relative overflow-hidden">
+            <p class="text-gray-500 font-semibold mb-1">Total de Rendas</p>
+            <h3 class="text-2xl font-bold text-gray-800"><?= formatarReais($totais['receitas']) ?></h3>
+            <i class="bi bi-cash-stack absolute right-5 top-1/2 -translate-y-1/2 text-3xl text-verde bg-verde/10 p-3 rounded-xl"></i>
         </div>
-        <div class="card">
-            <p>Despesas Pagas</p>
-            <h3><?= formatarReais(despesasPagasAnoPassado()) ?></h3>
-            <i class="bi bi-graph-down-arrow text-verde bg-verde/10"></i>
+        <div class="bg-white rounded-xl p-5 border border-borda shadow-sm flex flex-col justify-center items-start relative overflow-hidden">
+            <p class="text-gray-500 font-semibold mb-1">Despesas Pagas</p>
+            <h3 class="text-2xl font-bold text-gray-800"><?= formatarReais($totais['despesas_pagas']) ?></h3>
+            <i class="bi bi-graph-down-arrow absolute right-5 top-1/2 -translate-y-1/2 text-3xl text-verde bg-verde/10 p-3 rounded-xl"></i>
         </div>
-        <div class="card">
-            <p>Despesas Pendentes</p>
-            <h3><?= formatarReais(despesasPendentesAnoPassado()) ?></h3>
-            <i class="bi bi-currency-dollar text-verde bg-verde/10"></i>
+        <div class="bg-white rounded-xl p-5 border border-borda shadow-sm flex flex-col justify-center items-start relative overflow-hidden">
+            <p class="text-gray-500 font-semibold mb-1">Despesas Pendentes</p>
+            <h3 class="text-2xl font-bold text-gray-800"><?= formatarReais($totais['despesas_pendentes']) ?></h3>
+            <i class="bi bi-currency-dollar absolute right-5 top-1/2 -translate-y-1/2 text-3xl text-verde bg-verde/10 p-3 rounded-xl"></i>
         </div>
     </div>
 
     <!-- Container com os cards de cada mês -->
     <div class="grid grid-cols-1 gap-5 px-5 pb-5">
-        <?php for ($mes = 1; $mes <= 12; $mes++): ?>
-            <?php
-            // Busca rendas do mês
-            $sql_rendas = "SELECT descricao, data, valor FROM rendas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
-            $stmt_rendas = $conexao->prepare($sql_rendas);
-            $stmt_rendas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
-            $stmt_rendas->execute();
-            $resultado_rendas = $stmt_rendas->get_result();
-            $stmt_rendas->close();
-
-            // Busca despesas do mês
-            $sql_despesas = "SELECT descricao, data, valor, categoria_id, status FROM despesas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
-            $stmt_despesas = $conexao->prepare($sql_despesas);
-            $stmt_despesas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
-            $stmt_despesas->execute();
-            $resultado_despesas = $stmt_despesas->get_result();
-            $stmt_despesas->close();
-
-            // lógica para o saldo
-            $sql_total_rendas = "SELECT SUM(valor) FROM rendas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
-            $stmt_total_rendas = $conexao->prepare($sql_total_rendas);
-            $stmt_total_rendas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
-            $stmt_total_rendas->execute();
-            $stmt_total_rendas->bind_result($total_rendas_mes);
-            $stmt_total_rendas->fetch();
-            $stmt_total_rendas->close();
-
-            $sql_total_despesas = "SELECT SUM(valor) FROM despesas WHERE usuario_id = ? AND YEAR(data) = ? AND MONTH(data) = ? ORDER BY data ASC";
-            $stmt_total_despesas = $conexao->prepare($sql_total_despesas);
-            $stmt_total_despesas->bind_param("iis", $_SESSION['id'], $ano_passado, $mes);
-            $stmt_total_despesas->execute();
-            $stmt_total_despesas->bind_result($total_despesas_mes);
-            $stmt_total_despesas->fetch();
-            $stmt_total_despesas->close();
-            ?>
-
-            <!-- Só exibe o card do mês se houver alguma movimentação -->
-            <?php if ($resultado_rendas->num_rows > 0 || $resultado_despesas->num_rows > 0): ?>
-                <div class="bg-white rounded-xl p-10 border border-borda shadow-lg">
-                    <h3 class="text-2xl font-bold text-center">
-                        <?= htmlspecialchars($meses[$mes]) ?>
-                        <span class="text-verde">•</span>
-                        <?= formatarReais($total_rendas_mes - $total_despesas_mes) ?>
-                    </h3>
-                    <div>
-
-                        <!-- Seção de Rendas -->
-                        <?php if ($resultado_rendas->num_rows > 0): ?>
-                            <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
-                                Rendas</h4>
-                            <?php while ($renda = $resultado_rendas->fetch_assoc()): ?>
-                                <div class="flex items-center justify-between py-2 border-b border-gray-300">
-                                    <div>
-                                        <p class="font-semibold"><?= htmlspecialchars($renda['descricao']) ?></p>
-                                        <span class="text-texto-opaco"><?= htmlspecialchars(formatarData($renda['data'])) ?></span>
-                                    </div>
-                                    <p class="text-green-500 font-semibold"><?= htmlspecialchars(formatarReais($renda['valor'])) ?></p>
+        <?php foreach ($meses_data as $mes_num => $mes_info): 
+            $total_rendas_mes = array_sum(array_column($mes_info['rendas'], 'valor'));
+            $total_despesas_mes = array_sum(array_column($mes_info['despesas'], 'valor'));
+            $saldo_mes = $total_rendas_mes - $total_despesas_mes;
+        ?>
+            <div class="bg-white rounded-xl p-10 border border-borda shadow-lg">
+                <h3 class="text-2xl font-bold text-center">
+                    <?= htmlspecialchars($meses_nomes[$mes_num]) ?>
+                    <span class="text-verde">•</span>
+                    <span class="<?= $saldo_mes >= 0 ? 'text-emerald-500' : 'text-red-500' ?>">
+                        <?= formatarReais($saldo_mes) ?>
+                    </span>
+                </h3>
+                <div>
+                    <!-- Seção de Rendas -->
+                    <?php if (!empty($mes_info['rendas'])): ?>
+                        <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">Rendas</h4>
+                        <?php foreach ($mes_info['rendas'] as $renda): ?>
+                            <div class="flex items-center justify-between py-2 border-b border-gray-300">
+                                <div>
+                                    <p class="font-semibold"><?= htmlspecialchars($renda['descricao']) ?></p>
+                                    <span class="text-texto-opaco"><?= htmlspecialchars(formatarData($renda['data'])) ?></span>
                                 </div>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
+                                <p class="text-green-500 font-semibold"><?= htmlspecialchars(formatarReais($renda['valor'])) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
-                        <!-- Seção de Despesas -->
-                        <?php if ($resultado_despesas->num_rows > 0): ?>
-                            <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">
-                                Despesas</h4>
-                            <?php while ($despesa = $resultado_despesas->fetch_assoc()): ?>
-                                <div class="flex items-center justify-between py-2 border-b border-gray-300">
-                                    <div>
-                                        <p class="font-semibold">
-                                            <?= htmlspecialchars($despesa['descricao']) ?>
-                                            <?php if ($despesa['status'] == 0): ?>
-                                                <span class="text-sm px-3 rounded-full bg-[#EFB101] text-white">Pendente</span>
-                                            <?php else: ?>
-                                                <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
-                                            <?php endif; ?>
-                                        </p>
-                                        <span class="text-texto-opaco">
-                                            <?php
-                                            // puxando nome da categoria
-                                            $sql_categoria = "SELECT nome FROM categorias WHERE id = ?";
-                                            $stmt_categoria = $conexao->prepare($sql_categoria);
-                                            $stmt_categoria->bind_param("i", $despesa['categoria_id']);
-                                            $stmt_categoria->execute();
-                                            $stmt_categoria->bind_result($nome_categoria);
-                                            $stmt_categoria->fetch();
-                                            $stmt_categoria->close();
-
-                                            echo $nome_categoria;
-                                            ?>
-                                        </span>
-                                    </div>
-                                    <p class="text-red-500 font-semibold"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
+                    <!-- Seção de Despesas -->
+                    <?php if (!empty($mes_info['despesas'])): ?>
+                        <h4 class="text-xl my-5 text-texto-opaco font-semibold border-b-2 border-gray-500 pb-2">Despesas</h4>
+                        <?php foreach ($mes_info['despesas'] as $despesa): ?>
+                            <div class="flex items-center justify-between py-2 border-b border-gray-300">
+                                <div>
+                                    <p class="font-semibold">
+                                        <?= htmlspecialchars($despesa['descricao']) ?>
+                                        <?php if ($despesa['status'] == 0): ?>
+                                            <span class="text-sm px-3 rounded-full bg-[#EFB101] text-white">Pendente</span>
+                                        <?php else: ?>
+                                            <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
+                                        <?php endif; ?>
+                                    </p>
+                                    <span class="text-texto-opaco">
+                                        <?= htmlspecialchars($despesa['categoria_nome'] ?? 'Sem Categoria') ?>
+                                    </span>
                                 </div>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
-                    </div>
+                                <p class="text-red-500 font-semibold"><?= htmlspecialchars(formatarReais($despesa['valor'])) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
-        <?php endfor; ?>
-    </div>
-    <div id="mensagem-retorno"
-        class="hidden fixed top-0 left-0 bg-gradient-to-tl from-white to-gray-100 h-full w-full overflow-auto z-500">
-        <div
-            class="interface flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between gap-5 lg:gap-10 h-full">
-            <div class="flex flex-col items-center lg:items-start justify-center gap-5 w-full lg:w-2/3 h-max lg:h-auto">
-                <h2 class="text-5xl text-verde font-bold text-center lg:text-left">Relatório Gerado!</h2>
-                <p class="text-2xl text-texto-opaco text-center lg:text-left">
-                    Suas informações foram processadas e deletadas com sucesso.
-                    Agora você pode voltar para a dashboard.
-                </p>
-                <a class="px-5 py-3 bg-verde text-white rounded-xl w-full lg:w-max hover:bg-verde-hover text-center"
-                    href="<?= BASE_URL . "dashboard" ?>">
-                    Voltar para Dashboard
-                </a>
             </div>
-            <img class="w-full lg:w-1/3 h-1/3 lg:h-auto" src="<?= BASE_URL . "assets/img/img-relatorio.svg" ?>"
-                alt="Desenho confirmação">
-        </div>
+        <?php endforeach; ?>
     </div>
 </main>
-<script>
-    // fechar alerta inicio
-    function fecharAlertaInicio() {
-        const alerta = document.getElementById("alerta-inicio");
-
-        alerta.classList.add("hidden");
-    }
-
-    // fechar alerta relatorio
-    function fecharAlertaRelatorio() {
-        const alerta = document.getElementById("alerta-relatorio");
-
-        alerta.classList.add("hidden");
-    }
-
-    // mostrar alerta relatorio
-    function mostrarAlertaRelatorio() {
-        const alerta = document.getElementById("alerta-relatorio");
-
-        alerta.classList.remove("hidden");
-    }
-
-    // gerar relatório
-    function gerarRelatorio() {
-        fecharAlertaRelatorio();
-
-        // Define uma função que será chamada DEPOIS que a janela de impressão for fechada
-        const afterPrintHandler = async () => {
-            window.removeEventListener('afterprint', afterPrintHandler);
-
-            try {
-                // Mostra um feedback visual para o usuário
-                document.getElementById('processando').classList.remove('hidden');
-
-                const response = await fetch('finalizar_relatorio', {
-                    method: 'POST',
-                });
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    document.getElementById('mensagem-retorno').classList.remove('hidden');
-                } else {
-                    // caso houver erro
-                    alert('Ocorreu um erro ao finalizar o ano. Seus dados não foram apagados. Tente novamente.');
-                    document.getElementById('processando').classList.add('hidden');
-                }
-
-            } catch (error) {
-                alert('Ocorreu um erro de conexão. Verifique sua internet e tente novamente.');
-                document.getElementById('processando').classList.add('hidden');
-            }
-        };
-
-        // Adiciona o "ouvinte" do evento. Ele ficará esperando a janela de impressão fechar.
-        window.addEventListener('afterprint', afterPrintHandler, {
-            once: true
-        });
-
-        // Finalmente, chama a janela de impressão.
-        window.print();
-    }
-</script>
 <?php require_once "includes/layout/fim.php" ?>

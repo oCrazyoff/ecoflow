@@ -14,8 +14,8 @@ $routes = [
     'deslogar' => 'backend/auth/deslogar.php',
 
     // relatório
+    'relatorios' => 'pages/relatorios.php',
     'relatorio' => 'pages/relatorio.php',
-    'finalizar_relatorio' => 'backend/relatorio/finalizar.php',
 
     // paginas do usuario
     'dashboard' => 'pages/dashboard.php',

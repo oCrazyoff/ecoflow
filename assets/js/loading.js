@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener("click", e => {
             const href = link.getAttribute("href");
 
-            // Ignora links de âncora (#), links para nova aba ou links vazios
-            if (!href || href.startsWith("#") || link.target === "_blank") {
+            // Ignora links de âncora (#), javascript, links para nova aba ou links vazios
+            if (!href || href.startsWith("#") || href.startsWith("javascript:") || link.target === "_blank") {
                 return;
             }
 

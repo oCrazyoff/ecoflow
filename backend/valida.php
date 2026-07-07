@@ -18,12 +18,11 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
 } else {
     $id = $_SESSION["id"];
     // ADICIONADO: relatorio_anual_pendente na consulta
-    $stmt = $conexao->prepare("SELECT nome, email, cargo, relatorio_anual_pendente FROM usuarios WHERE id = ?");
+    $stmt = $conexao->prepare("SELECT nome, email, cargo FROM usuarios WHERE id = ?");
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        // ADICIONADO: variável para receber o status do relatório
-        $stmt->bind_result($nome, $email, $cargo, $relatorio_db);
+        $stmt->bind_result($nome, $email, $cargo);
         $stmt->fetch();
         $stmt->close();
 
@@ -38,8 +37,6 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
             $_SESSION["nome"] = $nome;
             $_SESSION["email"] = $email;
             $_SESSION["cargo"] = $cargo;
-            // CORREÇÃO CRUCIAL: Atualiza o status do relatório na sessão
-            $_SESSION['relatorio_pendente'] = (bool)$relatorio_db;
         }
     } else {
         $_SESSION['resposta'] = "Erro inesperado!";
@@ -50,23 +47,6 @@ if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["em
 }
 
 // 2. SEGUNDO: Agora fazemos as validações de rota com a sessão atualizada
-
-// Pega o status atualizado
-$pendente = $_SESSION['relatorio_pendente'] ?? false;
-
-// Bloqueia navegação se tiver relatório pendente (exceto na tela de relatório)
-if ($pendente && $rota !== 'relatorio' && $rota !== 'finalizar_relatorio') {
-    $_SESSION['resposta'] = "Gere um relatório primeiro!";
-    if (isAjax()) responderJSON(false, "Gere um relatório primeiro!");
-    header("Location: " . BASE_URL . "relatorio");
-    exit();
-}
-
-// Bloqueia acesso à tela de relatório se NÃO tiver pendência
-if ($pendente == false && $rota === 'relatorio') {
-    header("Location: " . BASE_URL . "dashboard");
-    exit();
-}
 
 // Bloqueio de rotas administrativas para usuários comuns
 if ($_SESSION['cargo'] == 0) {

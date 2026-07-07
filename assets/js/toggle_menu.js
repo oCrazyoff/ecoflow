@@ -31,3 +31,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function toggleMenuGaveta() {
+    const gaveta = document.getElementById('menu-gaveta');
+    const overlay = document.getElementById('menu-gaveta-overlay');
+    
+    if (gaveta.classList.contains('translate-y-full')) {
+        // Abrir gaveta
+        overlay.classList.remove('hidden');
+        // Usar setTimeout para permitir que o navegador processe a remoção do display:none antes de alterar a opacidade (transição suave)
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            gaveta.classList.remove('translate-y-full');
+        }, 10);
+    } else {
+        // Fechar gaveta
+        overlay.classList.add('opacity-0');
+        gaveta.classList.add('translate-y-full');
+        
+        // Aguardar o tempo da transição para esconder o elemento
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 300);
+    }
+}
