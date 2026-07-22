@@ -48,9 +48,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
-        $sql = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data) VALUES (?,?,?,?,?)";
+        // Gerar UUID de recorrência se for recorrente
+        $recorrencia_grupo = null;
+        if ($recorrente == 1) {
+            $recorrencia_grupo = sprintf(
+                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                mt_rand(0, 0xffff),
+                mt_rand(0, 0x0fff) | 0x4000,
+                mt_rand(0, 0x3fff) | 0x8000,
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            );
+        }
+
+        $sql = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, recorrencia_grupo, data) VALUES (?,?,?,?,?,?)";
         $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("issis", $usuario_id, $descricao, $valor, $recorrente, $data);
+        $stmt->bind_param("ississ", $usuario_id, $descricao, $valor, $recorrente, $recorrencia_grupo, $data);
 
         if ($stmt->execute()) {
             limparInsightsCache();

@@ -49,7 +49,10 @@ function totalRendas($mes = null, $ano = null): float
 }
 
 /**
- * Total de despesas pagas do mês
+ * Total de despesas pagas do mês (regime de caixa)
+ * Usa data_pagamento quando disponível para contabilizar quando o dinheiro realmente saiu.
+ * Inclui: despesas normais pagas neste mês + adiantamentos feitos neste mês
+ * Exclui: despesas pagas antecipadamente (status=2) cujo pagamento foi em outro mês
  */
 function despesasPagas($mes = null, $ano = null): float
 {
@@ -57,7 +60,13 @@ function despesasPagas($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 1 AND MONTH(data) = ? AND YEAR(data) = ?";
+    // Regime de caixa: soma despesas cujo pagamento efetivo ocorreu neste mês
+    // Usa COALESCE(data_pagamento, data) para compatibilidade com dados antigos
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas 
+            WHERE usuario_id = ? 
+            AND status IN (1, 2) 
+            AND MONTH(COALESCE(data_pagamento, data)) = ? 
+            AND YEAR(COALESCE(data_pagamento, data)) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -69,6 +78,7 @@ function despesasPagas($mes = null, $ano = null): float
 
 /**
  * Total de despesas pendentes do mês
+ * Exclui despesas pagas antecipadamente (status=2) — elas já foram contabilizadas
  */
 function despesasPendentes($mes = null, $ano = null): float
 {
@@ -76,7 +86,7 @@ function despesasPendentes($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -88,6 +98,7 @@ function despesasPendentes($mes = null, $ano = null): float
 
 /**
  * Total de TODAS as despesas do mês (pagas + pendentes)
+ * Exclui lançamentos de adiantamento (tipo=1) para evitar dupla contagem
  */
 function totalDespesas($mes = null, $ano = null): float
 {
@@ -95,7 +106,7 @@ function totalDespesas($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();

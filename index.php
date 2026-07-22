@@ -67,6 +67,10 @@ $routes = [
     'deletar_avisos' => 'backend/deletar/avisos.php',
     'deletar_categorias' => 'backend/deletar/categorias.php',
 
+    // rotas de adiantamento
+    'cadastrar_adiantamento' => 'backend/cadastrar/adiantamento.php',
+    'cancelar_adiantamento' => 'backend/deletar/adiantamento.php',
+
     // rotas da função aviso
     'marcar_aviso_visto' => 'backend/aviso/marcar_visto.php',
 ];

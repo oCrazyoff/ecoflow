@@ -64,6 +64,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
+        // Verificar se a despesa pode ser editada (bloquear tipo=1 e status=2)
+        $sqlCheck = "SELECT tipo, status FROM despesas WHERE id = ? AND usuario_id = ?";
+        $stmtCheck = $conexao->prepare($sqlCheck);
+        $stmtCheck->bind_param("ii", $id, $usuario_id);
+        $stmtCheck->execute();
+        $resCheck = $stmtCheck->get_result();
+        $despesaCheck = $resCheck->fetch_assoc();
+        $stmtCheck->close();
+
+        if ($despesaCheck && ($despesaCheck['tipo'] == 1 || $despesaCheck['status'] == 2)) {
+            $msg = "Despesas de adiantamento não podem ser editadas diretamente. Cancele o adiantamento para alterar.";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(false, $msg);
+            header($redirecionamento);
+            exit;
+        }
+
         // Verifica se deve editar todas as parcelas do grupo
         if ($editar_todas == 1 && !empty($parcela_grupo)) {
             // Atualiza todas as despesas do mesmo grupo de parcelas

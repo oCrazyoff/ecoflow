@@ -46,13 +46,17 @@ CREATE TABLE `despesas` (
   `usuario_id` int(10) UNSIGNED NOT NULL,
   `descricao` varchar(255) NOT NULL,
   `valor` decimal(10,2) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: Pendente, 1: Pago',
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: Pendente, 1: Pago, 2: Pago Antecipadamente',
   `recorrente` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: Não, 1: Sim',
   `categoria` int(11) NOT NULL COMMENT '0: Moradia, 1: Alimentação, etc.',
   `data` date NOT NULL,
   `parcela_grupo` varchar(36) DEFAULT NULL COMMENT 'UUID compartilhado entre parcelas do mesmo grupo',
   `parcela_numero` smallint(6) DEFAULT NULL COMMENT 'Número da parcela (1, 2, 3...)',
   `parcela_total` smallint(6) DEFAULT NULL COMMENT 'Total de parcelas do grupo',
+  `recorrencia_grupo` varchar(36) DEFAULT NULL COMMENT 'UUID que agrupa instâncias da mesma despesa recorrente',
+  `data_pagamento` date DEFAULT NULL COMMENT 'Data real do pagamento. NULL = não pago. Diferente de data quando há adiantamento.',
+  `adiantamento_ref_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Referência cruzada entre lançamento de adiantamento e despesa de competência',
+  `tipo` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: Normal, 1: Adiantamento (lançamento no mês de pagamento)',
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -83,6 +87,7 @@ CREATE TABLE `rendas` (
   `descricao` varchar(255) NOT NULL,
   `valor` decimal(10,2) NOT NULL,
   `recorrente` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Ex: 0 = não, 1 = sim',
+  `recorrencia_grupo` varchar(36) DEFAULT NULL COMMENT 'UUID que agrupa instâncias da mesma renda recorrente',
   `data` date NOT NULL DEFAULT current_timestamp(),
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -132,7 +137,9 @@ ALTER TABLE `avisos`
 --
 ALTER TABLE `despesas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`);
+  ADD KEY `usuario_id` (`usuario_id`),
+  ADD KEY `idx_recorrencia_grupo` (`recorrencia_grupo`),
+  ADD KEY `idx_adiantamento_ref` (`adiantamento_ref_id`);
 
 --
 -- Índices de tabela `insights`
@@ -204,7 +211,8 @@ ALTER TABLE `usuarios`
 -- Restrições para tabelas `despesas`
 --
 ALTER TABLE `despesas`
-  ADD CONSTRAINT `despesas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `despesas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_adiantamento_ref` FOREIGN KEY (`adiantamento_ref_id`) REFERENCES `despesas` (`id`) ON DELETE SET NULL;
 
 --
 -- Restrições para tabelas `insights`

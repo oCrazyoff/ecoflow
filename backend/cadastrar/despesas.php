@@ -117,9 +117,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         } else {
             // Cadastro normal (sem parcelas)
-            $sql = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data) VALUES (?,?,?,?,?,?,?)";
+            // Gerar UUID de recorrência se for recorrente
+            $recorrencia_grupo = null;
+            if ($recorrente == 1) {
+                $recorrencia_grupo = sprintf(
+                    '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+                );
+            }
+
+            // Definir data_pagamento se já está pago
+            $data_pagamento = ($status == 1) ? $data : null;
+
+            $sql = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, recorrencia_grupo, data_pagamento) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $conexao->prepare($sql);
-            $stmt->bind_param("issiiis", $usuario_id, $descricao, $valor, $status, $recorrente, $categoria, $data);
+            $stmt->bind_param("issiiisss", $usuario_id, $descricao, $valor, $status, $recorrente, $categoria, $data, $recorrencia_grupo, $data_pagamento);
 
             if ($stmt->execute()) {
                 limparInsightsCache();

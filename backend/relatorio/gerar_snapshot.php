@@ -11,8 +11,8 @@ function gerarRelatorioAnual($usuario_id, $ano) {
     // 1. Coleta Totais de Rendas e Despesas
     $sqlTotais = "SELECT 
         (SELECT COALESCE(SUM(valor), 0) FROM rendas WHERE usuario_id = ? AND YEAR(data) = ?) as total_rendas,
-        (SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 1 AND YEAR(data) = ?) as total_despesas_pagas,
-        (SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND YEAR(data) = ?) as total_despesas_pendentes
+        (SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status IN (1, 2) AND tipo = 0 AND YEAR(data) = ?) as total_despesas_pagas,
+        (SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND tipo = 0 AND YEAR(data) = ?) as total_despesas_pendentes
     ";
     
     $stmt = $conexao->prepare($sqlTotais);
@@ -61,7 +61,7 @@ function gerarRelatorioAnual($usuario_id, $ano) {
         $stmt_r->close();
 
         // Despesas do mês
-        $sql_desp = "SELECT d.descricao, d.data, d.valor, d.status, c.nome as categoria_nome 
+        $sql_desp = "SELECT d.descricao, d.data, d.valor, d.status, d.tipo, c.nome as categoria_nome 
                      FROM despesas d 
                      LEFT JOIN categorias c ON d.categoria_id = c.id 
                      WHERE d.usuario_id = ? AND YEAR(d.data) = ? AND MONTH(d.data) = ? ORDER BY d.data ASC";

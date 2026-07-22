@@ -128,8 +128,16 @@ $meses_nomes = [
                             <div class="flex items-center justify-between py-2 border-b border-gray-300">
                                 <div>
                                     <p class="font-semibold">
+                                        <?php if (($despesa['tipo'] ?? 0) == 1): ?>
+                                            <span class="text-purple-600">⏩</span>
+                                        <?php endif; ?>
                                         <?= htmlspecialchars($despesa['descricao']) ?>
-                                        <?php if ($despesa['status'] == 0): ?>
+                                        
+                                        <?php if (($despesa['tipo'] ?? 0) == 1): ?>
+                                            <span class="text-sm px-3 rounded-full bg-purple-100 text-purple-700">Adiantamento</span>
+                                        <?php elseif ($despesa['status'] == 2): ?>
+                                            <span class="text-sm px-3 rounded-full bg-green-100 text-green-700">Pago Antecipadamente</span>
+                                        <?php elseif ($despesa['status'] == 0): ?>
                                             <span class="text-sm px-3 rounded-full bg-[#EFB101] text-white">Pendente</span>
                                         <?php else: ?>
                                             <span class="text-sm px-3 rounded-full bg-[#00C951] text-white">Pago</span>
