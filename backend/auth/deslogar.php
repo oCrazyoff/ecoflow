@@ -1,5 +1,7 @@
 <?php
 session_start();
+$userId = $_SESSION['id'] ?? null;
+
 session_unset();
 session_destroy();
 
@@ -10,6 +12,19 @@ if (ini_get("session.use_cookies")) {
         $params["path"], $params["domain"],
         $params["secure"], $params["httponly"]
     );
+}
+
+require_once __DIR__ . "/../conexao.php";
+
+// Limpa o cookie e o token de lembrar-me
+if (isset($_COOKIE['ecoflow_lembrar'])) {
+    if ($userId) {
+        $stmtClear = $conexao->prepare("UPDATE usuarios SET lembrar_token = NULL WHERE id = ?");
+        $stmtClear->bind_param("i", $userId);
+        $stmtClear->execute();
+        $stmtClear->close();
+    }
+    setcookie('ecoflow_lembrar', '', time() - 3600, "/");
 }
 
 session_start();

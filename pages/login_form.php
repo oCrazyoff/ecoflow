@@ -49,6 +49,12 @@ require_once "includes/layout/inicio.php"
                         required>
                 </div>
 
+                <!-- Lembrar-me -->
+                <div class="flex items-center w-full mt-1">
+                    <input type="checkbox" name="lembrar_me" id="lembrar_me" value="1" class="w-4 h-4 text-verde bg-white border-borda rounded focus:ring-verde focus:ring-2">
+                    <label for="lembrar_me" class="ml-2 text-sm text-gray-600">Lembrar de mim</label>
+                </div>
+
                 <button type="submit"
                     class="w-full py-3 px-4 rounded-full cursor-pointer text-lg font-medium text-white bg-verde hover:bg-verde-hover transition-colors mt-2">
                     Entrar

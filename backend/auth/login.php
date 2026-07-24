@@ -80,6 +80,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $stmtUpdateData->close();
                 }
 
+                // Lembrar-me
+                if (isset($_POST['lembrar_me']) && $_POST['lembrar_me'] == '1') {
+                    $token = bin2hex(random_bytes(32));
+                    $token_hash = hash('sha256', $token);
+
+                    $stmtToken = $conexao->prepare("UPDATE usuarios SET lembrar_token = ? WHERE id = ?");
+                    $stmtToken->bind_param("si", $token_hash, $id);
+                    $stmtToken->execute();
+                    $stmtToken->close();
+
+                    // Cookie válido por 30 dias
+                    setcookie('ecoflow_lembrar', $token, time() + (86400 * 30), "/"); 
+                }
+
                 // redirecionamento
                 if ($cargo == 0) {
                     header("Location: " . BASE_URL . "dashboard");
