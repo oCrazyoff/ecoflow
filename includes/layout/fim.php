@@ -1,7 +1,8 @@
 </body>
 <?php include __DIR__ . "/../div_erro.php"; ?>
 <script src="<?= BASE_URL . "assets/js/toggle_menu.js?v=" . time() ?>"></script>
-<script src="<?= BASE_URL . "assets/js/loading.js?v=" . time() ?>"></script>
+<script src="<?= BASE_URL . "assets/js/skeleton.js?v=" . time() ?>"></script>
+<script src="<?= BASE_URL . "assets/js/form_loader.js?v=" . time() ?>"></script>
 <script src="<?= BASE_URL . "assets/js/crud_ajax.js?v=" . time() ?>"></script>
 <?php
 // buscando avisos pendentes

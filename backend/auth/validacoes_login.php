@@ -71,7 +71,8 @@ function verificarRecorrentes(int $userId): void
         }
         $stmtRendas->close();
 
-        // Fallback: processar rendas recorrentes SEM recorrencia_grupo (dados antigos não migrados)
+        // Fallback/Migração: rendas recorrentes SEM recorrencia_grupo (dados antigos)
+        // Primeiro atribui UUID a todas, depois processa normalmente
         $sqlRendasSemGrupo = "
             SELECT descricao, valor, MIN(data) as primeira_data
             FROM rendas
@@ -84,6 +85,24 @@ function verificarRecorrentes(int $userId): void
         $resultRendasSG = $stmtRendasSG->get_result();
 
         while ($itemRenda = $resultRendasSG->fetch_assoc()) {
+            // 1. Gerar UUID para este grupo
+            $novoGrupo = sprintf(
+                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                mt_rand(0, 0xffff),
+                mt_rand(0, 0x0fff) | 0x4000,
+                mt_rand(0, 0x3fff) | 0x8000,
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            );
+
+            // 2. Atualizar TODAS as rendas existentes deste grupo para terem o UUID
+            $sqlUpdateGrupo = "UPDATE rendas SET recorrencia_grupo = ? WHERE usuario_id = ? AND descricao = ? AND valor = ? AND recorrente = 1 AND recorrencia_grupo IS NULL AND YEAR(data) = ?";
+            $stmtUpdateGrupo = $conexao->prepare($sqlUpdateGrupo);
+            $stmtUpdateGrupo->bind_param("sisdi", $novoGrupo, $userId, $itemRenda['descricao'], $itemRenda['valor'], $anoAtual);
+            $stmtUpdateGrupo->execute();
+            $stmtUpdateGrupo->close();
+
+            // 3. Agora inserir meses faltantes COM o UUID
             $primeiraData = new DateTime($itemRenda['primeira_data']);
             $mesInicial = (int)$primeiraData->format('m');
             $diaOriginal = $primeiraData->format('d');
@@ -98,19 +117,20 @@ function verificarRecorrentes(int $userId): void
                 $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
                 $dataVerificar = "$anoAtual-$mesFormatado-$diaValido";
 
-                $sqlCheckR = "SELECT id FROM rendas WHERE usuario_id = ? AND descricao = ? AND YEAR(data) = ? AND MONTH(data) = ? LIMIT 1";
+                // Verificar por recorrencia_grupo + mês (mais confiável que descrição)
+                $sqlCheckR = "SELECT id FROM rendas WHERE usuario_id = ? AND recorrencia_grupo = ? AND YEAR(data) = ? AND MONTH(data) = ? LIMIT 1";
                 $stmtCheckR = $conexao->prepare($sqlCheckR);
-                $stmtCheckR->bind_param("isii", $userId, $itemRenda['descricao'], $anoAtual, $mes);
+                $stmtCheckR->bind_param("isii", $userId, $novoGrupo, $anoAtual, $mes);
                 $stmtCheckR->execute();
                 $stmtCheckR->store_result();
 
                 if ($stmtCheckR->num_rows === 0) {
-                    $sqlInsertR = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data) VALUES (?, ?, ?, 1, ?)";
+                    $sqlInsertR = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, recorrencia_grupo, data) VALUES (?, ?, ?, 1, ?, ?)";
                     $stmtInsertR = $conexao->prepare($sqlInsertR);
-                    $stmtInsertR->bind_param("isds", $userId, $itemRenda['descricao'], $itemRenda['valor'], $dataVerificar);
+                    $stmtInsertR->bind_param("isdss", $userId, $itemRenda['descricao'], $itemRenda['valor'], $novoGrupo, $dataVerificar);
 
                     if (!$stmtInsertR->execute()) {
-                        throw new Exception("Erro ao inserir Renda (sem grupo): " . $stmtInsertR->error);
+                        throw new Exception("Erro ao inserir Renda (migração grupo): " . $stmtInsertR->error);
                     }
                     $stmtInsertR->close();
                 }
@@ -173,7 +193,8 @@ function verificarRecorrentes(int $userId): void
         }
         $stmtDespesas->close();
 
-        // Fallback: processar despesas recorrentes SEM recorrencia_grupo (dados antigos não migrados)
+        // Fallback/Migração: despesas recorrentes SEM recorrencia_grupo (dados antigos)
+        // Primeiro atribui UUID a todas, depois processa normalmente
         $sqlDespesasSemGrupo = "
             SELECT descricao, valor, categoria_id, MIN(data) as primeira_data
             FROM despesas
@@ -187,6 +208,24 @@ function verificarRecorrentes(int $userId): void
         $resultDespesasSG = $stmtDespesasSG->get_result();
 
         while ($itemDespesa = $resultDespesasSG->fetch_assoc()) {
+            // 1. Gerar UUID para este grupo
+            $novoGrupo = sprintf(
+                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                mt_rand(0, 0xffff),
+                mt_rand(0, 0x0fff) | 0x4000,
+                mt_rand(0, 0x3fff) | 0x8000,
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            );
+
+            // 2. Atualizar TODAS as despesas existentes deste grupo para terem o UUID
+            $sqlUpdateGrupo = "UPDATE despesas SET recorrencia_grupo = ? WHERE usuario_id = ? AND descricao = ? AND valor = ? AND categoria_id = ? AND recorrente = 1 AND recorrencia_grupo IS NULL AND YEAR(data) = ?";
+            $stmtUpdateGrupo = $conexao->prepare($sqlUpdateGrupo);
+            $stmtUpdateGrupo->bind_param("sisdii", $novoGrupo, $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria_id'], $anoAtual);
+            $stmtUpdateGrupo->execute();
+            $stmtUpdateGrupo->close();
+
+            // 3. Agora inserir meses faltantes COM o UUID
             $primeiraData = new DateTime($itemDespesa['primeira_data']);
             $mesInicial = (int)$primeiraData->format('m');
             $diaOriginal = $primeiraData->format('d');
@@ -201,19 +240,20 @@ function verificarRecorrentes(int $userId): void
                 $mesFormatado = str_pad($mes, 2, '0', STR_PAD_LEFT);
                 $dataVerificar = "$anoAtual-$mesFormatado-$diaValido";
 
-                $sqlCheckD = "SELECT id FROM despesas WHERE usuario_id = ? AND descricao = ? AND YEAR(data) = ? AND MONTH(data) = ? LIMIT 1";
+                // Verificar por recorrencia_grupo + mês (mais confiável que descrição)
+                $sqlCheckD = "SELECT id FROM despesas WHERE usuario_id = ? AND recorrencia_grupo = ? AND YEAR(data) = ? AND MONTH(data) = ? AND tipo = 0 LIMIT 1";
                 $stmtCheckD = $conexao->prepare($sqlCheckD);
-                $stmtCheckD->bind_param("isii", $userId, $itemDespesa['descricao'], $anoAtual, $mes);
+                $stmtCheckD->bind_param("isii", $userId, $novoGrupo, $anoAtual, $mes);
                 $stmtCheckD->execute();
                 $stmtCheckD->store_result();
 
                 if ($stmtCheckD->num_rows === 0) {
-                    $sqlInsertD = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data) VALUES (?, ?, ?, 0, 1, ?, ?)";
+                    $sqlInsertD = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, recorrencia_grupo) VALUES (?, ?, ?, 0, 1, ?, ?, ?)";
                     $stmtInsertD = $conexao->prepare($sqlInsertD);
-                    $stmtInsertD->bind_param("isdis", $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria_id'], $dataVerificar);
+                    $stmtInsertD->bind_param("isdiss", $userId, $itemDespesa['descricao'], $itemDespesa['valor'], $itemDespesa['categoria_id'], $dataVerificar, $novoGrupo);
 
                     if (!$stmtInsertD->execute()) {
-                        throw new Exception("Erro ao inserir Despesa (sem grupo): " . $stmtInsertD->error);
+                        throw new Exception("Erro ao inserir Despesa (migração grupo): " . $stmtInsertD->error);
                     }
                     $stmtInsertD->close();
                 }

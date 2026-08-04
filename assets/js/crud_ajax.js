@@ -130,11 +130,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const action = form.action;
             const formData = new FormData(form);
 
-            // Desabilita o botão de submit para evitar duplo clique
+            // Desabilita o botão de submit para evitar duplo clique e adiciona spinner
             const btnSubmit = form.querySelector('button[type="submit"]');
+            let originalBtnContent = "";
             if (btnSubmit) {
+                originalBtnContent = btnSubmit.innerHTML;
                 btnSubmit.disabled = true;
-                btnSubmit.textContent = "Enviando...";
+                btnSubmit.innerHTML = `<i class="bi bi-arrow-repeat inline-block animate-spin"></i> ` + originalBtnContent;
+                btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
             }
 
             try {
@@ -169,13 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Re-habilita o botão
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
-                    btnSubmit.textContent = "Enviar";
+                    btnSubmit.innerHTML = originalBtnContent;
+                    btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
                 }
-
-                // Esconde o loader global (exibido pelo loading.js no submit)
-                const loader = document.getElementById("container-loading");
-                if (loader) loader.classList.add("hidden");
-                document.documentElement.classList.remove("loading");
             }
         });
     }
@@ -206,9 +205,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const action = form.action;
         const formData = new FormData(form);
 
-        // Desabilita o botão
+        // Desabilita o botão e adiciona spinner
         const btnDeleta = form.querySelector(".btn-deleta");
-        if (btnDeleta) btnDeleta.disabled = true;
+        let originalBtnDeletaContent = "";
+        if (btnDeleta) {
+            originalBtnDeletaContent = btnDeleta.innerHTML;
+            btnDeleta.disabled = true;
+            btnDeleta.innerHTML = `<i class="bi bi-arrow-repeat inline-block animate-spin"></i>`;
+            btnDeleta.classList.add('opacity-70', 'cursor-not-allowed');
+        }
 
         try {
             const resp = await fetch(action, {
@@ -247,12 +252,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Erro ao deletar:", erro);
             mostrarMensagem("Erro ao processar a exclusão.");
         } finally {
-            if (btnDeleta) btnDeleta.disabled = false;
-            
-            // Esconde o loader global
-            const loader = document.getElementById("container-loading");
-            if (loader) loader.classList.add("hidden");
-            document.documentElement.classList.remove("loading");
+            if (btnDeleta) {
+                btnDeleta.disabled = false;
+                btnDeleta.innerHTML = originalBtnDeletaContent;
+                btnDeleta.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
         }
     }
 

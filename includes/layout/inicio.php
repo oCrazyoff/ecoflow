@@ -35,6 +35,16 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title><?= htmlspecialchars((isset($titulo) ? $titulo . " • EcoFlow" : 'EcoFlow')) ?></title>
+
+    <?php
+    // Determina se esta rota precisa de skeleton
+    $temSkeleton = in_array($rota, ['login', 'cadastro', 'dashboard', 'perfil', 'rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos']);
+    if ($temSkeleton): ?>
+    <style>
+        /* Esconde o conteúdo real até o skeleton sumir */
+        body > main, body > nav, body > aside { opacity: 0; }
+    </style>
+    <?php endif; ?>
 </head>
 
 <body <?= ((isset($n_valida) && $n_valida == true) || $rota == 'relatorio') ? "class='flex-col h-auto'" : "" ?>>
@@ -47,6 +57,14 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
         }
     }
 
-    // incluindo o loading e o aviso
-    require_once __DIR__ . "/../loading.php";
+    // Incluindo o esqueleto baseado na rota
+    if ($rota === 'login' || $rota === 'cadastro') {
+        require_once __DIR__ . "/../skeletons/auth.php";
+    } elseif ($rota === 'dashboard') {
+        require_once __DIR__ . "/../skeletons/dashboard.php";
+    } elseif ($rota === 'perfil') {
+        require_once __DIR__ . "/../skeletons/perfil.php";
+    } elseif (in_array($rota, ['rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos'])) {
+        require_once __DIR__ . "/../skeletons/table.php";
+    }
     ?>

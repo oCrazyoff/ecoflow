@@ -118,13 +118,13 @@ function migrarRecorrentesParaAnoAtual($userId, $anoPassado, $anoAtual, $mesAtua
         $stmtMaxR->close();
 
         if ($ultimoMesRenda) {
-            $sqlGetRendas = "SELECT descricao, valor, DAY(data) as dia FROM rendas WHERE usuario_id = ? AND recorrente = 1 AND YEAR(data) = ? AND MONTH(data) = ?";
+            $sqlGetRendas = "SELECT descricao, valor, DAY(data) as dia, recorrencia_grupo FROM rendas WHERE usuario_id = ? AND recorrente = 1 AND YEAR(data) = ? AND MONTH(data) = ?";
             $stmtGetR = $conexao->prepare($sqlGetRendas);
             $stmtGetR->bind_param("iii", $userId, $anoPassado, $ultimoMesRenda);
             $stmtGetR->execute();
             $resRendas = $stmtGetR->get_result();
 
-            $sqlInsRenda = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data) VALUES (?, ?, ?, 1, ?)";
+            $sqlInsRenda = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data, recorrencia_grupo) VALUES (?, ?, ?, 1, ?, ?)";
             $stmtInsR = $conexao->prepare($sqlInsRenda);
 
             while ($renda = $resRendas->fetch_assoc()) {
@@ -133,7 +133,7 @@ function migrarRecorrentesParaAnoAtual($userId, $anoPassado, $anoAtual, $mesAtua
                     $diaReal = ($renda['dia'] > $ultimoDiaMes) ? $ultimoDiaMes : $renda['dia'];
                     $novaData = sprintf("%04d-%02d-%02d", $anoAtual, $m, $diaReal);
 
-                    $stmtInsR->bind_param("isds", $userId, $renda['descricao'], $renda['valor'], $novaData);
+                    $stmtInsR->bind_param("isdss", $userId, $renda['descricao'], $renda['valor'], $novaData, $renda['recorrencia_grupo']);
                     $stmtInsR->execute();
                 }
             }
@@ -151,13 +151,13 @@ function migrarRecorrentesParaAnoAtual($userId, $anoPassado, $anoAtual, $mesAtua
         $stmtMaxD->close();
 
         if ($ultimoMesDespesa) {
-            $sqlGetDespesas = "SELECT descricao, valor, categoria, DAY(data) as dia FROM despesas WHERE usuario_id = ? AND recorrente = 1 AND YEAR(data) = ? AND MONTH(data) = ?";
+            $sqlGetDespesas = "SELECT descricao, valor, categoria_id, DAY(data) as dia, recorrencia_grupo FROM despesas WHERE usuario_id = ? AND recorrente = 1 AND YEAR(data) = ? AND MONTH(data) = ?";
             $stmtGetD = $conexao->prepare($sqlGetDespesas);
             $stmtGetD->bind_param("iii", $userId, $anoPassado, $ultimoMesDespesa);
             $stmtGetD->execute();
             $resDespesas = $stmtGetD->get_result();
 
-            $sqlInsDespesa = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria, data) VALUES (?, ?, ?, 0, 1, ?, ?)";
+            $sqlInsDespesa = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, recorrencia_grupo) VALUES (?, ?, ?, 0, 1, ?, ?, ?)";
             $stmtInsD = $conexao->prepare($sqlInsDespesa);
 
             while ($despesa = $resDespesas->fetch_assoc()) {
@@ -166,7 +166,7 @@ function migrarRecorrentesParaAnoAtual($userId, $anoPassado, $anoAtual, $mesAtua
                     $diaReal = ($despesa['dia'] > $ultimoDiaMes) ? $ultimoDiaMes : $despesa['dia'];
                     $novaData = sprintf("%04d-%02d-%02d", $anoAtual, $m, $diaReal);
 
-                    $stmtInsD->bind_param("isdis", $userId, $despesa['descricao'], $despesa['valor'], $despesa['categoria'], $novaData);
+                    $stmtInsD->bind_param("isdiss", $userId, $despesa['descricao'], $despesa['valor'], $despesa['categoria_id'], $novaData, $despesa['recorrencia_grupo']);
                     $stmtInsD->execute();
                 }
             }

@@ -59,6 +59,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     // Garante data válida para usuários antigos/novos
                     $ultimaVerificacao = new DateTime($ultima_verificacao_db ?? '1970-01-01');
 
+                    // PRIMEIRO: Atualiza a data da última verificação para "AGORA"
+                    // (Feito ANTES de processar recorrentes para evitar re-execução 
+                    //  caso o processo falhe ou a requisição seja interrompida)
+                    $stmtUpdateData = $conexao->prepare("UPDATE usuarios SET ultima_verificacao = NOW() WHERE id = ?");
+                    $stmtUpdateData->bind_param("i", $id);
+                    $stmtUpdateData->execute();
+                    $stmtUpdateData->close();
+
                     // 1. VERIFICAÇÃO DE INÍCIO DE ANO (Relatório Anual e Limpeza)
                     if ($ultimaVerificacao->format('Y') < $hoje->format('Y')) {
                         require_once __DIR__ . "/../relatorio/gerar_snapshot.php";
@@ -72,12 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // Executa a função de gerar despesas e rendas
                         verificarRecorrentes($id);
                     }
-
-                    // 3. ATUALIZA A DATA DA ÚLTIMA VERIFICAÇÃO PARA "AGORA"
-                    $stmtUpdateData = $conexao->prepare("UPDATE usuarios SET ultima_verificacao = NOW() WHERE id = ?");
-                    $stmtUpdateData->bind_param("i", $id);
-                    $stmtUpdateData->execute();
-                    $stmtUpdateData->close();
                 }
 
                 // Lembrar-me

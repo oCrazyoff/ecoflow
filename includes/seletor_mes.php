@@ -15,7 +15,7 @@ if (isset($_GET['m']) && is_numeric($_GET['m']) && $_GET['m'] > 0 && $_GET['m'] 
 
 <form method="GET">
     <select class="seletor-mes" name="m" id="m"
-            onchange="document.getElementById('container-loading').classList.remove('hidden'); this.form.submit()">
+            onchange="this.form.submit()">
         <?php foreach ($meses as $numero => $nome): ?>
             <option value="<?= $numero; ?>" <?= ($numero == $m) ? 'selected' : ''; ?>>
                 <?= htmlspecialchars($nome); ?>

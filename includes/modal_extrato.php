@@ -24,7 +24,7 @@
             <textarea id="conteudo_extrato" name="conteudo_extrato"
                 placeholder="Cole o conteúdo do extrato aqui...&#10;&#10;Exemplo:&#10;01/03/2025 PIX RECEBIDO - JOÃO +1.500,00&#10;05/03/2025 IFOOD RESTAURANTE -32,00&#10;21/03/2025 NETFLIX -45,00"></textarea>
             <div class="container-btn">
-                <button class="btn-cancelar" onclick="fecharModalExtrato()">Cancelar</button>
+                <button type="button" class="btn-cancelar" onclick="fecharModalExtrato()">Cancelar</button>
                 <button type="submit" class="btn-submit">Analisar com I.A</button>
             </div>
         </form>
