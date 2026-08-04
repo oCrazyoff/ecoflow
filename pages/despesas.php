@@ -248,7 +248,7 @@ while ($row = $result->fetch_assoc()) {
                                 <td class="acoes">
                                     <?php if ($row['status'] != 2 && $row['tipo'] != 1): ?>
                                         <?php if ($row['recorrente'] == 1): ?>
-                                            <button class="text-purple-500 cursor-pointer hover:bg-purple-50 rounded p-1"
+                                            <button class="btn-adianta"
                                                 onclick="abrirModalAdiantamento(<?= $row['id'] ?>, '<?= htmlspecialchars($row['descricao'], ENT_QUOTES) ?>', '<?= $row['valor'] ?>')"
                                                 title="Adiantar próximo mês">
                                                 <i class="bi bi-fast-forward-fill"></i>
@@ -266,7 +266,7 @@ while ($row = $result->fetch_assoc()) {
                                             <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
                                         </form>
                                     <?php else: ?>
-                                        <button class="text-orange-500 cursor-pointer hover:bg-orange-50 rounded p-1"
+                                        <button class="btn-cancelar-adiantamento"
                                             onclick="cancelarAdiantamento(<?= $row['id'] ?>)" title="Cancelar adiantamento">
                                             <i class="bi bi-x-circle"></i>
                                         </button>

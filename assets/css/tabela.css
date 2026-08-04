@@ -66,16 +66,22 @@
         }
 
         & .acoes {
-          @apply flex items-center justify-center gap-3 lg:gap-5 text-xl;
+          @apply flex items-center justify-center gap-2 text-xl;
 
           & .btn-visu,
           .btn-edita,
-          .btn-deleta {
-            @apply w-10 h-10 rounded-lg cursor-pointer;
+          .btn-deleta,
+          .btn-adianta,
+          .btn-cancelar-adiantamento {
+            @apply flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer;
 
             &:hover {
               @apply bg-gray-200;
             }
+          }
+
+          & .btn-visu {
+            @apply text-green-500;
           }
 
           & .btn-edita {
@@ -84,6 +90,14 @@
 
           & .btn-deleta {
             @apply text-red-500;
+          }
+
+          & .btn-adianta {
+            @apply text-purple-600;
+          }
+
+          & .btn-cancelar-adiantamento {
+            @apply text-orange-500;
           }
         }
       }

@@ -1,34 +1,78 @@
 /**
  * Skeleton Loader - Remove o esqueleto e revela o conteúdo real.
- * 
- * Este script é carregado no final do <body> (via fim.php), portanto
- * quando ele executa, todo o DOM já está construído e pronto.
- * Não precisamos esperar window.onload (que espera imagens/fontes externas
- * e causa o flash do skeleton sobre conteúdo já renderizado).
+ * Permite também reexibir o skeleton durante a navegação pelo menu ou seletor de mês.
  */
 (function () {
     const skeleton = document.getElementById("skeleton-loader");
-    if (!skeleton) return;
 
-    // Revela o conteúdo real que estava escondido via inline <style> no <head>
-    const main = document.querySelector("main");
-    const nav = document.querySelector("nav");
-    const aside = document.querySelector("aside");
+    // Função global para reexibir o skeleton quando houver navegação
+    window.mostrarSkeleton = function () {
+        const sk = document.getElementById("skeleton-loader");
+        const main = document.querySelector("main");
+        if (sk) {
+            sk.style.display = "flex";
+            sk.style.pointerEvents = "all";
+            void sk.offsetHeight; // Força reflow para aplicar transição
+            sk.style.transition = "opacity 0.15s ease";
+            sk.style.opacity = "1";
+        }
+        if (main) {
+            main.style.transition = "opacity 0.15s ease";
+            main.style.opacity = "0";
+        }
+    };
 
-    // Fade out do skeleton
-    skeleton.style.transition = "opacity 0.3s ease";
-    skeleton.style.opacity = "0";
+    if (skeleton) {
+        const main = document.querySelector("main");
+        const nav = document.querySelector("nav");
+        const aside = document.querySelector("aside");
 
-    // Após a transição, remove o skeleton e revela o conteúdo
-    setTimeout(() => {
-        skeleton.remove();
+        // Fade out inicial do skeleton
+        skeleton.style.transition = "opacity 0.3s ease";
+        skeleton.style.opacity = "0";
 
-        // Revela o conteúdo com uma transição suave
-        [main, nav, aside].forEach(el => {
-            if (el) {
-                el.style.transition = "opacity 0.3s ease";
-                el.style.opacity = "1";
-            }
+        // Após a transição, esconde o esqueleto (mantendo no DOM) e revela o conteúdo
+        setTimeout(() => {
+            skeleton.style.display = "none";
+
+            [main, nav, aside].forEach(el => {
+                if (el) {
+                    el.style.transition = "opacity 0.3s ease";
+                    el.style.opacity = "1";
+                }
+            });
+        }, 300);
+    }
+
+    // Configurar ouvintes de eventos para navegação (menu e seletor de mês)
+    const initSkeletonEvents = () => {
+        // Links do menu
+        const menuLinks = document.querySelectorAll("aside.menu a, .menu-mobile a, #menu-gaveta a, .container-mais-opt a");
+        menuLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                const href = this.getAttribute("href");
+                if (href && !href.startsWith("javascript:") && href !== "#" && !this.target && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    if (typeof window.mostrarSkeleton === "function") {
+                        window.mostrarSkeleton();
+                    }
+                }
+            });
         });
-    }, 300);
+
+        // Seletor de mês
+        const seletoresMes = document.querySelectorAll(".seletor-mes");
+        seletoresMes.forEach(select => {
+            select.addEventListener("change", function () {
+                if (typeof window.mostrarSkeleton === "function") {
+                    window.mostrarSkeleton();
+                }
+            });
+        });
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initSkeletonEvents);
+    } else {
+        initSkeletonEvents();
+    }
 })();

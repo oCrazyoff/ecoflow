@@ -38,7 +38,7 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
 
     <?php
     // Determina se esta rota precisa de skeleton
-    $temSkeleton = in_array($rota, ['login', 'cadastro', 'dashboard', 'perfil', 'rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos']);
+    $temSkeleton = in_array($rota, ['login', 'cadastro', 'dashboard', 'perfil', 'rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos', 'mais']);
     if ($temSkeleton): ?>
     <style>
         /* Esconde o conteúdo real até o skeleton sumir */
@@ -64,7 +64,7 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
         require_once __DIR__ . "/../skeletons/dashboard.php";
     } elseif ($rota === 'perfil') {
         require_once __DIR__ . "/../skeletons/perfil.php";
-    } elseif (in_array($rota, ['rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos'])) {
+    } elseif (in_array($rota, ['rendas', 'despesas', 'categorias', 'relatorios', 'usuarios', 'avisos', 'mais'])) {
         require_once __DIR__ . "/../skeletons/table.php";
     }
     ?>

@@ -440,9 +440,6 @@
   .hidden {
     display: none;
   }
-  .inline {
-    display: inline;
-  }
   .inline-block {
     display: inline-block;
   }
@@ -1243,20 +1240,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-indigo-100);
-      }
-    }
-  }
-  .hover\:bg-orange-50 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-orange-50);
-      }
-    }
-  }
-  .hover\:bg-purple-50 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-purple-50);
       }
     }
   }
@@ -2243,26 +2226,35 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: calc(var(--spacing) * 3);
+          gap: calc(var(--spacing) * 2);
           font-size: var(--text-xl);
           line-height: var(--tw-leading, var(--text-xl--line-height));
-          @media (width >= 64rem) {
-            gap: calc(var(--spacing) * 5);
-          }
-          & .btn-visu, .btn-edita, .btn-deleta {
+          & .btn-visu, .btn-edita, .btn-deleta, .btn-adianta, .btn-cancelar-adiantamento {
+            display: flex;
             height: calc(var(--spacing) * 10);
             width: calc(var(--spacing) * 10);
             cursor: pointer;
+            align-items: center;
+            justify-content: center;
             border-radius: var(--radius-lg);
             &:hover {
               background-color: var(--color-gray-200);
             }
+          }
+          & .btn-visu {
+            color: var(--color-green-500);
           }
           & .btn-edita {
             color: var(--color-blue-500);
           }
           & .btn-deleta {
             color: var(--color-red-500);
+          }
+          & .btn-adianta {
+            color: var(--color-purple-600);
+          }
+          & .btn-cancelar-adiantamento {
+            color: var(--color-orange-500);
           }
         }
       }
