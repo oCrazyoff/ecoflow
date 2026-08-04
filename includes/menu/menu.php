@@ -39,8 +39,8 @@
 </div>
 
 <!-- Drawer / Gaveta -->
-<div id="menu-gaveta-overlay" class="fixed inset-0 bg-black/50 z-[201] hidden opacity-0 transition-opacity duration-300" onclick="toggleMenuGaveta()"></div>
-<div id="menu-gaveta" class="fixed bottom-0 left-0 w-full bg-white rounded-t-3xl z-[202] transform translate-y-full transition-transform duration-300 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+<div id="menu-gaveta-overlay" class="fixed inset-0 bg-black/50 z-[10001] hidden opacity-0 transition-opacity duration-300" onclick="toggleMenuGaveta()"></div>
+<div id="menu-gaveta" class="fixed bottom-0 left-0 w-full bg-white rounded-t-3xl z-[10002] transform translate-y-full transition-transform duration-300 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
     <div class="p-6">
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6"></div>
         
