@@ -13,7 +13,7 @@ $dia = date('d');
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-        <form id="modal-form" action="#" method="POST">
+        <form id="modal-form" action="#" method="POST" data-ajax="true">
             <!--CSRF-->
             <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
             <?php
@@ -241,22 +241,36 @@ $dia = date('d');
         });
     });
 
-    // digitação dinamica valor
-    const inputValor = document.getElementById('valor');
+    // Formatação em tempo real do campo Valor (moeda BRL)
+    function formatarMoedaBRL(val) {
+        if (val === null || val === undefined) return '';
+        let digitos = val.toString().replace(/\D/g, '');
+        if (!digitos || digitos === '0' || digitos === '00') return '';
 
-    inputValor.addEventListener('input', function() {
-        // Remove tudo que não for número
-        let valor = this.value.replace(/\D/g, '');
+        let centavos = parseInt(digitos, 10);
+        if (isNaN(centavos) || centavos === 0) return '';
 
-        // Divide por 100 pra ter as casas decimais
-        valor = (valor / 100).toFixed(2) + '';
+        let valorDecimal = (centavos / 100).toFixed(2);
+        let partes = valorDecimal.split('.');
+        let inteiro = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        let decimal = partes[1];
 
-        // Troca o ponto por vírgula e adiciona separador de milhar
-        valor = valor.replace('.', ',');
-        valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `${inteiro},${decimal}`;
+    }
 
-        // Atualiza o campo
-        this.value = valor;
+    function formatarValorParaInput(val) {
+        if (val === null || val === undefined || val === '') return '';
+        let num = parseFloat(val);
+        if (isNaN(num)) return '';
+        let centavos = Math.round(num * 100);
+        return formatarMoedaBRL(centavos.toString());
+    }
+
+    // Delegação de evento no document para garantir que funcione sempre (mesmo se o modal for recarregado por AJAX)
+    document.addEventListener('input', function(e) {
+        if (e.target && (e.target.id === 'valor' || e.target.name === 'valor')) {
+            e.target.value = formatarMoedaBRL(e.target.value);
+        }
     });
 
     // Capitaliza a primeira letra
@@ -347,7 +361,13 @@ $dia = date('d');
 
             // Preenche os campos do form
             for (const campo in dados) {
-                if (form[campo]) form[campo].value = dados[campo];
+                if (form[campo]) {
+                    if (campo === 'valor') {
+                        form[campo].value = formatarValorParaInput(dados[campo]);
+                    } else {
+                        form[campo].value = dados[campo];
+                    }
+                }
             }
 
             // Atualiza toggles com os valores

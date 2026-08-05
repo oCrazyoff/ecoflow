@@ -123,60 +123,73 @@ document.addEventListener("DOMContentLoaded", () => {
         const modalForm = document.getElementById("modal-form");
         if (!modalForm) return;
 
-        modalForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
+        modalForm.removeEventListener("submit", handleModalFormSubmit);
+        modalForm.addEventListener("submit", handleModalFormSubmit);
+    }
 
-            const form = e.target;
-            const action = form.action;
-            const formData = new FormData(form);
+    /**
+     * Handler para submit do modal form
+     */
+    async function handleModalFormSubmit(e) {
+        e.preventDefault();
 
-            // Desabilita o botão de submit para evitar duplo clique e adiciona spinner
-            const btnSubmit = form.querySelector('button[type="submit"]');
-            let originalBtnContent = "";
+        const form = e.target;
+        const action = form.action;
+        const formData = new FormData(form);
+
+        // Desabilita o botão de submit para evitar duplo clique e adiciona spinner
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        let originalBtnContent = "";
+        if (btnSubmit) {
+            if (btnSubmit.disabled) return;
+
+            // Remove qualquer spinner residual se houver para evitar duplicação
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = btnSubmit.innerHTML;
+            tempDiv.querySelectorAll(".bi-arrow-repeat.animate-spin").forEach(icon => icon.remove());
+            originalBtnContent = tempDiv.innerHTML.trim();
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<i class="bi bi-arrow-repeat inline-block animate-spin"></i> ` + originalBtnContent;
+            btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+        }
+
+        try {
+            const resp = await fetch(action, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData
+            });
+
+            const data = await resp.json();
+
+            // Mostra a mensagem
+            if (data.mensagem) {
+                mostrarMensagem(data.mensagem);
+            }
+
+            if (data.sucesso) {
+                // Fecha o modal
+                const modal = document.getElementById("modal");
+                if (modal) modal.classList.add("hidden");
+
+                // Recarrega o conteúdo
+                await recarregarConteudo();
+            }
+
+        } catch (erro) {
+            console.error("Erro no envio do formulário:", erro);
+            mostrarMensagem("Erro ao processar a requisição.");
+        } finally {
+            // Re-habilita o botão
             if (btnSubmit) {
-                originalBtnContent = btnSubmit.innerHTML;
-                btnSubmit.disabled = true;
-                btnSubmit.innerHTML = `<i class="bi bi-arrow-repeat inline-block animate-spin"></i> ` + originalBtnContent;
-                btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalBtnContent;
+                btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
             }
-
-            try {
-                const resp = await fetch(action, {
-                    method: "POST",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    body: formData
-                });
-
-                const data = await resp.json();
-
-                // Mostra a mensagem
-                if (data.mensagem) {
-                    mostrarMensagem(data.mensagem);
-                }
-
-                if (data.sucesso) {
-                    // Fecha o modal
-                    const modal = document.getElementById("modal");
-                    if (modal) modal.classList.add("hidden");
-
-                    // Recarrega o conteúdo
-                    await recarregarConteudo();
-                }
-
-            } catch (erro) {
-                console.error("Erro no envio do formulário:", erro);
-                mostrarMensagem("Erro ao processar a requisição.");
-            } finally {
-                // Re-habilita o botão
-                if (btnSubmit) {
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = originalBtnContent;
-                    btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
-                }
-            }
-        });
+        }
     }
 
     // ========== INTERCEPTAÇÃO DOS FORMULÁRIOS DE DELETE ==========

@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const forms = document.querySelectorAll("form:not([data-ajax='true'])");
 
     forms.forEach(form => {
-        // Se for form de delete (tem btn-deleta), crud_ajax já trata.
-        if (form.querySelector('.btn-deleta')) return;
+        // Se for form de delete ou modal-form (tratados via AJAX pelo crud_ajax.js), ignora.
+        if (form.querySelector('.btn-deleta') || form.id === 'modal-form' || form.dataset.ajax === 'true') return;
 
         form.addEventListener("submit", function (e) {
             // Em HTML5, se o formulário for inválido, o evento submit não é acionado

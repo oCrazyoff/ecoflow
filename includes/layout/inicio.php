@@ -1,4 +1,7 @@
 <?php
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 date_default_timezone_set('America/Sao_Paulo');
 $rota = $_GET['url'] ?? ''; // rota atual
 
