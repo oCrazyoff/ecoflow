@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt_check_despesa = $conexao->prepare("SELECT id FROM despesas WHERE usuario_id = ? AND data = ? AND valor = ?");
 
         $stmt_insert_renda = $conexao->prepare("INSERT INTO rendas (usuario_id, descricao, valor, recorrente, data) VALUES (?, ?, ?, 0, ?)");
-        $stmt_insert_despesa = $conexao->prepare("INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data) VALUES (?, ?, ?, 1, 0, ?, ?)");
+        $stmt_insert_despesa = $conexao->prepare("INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, data_pagamento) VALUES (?, ?, ?, 1, 0, ?, ?, ?)");
 
         $cadastrados = 0;
         $ignorados = 0;
@@ -146,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $ignorados++; // Já existe
                 } else {
                     // Insere
-                    $stmt_insert_despesa->bind_param("isdis", $usuario_id, $descricao, $valor, $categoria_id, $data);
+                    $stmt_insert_despesa->bind_param("isdiss", $usuario_id, $descricao, $valor, $categoria_id, $data, $data);
                     if ($stmt_insert_despesa->execute()) $cadastrados++;
                 }
             }

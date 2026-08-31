@@ -5,6 +5,31 @@
 (function () {
     const skeleton = document.getElementById("skeleton-loader");
 
+    // Função para esconder o skeleton e revelar o conteúdo
+    function esconderSkeleton() {
+        const sk = document.getElementById("skeleton-loader");
+        const main = document.querySelector("main");
+        const nav = document.querySelector("nav");
+        const aside = document.querySelector("aside");
+
+        if (sk) {
+            sk.style.transition = "opacity 0.15s ease";
+            sk.style.opacity = "0";
+
+            setTimeout(() => {
+                sk.style.display = "none";
+                sk.style.pointerEvents = "none";
+
+                [main, nav, aside].forEach(el => {
+                    if (el) {
+                        el.style.transition = "opacity 0.15s ease";
+                        el.style.opacity = "1";
+                    }
+                });
+            }, 150);
+        }
+    }
+
     // Função global para reexibir o skeleton quando houver navegação
     window.mostrarSkeleton = function () {
         const sk = document.getElementById("skeleton-loader");
@@ -23,26 +48,25 @@
     };
 
     if (skeleton) {
-        const main = document.querySelector("main");
-        const nav = document.querySelector("nav");
-        const aside = document.querySelector("aside");
-
         // Fade out inicial do skeleton
-        skeleton.style.transition = "opacity 0.15s ease";
-        skeleton.style.opacity = "0";
+        esconderSkeleton();
 
-        // Após a transição, esconde o esqueleto (mantendo no DOM) e revela o conteúdo
+        // Timeout de segurança: se por algum motivo o skeleton não foi removido, forçar
         setTimeout(() => {
-            skeleton.style.display = "none";
-
-            [main, nav, aside].forEach(el => {
-                if (el) {
-                    el.style.transition = "opacity 0.15s ease";
-                    el.style.opacity = "1";
-                }
-            });
-        }, 150);
+            const sk = document.getElementById("skeleton-loader");
+            if (sk && sk.style.display !== "none") {
+                esconderSkeleton();
+            }
+        }, 15000);
     }
+
+    // Fix para BFCache (Back/Forward Cache)
+    // Quando o usuário volta com o botão do navegador, destravar o skeleton
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            esconderSkeleton();
+        }
+    });
 
     // Configurar ouvintes de eventos para navegação (menu e seletor de mês)
     const initSkeletonEvents = () => {
@@ -59,15 +83,8 @@
             });
         });
 
-        // Seletor de mês
-        const seletoresMes = document.querySelectorAll(".seletor-mes");
-        seletoresMes.forEach(select => {
-            select.addEventListener("change", function () {
-                if (typeof window.mostrarSkeleton === "function") {
-                    window.mostrarSkeleton();
-                }
-            });
-        });
+        // Seletor de mês — NÃO adicionar listener aqui pois o onchange inline já chama mostrarSkeleton
+        // Isso evita o disparo duplicado
     };
 
     if (document.readyState === "loading") {

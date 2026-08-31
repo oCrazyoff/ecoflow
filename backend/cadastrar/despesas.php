@@ -87,9 +87,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($i == 1) {
                     $data_parcela = $data;
                 } else {
-                    $data_obj = new DateTime($data);
-                    $data_obj->modify('+' . ($i - 1) . ' months');
-                    $data_parcela = $data_obj->format('Y-m-d');
+                    // Cálculo seguro para evitar pular meses (ex: 31/01 + 1 mês = 28/02, não 03/03)
+                    $data_base = new DateTime($data);
+                    $diaOriginal = (int)$data_base->format('d');
+                    $mesAlvo = (int)$data_base->format('m') + ($i - 1);
+                    $anoAlvo = (int)$data_base->format('Y');
+                    while ($mesAlvo > 12) {
+                        $mesAlvo -= 12;
+                        $anoAlvo++;
+                    }
+                    $ultimoDiaMes = (int)date('t', mktime(0, 0, 0, $mesAlvo, 1, $anoAlvo));
+                    $diaReal = min($diaOriginal, $ultimoDiaMes);
+                    $data_parcela = sprintf('%04d-%02d-%02d', $anoAlvo, $mesAlvo, $diaReal);
                 }
 
                 $stmt->bind_param(

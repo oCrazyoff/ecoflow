@@ -125,13 +125,20 @@ function responderJSON(bool $sucesso, string $mensagem): void
     exit;
 }
 
-function limparInsightsCache() {
+function limparInsightsCache($mes = null) {
     global $conexao;
     $usuario_id = $_SESSION['id'] ?? 0;
     if ($usuario_id > 0) {
-        $sql = "DELETE FROM insights WHERE usuario_id = ?";
-        $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("i", $usuario_id);
+        if ($mes !== null) {
+            $ano = (int)date('Y');
+            $sql = "DELETE FROM insights WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param("iii", $usuario_id, $mes, $ano);
+        } else {
+            $sql = "DELETE FROM insights WHERE usuario_id = ?";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param("i", $usuario_id);
+        }
         $stmt->execute();
         $stmt->close();
     }

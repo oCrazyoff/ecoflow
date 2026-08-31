@@ -2,90 +2,11 @@
 $titulo = "Dashboard";
 require_once "includes/layout/inicio.php";
 require_once "includes/dashboard/queries.php";
-require_once "api/ia.php";
 
 // ──────────────────────────────────────────────
-// Lógica do assistente IA (mantida do original)
+// Dados da dashboard (tudo síncrono e rápido — apenas SQL local)
 // ──────────────────────────────────────────────
 $mes = $_GET['m'] ?? date('m');
-$dia = date('d');
-// $dia = 16;
-$saldo = totalRendas() - despesasPagas();
-
-// Buscando insights do banco
-$sql_ia = "SELECT titulo, mensagem FROM insights WHERE usuario_id = ? AND MONTH(data) = ?";
-$stmt_ia = $conexao->prepare($sql_ia);
-$stmt_ia->bind_param("is", $_SESSION['id'], $mes);
-$stmt_ia->execute();
-$resultado_ia = $stmt_ia->get_result();
-$dados_ia = $resultado_ia->fetch_assoc();
-$stmt_ia->close();
-
-// Variáveis de saída
-$titulo_ia = '';
-$txt_ia = '';
-$expected_title_type = null; // 0=Meta, 1=Parabéns, 2=Alerta
-
-if ($mes == date('m')) {
-    // --- MÊS ATUAL ---
-    if ($dia <= 15) {
-        // Começo do mês: esperado é uma Meta
-        $expected_title_type = 0;
-    } else {
-        // Fim do mês: esperado é Parabéns ou Alerta
-        if ($saldo > 0) {
-            $expected_title_type = 1; // Parabéns
-        } elseif ($saldo < 0) {
-            $expected_title_type = 2; // Alerta
-        }
-    }
-} elseif ($mes < date('m')) {
-    // --- MÊS PASSADO ---
-    // Esperado é o resultado final: Parabéns ou Alerta
-    if ($saldo > 0) {
-        $expected_title_type = 1; // Parabéns
-    } elseif ($saldo < 0) {
-        $expected_title_type = 2; // Alerta
-    }
-}
-
-// Se há um estado esperado (não é mês futuro)
-if ($expected_title_type !== null) {
-
-    // CASO 1: Um insight salvo E o tipo dele bate com o esperado
-    if ($dados_ia && $dados_ia['titulo'] == $expected_title_type) {
-        $txt_ia = $dados_ia['mensagem'];
-
-        // Define o título com base no tipo
-        if ($expected_title_type == 0) $titulo_ia = 'Meta Financeira 🎯';
-        if ($expected_title_type == 1) $titulo_ia = 'Parabéns ✅';
-        if ($expected_title_type == 2) $titulo_ia = 'Alerta ⚠️';
-
-        // CASO 2: Insight salvo OU o tipo não bate (ex: esperava 'Parabéns' mas salvou 'Meta')
-    } else {
-        // Gera uma nova mensagem com base no tipo esperado
-        if ($expected_title_type == 0) {
-            $titulo_ia = 'Meta Financeira 🎯';
-            $txt_ia = gerarMeta($mes);
-        } elseif ($expected_title_type == 1) {
-            $titulo_ia = 'Parabéns ✅';
-            $txt_ia = gerarSucesso($mes);
-        } elseif ($expected_title_type == 2) {
-            $titulo_ia = 'Alerta ⚠️';
-            $txt_ia = gerarAlerta($mes);
-        }
-    }
-
-    // Se for começo do mês e o insight salvo NÃO for uma meta, forçar uma meta.
-    if ($mes == date('m') && $dia <= 15 && $dados_ia && $dados_ia['titulo'] != 0) {
-        $titulo_ia = 'Meta Financeira 🎯';
-        $txt_ia = gerarMeta($mes);
-    }
-}
-
-// ──────────────────────────────────────────────
-// Dados da dashboard
-// ──────────────────────────────────────────────
 $tem_dados = (totalRendas() > 0 || totalDespesas() > 0);
 $dados_comparacao = getDadosComparacao();
 $dados_categorias = getCategoriasDespesas();
@@ -203,69 +124,115 @@ $dados_indicadores = getIndicadores();
     // ──────────────────────────────────────────────
     // Chart.js — Histórico dos últimos 6 meses
     // ──────────────────────────────────────────────
-    const ctxHistorico = document.getElementById('historicoChart');
-    if (ctxHistorico) {
-        new Chart(ctxHistorico, {
-            type: 'bar',
-            data: {
-                labels: <?= json_encode(array_column($dados_historico, 'mes')) ?>,
-                datasets: [
-                    {
-                        label: 'Receitas',
-                        data: <?= json_encode(array_column($dados_historico, 'receitas')) ?>,
-                        backgroundColor: 'rgba(52, 211, 153, 0.7)',
-                        borderColor: 'rgba(52, 211, 153, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                    },
-                    {
-                        label: 'Despesas',
-                        data: <?= json_encode(array_column($dados_historico, 'despesas')) ?>,
-                        backgroundColor: 'rgba(248, 113, 113, 0.7)',
-                        borderColor: 'rgba(248, 113, 113, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                borderRadius: 6,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 20,
-                            font: { size: 12 }
+    try {
+        const ctxHistorico = document.getElementById('historicoChart');
+        if (ctxHistorico && typeof Chart !== 'undefined') {
+            new Chart(ctxHistorico, {
+                type: 'bar',
+                data: {
+                    labels: <?= json_encode(array_column($dados_historico, 'mes')) ?>,
+                    datasets: [
+                        {
+                            label: 'Receitas',
+                            data: <?= json_encode(array_column($dados_historico, 'receitas')) ?>,
+                            backgroundColor: 'rgba(52, 211, 153, 0.7)',
+                            borderColor: 'rgba(52, 211, 153, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                        },
+                        {
+                            label: 'Despesas',
+                            data: <?= json_encode(array_column($dados_historico, 'despesas')) ?>,
+                            backgroundColor: 'rgba(248, 113, 113, 0.7)',
+                            borderColor: 'rgba(248, 113, 113, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6,
                         }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': R$ ' + context.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                            }
-                        }
-                    }
+                    ]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'R$ ' + value.toLocaleString('pt-BR');
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    borderRadius: 6,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12 }
                             }
                         },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': R$ ' + context.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
                     },
-                    x: {
-                        grid: { display: false }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+    } catch (e) {
+        console.warn('Chart.js não pôde ser inicializado:', e.message);
     }
 </script>
 <?php endif; ?>
+
+<!-- Script de carregamento assíncrono do Assistente IA -->
+<script>
+(function() {
+    var mes = <?= json_encode($mes) ?>;
+    var containers = document.querySelectorAll('.assistente-ia-conteudo');
+    if (!containers.length) return;
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
+    }
+
+    function preencherContainers(html) {
+        containers.forEach(function(c) { c.innerHTML = html; });
+    }
+
+    fetch('<?= BASE_URL ?>obter_insight?m=' + encodeURIComponent(mes))
+        .then(function(resp) { return resp.json(); })
+        .then(function(data) {
+            if (data.sucesso && data.mensagem && data.mensagem.trim() !== '') {
+                preencherContainers(
+                    '<h4 class="titulo">' + escapeHtml(data.titulo) + '</h4>' +
+                    '<p>' + escapeHtml(data.mensagem) + '</p>'
+                );
+            } else {
+                preencherContainers(
+                    '<img class="bg-verde/20 rounded-2xl py-1 h-25" src="assets/img/esperar.svg" alt="Desenho de espera">' +
+                    '<p class="text-xs text-texto-opaco mt-2">Sem sugestões para este mês.</p>'
+                );
+            }
+        })
+        .catch(function() {
+            preencherContainers(
+                '<p class="text-sm text-texto-opaco text-center py-3">' +
+                '<i class="bi bi-exclamation-circle"></i> Não foi possível carregar o insight.</p>'
+            );
+        });
+})();
+</script>
+
 <?php require_once "includes/layout/fim.php" ?>

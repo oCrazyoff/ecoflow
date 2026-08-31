@@ -73,6 +73,9 @@ $routes = [
 
     // rotas da função aviso
     'marcar_aviso_visto' => 'backend/aviso/marcar_visto.php',
+
+    // rota da IA assíncrona
+    'obter_insight' => 'backend/ia/obter_insight.php',
 ];
 
 if (array_key_exists($url, $routes)) {
