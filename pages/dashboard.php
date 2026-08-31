@@ -212,8 +212,21 @@ $dados_indicadores = getIndicadores();
     }
 
     fetch('<?= BASE_URL ?>obter_insight?m=' + encodeURIComponent(mes))
-        .then(function(resp) { return resp.json(); })
-        .then(function(data) {
+        .then(function(resp) {
+            if (!resp.ok) {
+                throw new Error('HTTP ' + resp.status);
+            }
+            return resp.text(); // Lê como texto primeiro
+        })
+        .then(function(text) {
+            var data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error('Resposta inválida do servidor (não é JSON):', text);
+                throw new Error('JSON Inválido');
+            }
+
             if (data.sucesso && data.mensagem && data.mensagem.trim() !== '') {
                 preencherContainers(
                     '<h4 class="titulo">' + escapeHtml(data.titulo) + '</h4>' +
@@ -226,7 +239,8 @@ $dados_indicadores = getIndicadores();
                 );
             }
         })
-        .catch(function() {
+        .catch(function(erro) {
+            console.error('Erro na requisição da IA:', erro.message);
             preencherContainers(
                 '<p class="text-sm text-texto-opaco text-center py-3">' +
                 '<i class="bi bi-exclamation-circle"></i> Não foi possível carregar o insight.</p>'

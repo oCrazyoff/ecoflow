@@ -11,6 +11,9 @@
  */
 header('Content-Type: application/json; charset=utf-8');
 
+// Permite que o script rode por mais tempo para aguardar a resposta da IA
+set_time_limit(60);
+
 require_once __DIR__ . '/../valida.php';
 require_once __DIR__ . '/../../api/ia.php';
 require_once __DIR__ . '/../../includes/dashboard/queries.php';
