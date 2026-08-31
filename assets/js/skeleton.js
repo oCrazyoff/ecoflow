@@ -28,7 +28,7 @@
         const aside = document.querySelector("aside");
 
         // Fade out inicial do skeleton
-        skeleton.style.transition = "opacity 0.3s ease";
+        skeleton.style.transition = "opacity 0.15s ease";
         skeleton.style.opacity = "0";
 
         // Após a transição, esconde o esqueleto (mantendo no DOM) e revela o conteúdo
@@ -37,11 +37,11 @@
 
             [main, nav, aside].forEach(el => {
                 if (el) {
-                    el.style.transition = "opacity 0.3s ease";
+                    el.style.transition = "opacity 0.15s ease";
                     el.style.opacity = "1";
                 }
             });
-        }, 300);
+        }, 150);
     }
 
     // Configurar ouvintes de eventos para navegação (menu e seletor de mês)

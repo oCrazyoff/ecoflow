@@ -445,9 +445,6 @@
   .inline-block {
     display: inline-block;
   }
-  .inline-flex {
-    display: inline-flex;
-  }
   .h-1\.5 {
     height: calc(var(--spacing) * 1.5);
   }

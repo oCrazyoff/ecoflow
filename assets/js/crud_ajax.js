@@ -33,6 +33,60 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
+     * Re-inicializa os event listeners dos toggle buttons do modal
+     */
+    function reattachToggleListeners() {
+        document.querySelectorAll('.toggle-group').forEach(group => {
+            group.querySelectorAll('.toggle-btn').forEach(btn => {
+                // Clona e substitui para remover listeners antigos
+                const novoBotao = btn.cloneNode(true);
+                btn.parentNode.replaceChild(novoBotao, btn);
+            });
+
+            group.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const hiddenInput = group.previousElementSibling;
+                    if (hiddenInput && hiddenInput.type === 'hidden') {
+                        hiddenInput.value = this.dataset.value;
+                    }
+
+                    // Lógica condicional: Parcelado <-> Recorrente
+                    if (group.id === 'toggle-parcelado') {
+                        const containerRecorrente = document.getElementById('container-recorrente');
+                        const containerParcelas = document.getElementById('container-parcelas');
+                        if (this.dataset.value === '1') {
+                            if (containerRecorrente) containerRecorrente.classList.add('hidden');
+                            if (containerParcelas) containerParcelas.classList.remove('hidden');
+                            const recorrenteInput = document.getElementById('recorrente');
+                            if (recorrenteInput) recorrenteInput.value = '0';
+                        } else {
+                            if (containerRecorrente) containerRecorrente.classList.remove('hidden');
+                            if (containerParcelas) containerParcelas.classList.add('hidden');
+                            const numParcelas = document.getElementById('num_parcelas');
+                            if (numParcelas) numParcelas.value = '';
+                        }
+                    }
+
+                    if (group.id === 'toggle-recorrente') {
+                        const containerParcelado = document.getElementById('container-parcelado-wrapper');
+                        const containerParcelas = document.getElementById('container-parcelas');
+                        if (this.dataset.value === '1') {
+                            if (containerParcelado) containerParcelado.classList.add('hidden');
+                            if (containerParcelas) containerParcelas.classList.add('hidden');
+                            const parceladoInput = document.getElementById('parcelado');
+                            if (parceladoInput) parceladoInput.value = '0';
+                        } else {
+                            if (containerParcelado) containerParcelado.classList.remove('hidden');
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Recarrega o conteúdo da página atual sem reload completo
      */
     async function recarregarConteudo() {
@@ -57,29 +111,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const modalNovo = doc.getElementById("modal");
 
             if (modalAtual && modalNovo) {
-                // Substitui o modal inteiro
-                modalAtual.parentNode.replaceChild(modalNovo, modalAtual);
-
-                // Re-executa os scripts do modal
-                const scripts = modalNovo.querySelectorAll("script");
-                scripts.forEach(script => {
-                    const novoScript = document.createElement("script");
-                    novoScript.textContent = script.textContent;
-                    document.body.appendChild(novoScript);
-                });
+                // Substitui apenas o innerHTML do modal para manter o nó no DOM
+                modalAtual.innerHTML = modalNovo.innerHTML;
+                // Garante que o modal fique escondido após a atualização
+                modalAtual.classList.add("hidden");
             }
 
             // Atualiza os modais de visualização (avisos admin)
-            doc.querySelectorAll(".modal-visualizar").forEach(modalNovo => {
-                const id = modalNovo.id;
+            doc.querySelectorAll(".modal-visualizar").forEach(modalVisualizarNovo => {
+                const id = modalVisualizarNovo.id;
                 const modalExistente = document.getElementById(id);
                 if (modalExistente) {
-                    modalExistente.parentNode.replaceChild(modalNovo.cloneNode(true), modalExistente);
+                    modalExistente.parentNode.replaceChild(modalVisualizarNovo.cloneNode(true), modalExistente);
                 } else {
                     // Se é um modal novo, adiciona ao body
                     const mainEl = document.querySelector("main");
                     if (mainEl && mainEl.nextSibling) {
-                        mainEl.parentNode.insertBefore(modalNovo.cloneNode(true), mainEl.nextSibling);
+                        mainEl.parentNode.insertBefore(modalVisualizarNovo.cloneNode(true), mainEl.nextSibling);
                     }
                 }
             });
@@ -90,8 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Re-attach o listener do modal form no novo modal
             attachModalFormListener();
 
-            // Re-attach o listener do trocarStatus se existir na página de despesas
-            reattachTrocarStatus(doc);
+            // Re-attach os toggle listeners do modal
+            reattachToggleListeners();
 
         } catch (erro) {
             console.error("Erro ao recarregar conteúdo:", erro);
@@ -100,19 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /**
-     * Re-attach a função trocarStatus para a página de despesas
-     */
-    function reattachTrocarStatus(doc) {
-        // Verifica se existe a função trocarStatus (página de despesas)
-        const scriptsDespesas = doc.querySelectorAll("main + script, main script");
-        scriptsDespesas.forEach(script => {
-            if (script.textContent.includes("trocarStatus")) {
-                // A função trocarStatus já está definida globalmente, 
-                // os botões com onclick já apontam para ela
-            }
-        });
-    }
+
 
     // ========== INTERCEPTAÇÃO DO MODAL FORM (CADASTRAR / EDITAR) ==========
 

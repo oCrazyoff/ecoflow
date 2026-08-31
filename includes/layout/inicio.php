@@ -34,8 +34,10 @@ if (!isset($_GET['m']) || $_GET['m'] < 0 || $_GET['m'] > 13) {
     <link href="<?= BASE_URL ?>assets/css/output.css?v=<?= time() ?>" rel="stylesheet">
     <link rel="shortcut icon" href="<?= BASE_URL . "assets/img/logo.png" ?>" type="image/x-icon">
 
-    <!--CHART JS-->
+    <!--CHART JS - somente no dashboard-->
+    <?php if ($rota === 'dashboard'): ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php endif; ?>
 
     <title><?= htmlspecialchars((isset($titulo) ? $titulo . " • EcoFlow" : 'EcoFlow')) ?></title>
 
