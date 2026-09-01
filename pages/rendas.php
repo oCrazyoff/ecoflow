@@ -2,6 +2,10 @@
 $titulo = "Rendas";
 require_once "includes/layout/inicio.php";
 
+// Detectar se o mês selecionado é futuro (para exibir botão de adiantar)
+$mesAtualNum = (int)date('n');
+$mesFuturo = (isset($m) && $m > $mesAtualNum);
+
 //puxando todas as rendas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
     $sql = "SELECT id, descricao, valor, recorrente, data FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
@@ -25,6 +29,12 @@ while ($row = $result->fetch_assoc()) {
         <h2>Rendas</h2>
         <div class="container-btn-tabela">
             <?php require_once "includes/seletor_mes.php" ?>
+            <?php if ($mesFuturo): ?>
+                <button onclick="abrirModalAdiantarMes()" class="border border-emerald-300 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg px-3 py-2 cursor-pointer flex items-center gap-1.5 text-sm font-medium">
+                    <i class="bi bi-fast-forward-fill"></i>
+                    <span>Adiantar</span>
+                </button>
+            <?php endif; ?>
             <button onclick="abrirCadastrarModal('rendas')"><i class="bi bi-plus"></i> <span>Nova Renda</span></button>
         </div>
     </div>
@@ -172,5 +182,11 @@ while ($row = $result->fetch_assoc()) {
     }
 </script>
 <?php $tipo_modal = "rendas" ?>
+
+<?php if ($mesFuturo): ?>
+    <?php $tipo_adiantar = "rendas" ?>
+    <?php require_once "includes/modal_adiantar_mes.php" ?>
+<?php endif; ?>
+
 <?php require_once "includes/modal.php" ?>
 <?php require_once "includes/layout/fim.php" ?>

@@ -2,29 +2,17 @@
 $titulo = "Despesas";
 require_once "includes/layout/inicio.php";
 
-// Nomes dos meses para exibição
-$nomesMeses = [
-    1 => 'Janeiro',
-    2 => 'Fevereiro',
-    3 => 'Março',
-    4 => 'Abril',
-    5 => 'Maio',
-    6 => 'Junho',
-    7 => 'Julho',
-    8 => 'Agosto',
-    9 => 'Setembro',
-    10 => 'Outubro',
-    11 => 'Novembro',
-    12 => 'Dezembro'
-];
+// Detectar se o mês selecionado é futuro (para exibir botão de adiantar)
+$mesAtualNum = (int)date('n');
+$mesFuturo = (isset($m) && $m > $mesAtualNum);
 
 // puxando todas as despesas do mês e ano
 if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, adiantamento_ref_id, data_pagamento, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('ii', $_SESSION['id'], $m);
 } else {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, adiantamento_ref_id, data_pagamento, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
+    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param('i', $_SESSION['id']);
 }
@@ -42,32 +30,6 @@ while ($row = $result->fetch_assoc()) {
     $stmt_categoria->close();
 
     $row['nome_categoria'] = $nome_categoria;
-
-    // Se é adiantamento (tipo=1), buscar o mês de referência
-    if ($row['tipo'] == 1 && $row['adiantamento_ref_id']) {
-        $sqlRef = "SELECT MONTH(data) as mes_ref, YEAR(data) as ano_ref FROM despesas WHERE id = ?";
-        $stmtRef = $conexao->prepare($sqlRef);
-        $stmtRef->bind_param("i", $row['adiantamento_ref_id']);
-        $stmtRef->execute();
-        $stmtRef->bind_result($mesRef, $anoRef);
-        $stmtRef->fetch();
-        $stmtRef->close();
-        $row['mes_ref_nome'] = $nomesMeses[$mesRef] ?? $mesRef;
-        $row['ano_ref'] = $anoRef;
-    }
-
-    // Se é pago antecipadamente (status=2), buscar quando foi pago
-    if ($row['status'] == 2 && $row['adiantamento_ref_id']) {
-        $sqlPag = "SELECT MONTH(data) as mes_pag FROM despesas WHERE id = ?";
-        $stmtPag = $conexao->prepare($sqlPag);
-        $stmtPag->bind_param("i", $row['adiantamento_ref_id']);
-        $stmtPag->execute();
-        $stmtPag->bind_result($mesPag);
-        $stmtPag->fetch();
-        $stmtPag->close();
-        $row['mes_pagamento_nome'] = $nomesMeses[$mesPag] ?? $mesPag;
-    }
-
     $despesas[] = $row;
 }
 ?>
@@ -76,6 +38,12 @@ while ($row = $result->fetch_assoc()) {
         <h2>Despesas</h2>
         <div class="container-btn-tabela">
             <?php require_once "includes/seletor_mes.php" ?>
+            <?php if ($mesFuturo): ?>
+                <button onclick="abrirModalAdiantarMes()" class="border border-purple-300 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg px-3 py-2 cursor-pointer flex items-center gap-1.5 text-sm font-medium">
+                    <i class="bi bi-fast-forward-fill"></i>
+                    <span>Adiantar</span>
+                </button>
+            <?php endif; ?>
             <button onclick="abrirCadastrarModal('despesas')"><i class="bi bi-plus"></i>
                 <span>Nova Despesa</span></button>
         </div>
@@ -88,37 +56,26 @@ while ($row = $result->fetch_assoc()) {
             <div class="mobile-cards md:hidden flex flex-col gap-4">
                 <?php foreach ($despesas as $row): ?>
                     <div
-                        class="bg-white border border-borda rounded-lg p-4 flex flex-col gap-3 <?= ($row['tipo'] == 1) ? 'border-l-4 border-l-purple-400' : '' ?> <?= ($row['status'] == 2) ? 'border-l-4 border-l-green-400' : '' ?>">
+                        class="bg-white border border-borda rounded-lg p-4 flex flex-col gap-3">
                         <div class="flex justify-between items-start">
                             <div class="font-bold text-lg text-texto">
-                                <?php if ($row['tipo'] == 1): ?>
-                                    <span class="text-purple-600">⏩</span>
-                                <?php endif; ?>
                                 <?= htmlspecialchars($row['descricao']) ?>
                             </div>
                             <div class="flex gap-2 text-xl">
-                                <?php if ($row['status'] != 2 && $row['tipo'] != 1): ?>
+                                <button
+                                    class="text-blue-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center"
+                                    onclick="abrirEditarModal('despesas', <?= htmlspecialchars($row['id']) ?>)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form action="deletar_despesas" method="POST" class="m-0 flex">
+                                    <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                    <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
                                     <button
-                                        class="text-blue-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center"
-                                        onclick="abrirEditarModal('despesas', <?= htmlspecialchars($row['id']) ?>)">
-                                        <i class="bi bi-pencil"></i>
+                                        class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta"
+                                        type="submit">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
-                                    <form action="deletar_despesas" method="POST" class="m-0 flex">
-                                        <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
-                                        <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
-                                        <button
-                                            class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta"
-                                            type="submit">
-                                            <i class="bi bi-trash3"></i>
-                                        </button>
-                                    </form>
-                                <?php elseif ($row['tipo'] == 1 || $row['status'] == 2): ?>
-                                    <button
-                                        class="text-orange-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center"
-                                        onclick="cancelarAdiantamento(<?= $row['id'] ?>)" title="Cancelar adiantamento">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
-                                <?php endif; ?>
+                                </form>
                             </div>
                         </div>
 
@@ -128,12 +85,7 @@ while ($row = $result->fetch_assoc()) {
                             <span>&bull;</span>
                             <span><?= htmlspecialchars(formatarData($row['data'])) ?></span>
 
-                            <?php if ($row['tipo'] == 1): ?>
-                                <span>&bull;</span>
-                                <span class="bg-purple-50 text-purple-600 px-2 py-0.5 rounded flex items-center gap-1">
-                                    ⏩ Adiantamento (<?= $row['mes_ref_nome'] ?? '' ?>)
-                                </span>
-                            <?php elseif (!empty($row['parcela_grupo'])): ?>
+                            <?php if (!empty($row['parcela_grupo'])): ?>
                                 <span>&bull;</span>
                                 <span
                                     class="items-center gap-1.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-amber-700 px-2.5 py-0.5 rounded-md shadow-sm">
@@ -142,7 +94,7 @@ while ($row = $result->fetch_assoc()) {
                                     <span class="text-amber-400">/</span>
                                     <span class="font-semibold"><?= $row['parcela_total'] ?></span>
                                 </span>
-                            <?php elseif ($row['status'] != 2): ?>
+                            <?php else: ?>
                                 <span>&bull;</span>
                                 <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)"
                                     class="flex items-center justify-center cursor-pointer">
@@ -159,43 +111,19 @@ while ($row = $result->fetch_assoc()) {
                                     <?php endif; ?>
                                 </button>
                             <?php endif; ?>
-
-                            <?php if ($row['status'] == 2): ?>
-                                <span>&bull;</span>
-                                <span class="bg-green-50 text-green-600 px-2 py-0.5 rounded flex items-center gap-1">
-                                    ⏩ Pago antecipadamente (<?= $row['mes_pagamento_nome'] ?? '' ?>)
-                                </span>
-                            <?php endif; ?>
                         </div>
 
                         <hr class="border-borda my-1">
 
                         <div class="flex justify-between items-center mt-1">
                             <div>
-                                <?php if ($row['tipo'] == 1): ?>
-                                    <span class="btn-pago text-xs md:text-base">Pago</span>
-                                <?php elseif ($row['status'] == 2): ?>
-                                    <span
-                                        class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs md:text-base font-medium">Pago
-                                        Antecipadamente</span>
-                                <?php else: ?>
-                                    <button data-id="<?= $row['id'] ?>" onclick="trocarStatus(this)">
-                                        <?php if ($row['status'] == 0): ?>
-                                            <span class="btn-pendente text-xs md:text-base">Pendente</span>
-                                        <?php else: ?>
-                                            <span class="btn-pago text-xs md:text-base">Pago</span>
-                                        <?php endif; ?>
-                                    </button>
-                                <?php endif; ?>
-
-                                <?php if ($row['recorrente'] == 1 && $row['tipo'] == 0 && $row['status'] != 2): ?>
-                                    <button
-                                        onclick="abrirModalAdiantamento(<?= $row['id'] ?>, '<?= htmlspecialchars($row['descricao'], ENT_QUOTES) ?>', '<?= $row['valor'] ?>')"
-                                        class="ml-2 text-purple-600 hover:text-purple-800 text-xs cursor-pointer"
-                                        title="Adiantar próximo mês">
-                                        <i class="bi bi-fast-forward-fill"></i> Adiantar
-                                    </button>
-                                <?php endif; ?>
+                                <button data-id="<?= $row['id'] ?>" onclick="trocarStatus(this)">
+                                    <?php if ($row['status'] == 0): ?>
+                                        <span class="btn-pendente text-xs md:text-base">Pendente</span>
+                                    <?php else: ?>
+                                        <span class="btn-pago text-xs md:text-base">Pago</span>
+                                    <?php endif; ?>
+                                </button>
                             </div>
                             <div class="text-red-500 font-bold whitespace-nowrap text-lg">
                                 - <?= htmlspecialchars(formatarReais($row['valor'])) ?>
@@ -221,38 +149,18 @@ while ($row = $result->fetch_assoc()) {
                     </thead>
                     <tbody>
                         <?php foreach ($despesas as $row): ?>
-                            <tr
-                                class="<?= ($row['tipo'] == 1) ? 'bg-purple-50/50' : '' ?> <?= ($row['status'] == 2) ? 'bg-green-50/50' : '' ?>">
+                            <tr>
                                 <td class="font-bold">
-                                    <?php if ($row['tipo'] == 1): ?>
-                                        <span class="text-purple-600">⏩</span>
-                                    <?php endif; ?>
                                     <?= htmlspecialchars($row['descricao']) ?>
-                                    <?php if ($row['tipo'] == 1): ?>
-                                        <br><small class="text-purple-500 font-normal">↳ Ref.
-                                            <?= $row['mes_ref_nome'] ?? '' ?>/<?= $row['ano_ref'] ?? '' ?></small>
-                                    <?php elseif ($row['status'] == 2): ?>
-                                        <br><small class="text-green-600 font-normal">↳ Pago em
-                                            <?= $row['mes_pagamento_nome'] ?? '' ?>/<?= date('Y') ?></small>
-                                    <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if ($row['tipo'] == 1): ?>
-                                        <span class="btn-pago">Pago</span>
-                                    <?php elseif ($row['status'] == 2): ?>
-                                        <span
-                                            class="whitespace-nowrap bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                                            Pago Antecipadamente
-                                        </span>
-                                    <?php else: ?>
-                                        <button data-id="<?= $row['id'] ?>" onclick="trocarStatus(this)">
-                                            <?php if ($row['status'] == 0): ?>
-                                                <span class="btn-pendente">Pendente</span>
-                                            <?php else: ?>
-                                                <span class="btn-pago">Pago</span>
-                                            <?php endif; ?>
-                                        </button>
-                                    <?php endif; ?>
+                                    <button data-id="<?= $row['id'] ?>" onclick="trocarStatus(this)">
+                                        <?php if ($row['status'] == 0): ?>
+                                            <span class="btn-pendente">Pendente</span>
+                                        <?php else: ?>
+                                            <span class="btn-pago">Pago</span>
+                                        <?php endif; ?>
+                                    </button>
                                 </td>
                                 <td class="text-red-500 whitespace-nowrap"><?= htmlspecialchars(formatarReais($row['valor'])) ?>
                                 </td>
@@ -261,17 +169,7 @@ while ($row = $result->fetch_assoc()) {
                                 </td>
                                 <td><?= htmlspecialchars(formatarData($row['data'])) ?></td>
                                 <td>
-                                    <?php if ($row['tipo'] == 1): ?>
-                                        <span
-                                            class="whitespace-nowrap w-full border border-purple-200 bg-purple-50 text-purple-600 rounded-full px-5 py-1">
-                                            Adiantamento
-                                        </span>
-                                    <?php elseif ($row['status'] == 2): ?>
-                                        <span
-                                            class="whitespace-nowrap w-full border border-green-200 bg-green-50 text-green-600 rounded-full px-5 py-1">
-                                            Recorrente
-                                        </span>
-                                    <?php elseif (!empty($row['parcela_grupo'])): ?>
+                                    <?php if (!empty($row['parcela_grupo'])): ?>
                                         <span
                                             class="whitespace-nowrap w-full items-center justify-center gap-1.5 border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 rounded-full px-5 py-1 shadow-sm">
                                             <i class="bi bi-layers-half"></i>
@@ -279,7 +177,6 @@ while ($row = $result->fetch_assoc()) {
                                             <span class="text-amber-400">/</span>
                                             <span class="font-semibold"><?= $row['parcela_total'] ?></span>
                                         </span>
-
                                     <?php else: ?>
                                         <button data-id="<?= $row['id'] ?>" onclick="trocarRecorrente(this)">
                                             <?php if ($row['recorrente'] == 1): ?>
@@ -297,31 +194,17 @@ while ($row = $result->fetch_assoc()) {
                                     <?php endif; ?>
                                 </td>
                                 <td class="acoes">
-                                    <?php if ($row['status'] != 2 && $row['tipo'] != 1): ?>
-                                        <?php if ($row['recorrente'] == 1): ?>
-                                            <button class="btn-adianta"
-                                                onclick="abrirModalAdiantamento(<?= $row['id'] ?>, '<?= htmlspecialchars($row['descricao'], ENT_QUOTES) ?>', '<?= $row['valor'] ?>')"
-                                                title="Adiantar próximo mês">
-                                                <i class="bi bi-fast-forward-fill"></i>
-                                            </button>
-                                        <?php endif; ?>
-                                        <button class="btn-edita"
-                                            onclick="abrirEditarModal('despesas', <?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <form action="deletar_despesas" method="POST">
-                                            <!--csrf-->
-                                            <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
-                                            <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
+                                    <button class="btn-edita"
+                                        onclick="abrirEditarModal('despesas', <?= htmlspecialchars($row['id']) ?>)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form action="deletar_despesas" method="POST">
+                                        <!--csrf-->
+                                        <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
+                                        <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
 
-                                            <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
-                                        </form>
-                                    <?php else: ?>
-                                        <button class="btn-cancelar-adiantamento" onclick="cancelarAdiantamento(<?= $row['id'] ?>)"
-                                            title="Cancelar adiantamento">
-                                            <i class="bi bi-x-circle"></i>
-                                        </button>
-                                    <?php endif; ?>
+                                        <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -342,8 +225,11 @@ while ($row = $result->fetch_assoc()) {
     <?php endif; ?>
 </main>
 
-<!-- Modal de Adiantamento -->
-<?php require_once "includes/modal_adiantamento.php" ?>
+<!-- Modal de Adiantar Mês (aparece apenas se mês futuro) -->
+<?php if ($mesFuturo): ?>
+    <?php $tipo_adiantar = "despesas" ?>
+    <?php require_once "includes/modal_adiantar_mes.php" ?>
+<?php endif; ?>
 
 <script>
     function trocarRecorrente(botao) {
@@ -374,8 +260,6 @@ while ($row = $result->fetch_assoc()) {
                             span.textContent = "Não Recorrente";
                         }
                     }
-                    // Recarregar para atualizar o botão de adiantar
-                    setTimeout(() => location.reload(), 300);
                 }
             });
     }
@@ -407,25 +291,6 @@ while ($row = $result->fetch_assoc()) {
                     }
                 }
             });
-    }
-
-    function cancelarAdiantamento(id) {
-        if (!confirm('Deseja realmente cancelar este adiantamento?')) return;
-
-        fetch("cancelar_adiantamento", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data.sucesso) {
-                    location.reload();
-                } else {
-                    alert(data.mensagem || 'Erro ao cancelar adiantamento.');
-                }
-            })
-            .catch(() => alert('Erro de conexão. Tente novamente.'));
     }
 </script>
 

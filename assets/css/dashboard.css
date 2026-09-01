@@ -588,4 +588,46 @@
       width: 0;
     }
   }
+
+  .ia-loading {
+    @apply flex flex-col items-center justify-center gap-3 py-4;
+  }
+
+  .ia-loading-icon {
+    animation: iaGlow 1.5s ease-in-out infinite alternate;
+  }
+
+  .ia-progress-bar {
+    @apply w-full h-1 bg-gray-200 rounded overflow-hidden mt-1;
+  }
+
+  .ia-progress-fill {
+    @apply h-full bg-verde rounded w-1/2;
+    animation: iaSlide 1.5s infinite linear;
+  }
+
+  .ia-loaded {
+    @apply opacity-0;
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
+
+  @keyframes iaGlow {
+    from {
+      transform: scale(0.95);
+      opacity: 0.7;
+    }
+    to {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes iaSlide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
 }

@@ -208,7 +208,10 @@ $dados_indicadores = getIndicadores();
     }
 
     function preencherContainers(html) {
-        containers.forEach(function(c) { c.innerHTML = html; });
+        containers.forEach(function(c) {
+            c.innerHTML = html;
+            c.classList.add('ia-loaded');
+        });
     }
 
     fetch('<?= BASE_URL ?>obter_insight?m=' + encodeURIComponent(mes))
