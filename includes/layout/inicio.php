@@ -7,8 +7,16 @@ $rota = $_GET['url'] ?? ''; // rota atual
 
 // verificando se precisa incluir o valida ou não
 if (isset($n_valida) && $n_valida == true) {
-    session_start();
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
     require_once __DIR__ . "/../../backend/conexao.php";
+    require_once __DIR__ . "/../../backend/auth/auto_login.php";
+    
+    if (isset($_SESSION["id"]) && in_array($rota, ['', 'login', 'cadastro'])) {
+        header("Location: " . BASE_URL . "dashboard");
+        exit;
+    }
 } else {
     require_once __DIR__ . "/../../backend/valida.php";
 }

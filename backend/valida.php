@@ -9,24 +9,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $rota = $rota ?? false;
 
 // Auto-login com o Lembrar-me
-if (!isset($_SESSION["id"]) && isset($_COOKIE['ecoflow_lembrar'])) {
-    $token = $_COOKIE['ecoflow_lembrar'];
-    $token_hash = hash('sha256', $token);
-
-    $stmt_lembrar = $conexao->prepare("SELECT id, nome, email, cargo FROM usuarios WHERE lembrar_token = ?");
-    $stmt_lembrar->bind_param("s", $token_hash);
-    
-    if ($stmt_lembrar->execute()) {
-        $stmt_lembrar->bind_result($id_lembrar, $nome_lembrar, $email_lembrar, $cargo_lembrar);
-        if ($stmt_lembrar->fetch()) {
-            $_SESSION["id"] = $id_lembrar;
-            $_SESSION["nome"] = $nome_lembrar;
-            $_SESSION["email"] = $email_lembrar;
-            $_SESSION["cargo"] = $cargo_lembrar;
-        }
-    }
-    $stmt_lembrar->close();
-}
+require_once __DIR__ . "/auth/auto_login.php";
 
 // 1. PRIMEIRO: Verificamos a autenticação e ATUALIZAMOS os dados do banco
 if (!isset($_SESSION["id"]) && !isset($_SESSION["nome"]) && !isset($_SESSION["email"])) {

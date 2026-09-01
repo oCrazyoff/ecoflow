@@ -53,34 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_SESSION['resposta'] = "Bem Vindo! " . $_SESSION['nome'];
 
                 // verificações antes do login
-                if ($cargo == 0 || $cargo == 1) {
-
-                    $hoje = new DateTime();
-                    // Garante data válida para usuários antigos/novos
-                    $ultimaVerificacao = new DateTime($ultima_verificacao_db ?? '1970-01-01');
-
-                    // PRIMEIRO: Atualiza a data da última verificação para "AGORA"
-                    // (Feito ANTES de processar recorrentes para evitar re-execução 
-                    //  caso o processo falhe ou a requisição seja interrompida)
-                    $stmtUpdateData = $conexao->prepare("UPDATE usuarios SET ultima_verificacao = NOW() WHERE id = ?");
-                    $stmtUpdateData->bind_param("i", $id);
-                    $stmtUpdateData->execute();
-                    $stmtUpdateData->close();
-
-                    // 1. VERIFICAÇÃO DE INÍCIO DE ANO (Relatório Anual e Limpeza)
-                    if ($ultimaVerificacao->format('Y') < $hoje->format('Y')) {
-                        require_once __DIR__ . "/../relatorio/gerar_snapshot.php";
-                        processarViradaMultiplosAnos($id, (int)$ultimaVerificacao->format('Y'), (int)$hoje->format('Y'));
-                    }
-
-                    // 2. VERIFICAÇÃO DE RECORRENTES (Despesas/Rendas)
-                    // Só executa se o mês atual for maior que o mês da última verificação
-                    if ($ultimaVerificacao->format('Y-m') < $hoje->format('Y-m')) {
-
-                        // Executa a função de gerar despesas e rendas
-                        verificarRecorrentes($id);
-                    }
-                }
+                processarVerificacoesLogin($id, $cargo, $ultima_verificacao_db);
 
                 // Lembrar-me
                 if (isset($_POST['lembrar_me']) && $_POST['lembrar_me'] == '1') {
