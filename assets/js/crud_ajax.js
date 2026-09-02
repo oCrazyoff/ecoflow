@@ -59,13 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (this.dataset.value === '1') {
                             if (containerRecorrente) containerRecorrente.classList.add('hidden');
                             if (containerParcelas) containerParcelas.classList.remove('hidden');
+                            // Reseta recorrente para 0
                             const recorrenteInput = document.getElementById('recorrente');
                             if (recorrenteInput) recorrenteInput.value = '0';
+                            window.atualizarPreviewParcelasCadastro?.();
                         } else {
                             if (containerRecorrente) containerRecorrente.classList.remove('hidden');
                             if (containerParcelas) containerParcelas.classList.add('hidden');
                             const numParcelas = document.getElementById('num_parcelas');
                             if (numParcelas) numParcelas.value = '';
+                            const previewParcelas = document.getElementById('preview-parcelas');
+                            if (previewParcelas) previewParcelas.classList.add('hidden');
                         }
                     }
 

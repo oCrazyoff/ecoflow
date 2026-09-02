@@ -153,7 +153,7 @@
   }
 
   & #modal-extrato {
-    @apply hidden fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
+    @apply hidden fixed inset-0 flex items-center justify-center bg-black/60 z-1100 w-full;
 
     & .container-modal {
       @apply bg-white shadow-lg p-5 rounded-lg w-xl max-h-[90dvh] min-w-1/2 max-w-[90vw] overflow-auto;

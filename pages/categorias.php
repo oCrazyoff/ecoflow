@@ -3,7 +3,7 @@ $titulo = "Categorias";
 require_once "includes/layout/inicio.php";
 
 //puxando todas as categorias do usuário
-$sql = "SELECT id, nome FROM categorias WHERE usuario_id = ?";
+$sql = "SELECT id, nome FROM categorias WHERE usuario_id = ? ORDER BY nome ASC";
 $stmt = $conexao->prepare($sql);
 $stmt->bind_param('i', $_SESSION['id']);
 $stmt->execute();

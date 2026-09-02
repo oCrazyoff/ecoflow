@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmtInsert->execute()) {
             $novo_usuario_id = $conexao->insert_id;
-            $categorias_padrao = ['Casa', 'Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Cartão', 'Outro'];
+            $categorias_padrao = ['Alimentação', 'Cartão', 'Casa', 'Educação', 'Lazer', 'Outro', 'Saúde', 'Transporte'];
 
             $stmt_cat = $conexao->prepare("INSERT INTO categorias (usuario_id, nome) VALUES (?, ?)");
             foreach ($categorias_padrao as $nome_cat) {

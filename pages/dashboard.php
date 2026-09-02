@@ -26,7 +26,7 @@ $dados_indicadores = getIndicadores();
         <div class="opt-header">
             <button id="btn-extrato" onclick="mostrarModalExtrato()">
                 <i class="bi bi-upload"></i>
-                <div class="txt-btn"><span>Importar</span> Extrato</div>
+                <div class="txt-btn"><span>Importar Extrato</span></div>
             </button>
             <?php require_once "includes/seletor_mes.php" ?>
         </div>
@@ -230,7 +230,12 @@ $dados_indicadores = getIndicadores();
                 throw new Error('JSON Inválido');
             }
 
-            if (data.sucesso && data.mensagem && data.mensagem.trim() !== '') {
+            // Se houver detalhe de erro técnico, loga no console para diagnóstico sem afetar a interface
+            if (data.erro_tecnico) {
+                console.error('EcoFlow IA (detalhe do erro de conexão/servidor):', data.erro_tecnico);
+            }
+
+            if (data.sucesso && data.mensagem && data.mensagem.trim() !== '' && !data.mensagem.startsWith('Erro')) {
                 preencherContainers(
                     '<h4 class="titulo">' + escapeHtml(data.titulo) + '</h4>' +
                     '<p>' + escapeHtml(data.mensagem) + '</p>'
@@ -243,10 +248,11 @@ $dados_indicadores = getIndicadores();
             }
         })
         .catch(function(erro) {
-            console.error('Erro na requisição da IA:', erro.message);
+            // Registra o erro no console e mantém a interface limpa e elegante sem mensagens de erro
+            console.error('Erro na requisição da IA:', erro.message || erro);
             preencherContainers(
-                '<p class="text-sm text-texto-opaco text-center py-3">' +
-                '<i class="bi bi-exclamation-circle"></i> Não foi possível carregar o insight.</p>'
+                '<img class="bg-verde/20 rounded-2xl py-1 h-25" src="assets/img/esperar.svg" alt="Desenho de espera">' +
+                '<p class="text-xs text-texto-opaco mt-2">Sem sugestões para este mês.</p>'
             );
         });
 })();

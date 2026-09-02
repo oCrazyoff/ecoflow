@@ -80,8 +80,8 @@ if ($expected_title_type === null) {
     exit;
 }
 
-// CASO 1: Insight salvo E o tipo dele bate com o esperado
-if ($dados_ia && $dados_ia['titulo'] == $expected_title_type) {
+// CASO 1: Insight salvo E o tipo dele bate com o esperado (e não é mensagem de erro)
+if ($dados_ia && $dados_ia['titulo'] == $expected_title_type && stripos($dados_ia['mensagem'], 'Erro') !== 0) {
     $txt_ia = $dados_ia['mensagem'];
 
     if ($expected_title_type == 0) $titulo_ia = 'Meta Financeira 🎯';
@@ -103,16 +103,21 @@ if ($dados_ia && $dados_ia['titulo'] == $expected_title_type) {
 }
 
 // Retornar resultado
-if (!empty(trim($txt_ia ?? ''))) {
+$erro_tecnico = $GLOBALS['ultimo_erro_ia'] ?? null;
+
+// Garante que nenhuma mensagem técnica de erro seja exposta como insight para o usuário
+if (!empty(trim($txt_ia ?? '')) && stripos($txt_ia, 'Erro') !== 0) {
     echo json_encode([
         'sucesso' => true,
         'titulo' => $titulo_ia,
-        'mensagem' => $txt_ia
+        'mensagem' => $txt_ia,
+        'erro_tecnico' => $erro_tecnico
     ]);
 } else {
     echo json_encode([
         'sucesso' => true,
         'titulo' => '',
-        'mensagem' => ''
+        'mensagem' => '',
+        'erro_tecnico' => $erro_tecnico
     ]);
 }

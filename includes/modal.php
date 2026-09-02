@@ -65,7 +65,6 @@ $dia = date('d');
                                 <select class="input-modal" name="categoria_id" id="categoria_id" required>
                                     <option value="">Selecione</option>
                                     <?php
-                                    $categoria_selecionada = isset($row['categoria_id']) ? $row['categoria_id'] : null;
                                     $sql_todas_cat = "SELECT id, nome FROM categorias WHERE usuario_id = ? ORDER BY nome ASC";
                                     if ($stmt_cat = $conexao->prepare($sql_todas_cat)) {
                                         $stmt_cat->bind_param("i", $_SESSION['id']);
@@ -73,8 +72,7 @@ $dia = date('d');
                                         $result_cat = $stmt_cat->get_result();
                                         if ($result_cat->num_rows > 0) {
                                             while ($cat = $result_cat->fetch_assoc()) {
-                                                $selected = ($cat['id'] == $categoria_selecionada) ? 'selected' : '';
-                                                echo "<option value='{$cat['id']}' $selected>" . htmlspecialchars($cat['nome']) . "</option>";
+                                                echo "<option value='{$cat['id']}'>" . htmlspecialchars($cat['nome']) . "</option>";
                                             }
                                         }
                                         $stmt_cat->close();
@@ -124,15 +122,44 @@ $dia = date('d');
                         <div id="container-parcelas" class="hidden mt-3">
                             <label for="num_parcelas">Número de Parcelas</label>
                             <input type="number" name="num_parcelas" id="num_parcelas" class="input-modal" min="2" max="120" placeholder="Ex: 12">
+                            <!-- Previsão do término do parcelamento (Dia, Mês e Ano) -->
+                            <div id="preview-parcelas" class="hidden mt-2.5 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-950">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="bi bi-calendar-check text-base"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                                            <span class="text-xs uppercase font-bold tracking-wider text-emerald-700">Término do Parcelamento</span>
+                                            <span id="preview-parcelas-valor" class="text-xs font-semibold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded"></span>
+                                        </div>
+                                        <div class="text-sm font-bold text-emerald-950 mt-1" id="preview-parcelas-data"></div>
+                                        <div class="text-xs text-emerald-700/90 mt-0.5" id="preview-parcelas-subtexto"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Campo oculto para grupo de parcelas (usado na edição) -->
                     <input type="hidden" name="parcela_grupo" id="parcela_grupo" value="">
 
-                    <!-- Checkbox para editar todas as parcelas -->
-                    <div id="container-editar-todas" class="hidden mt-3 p-3 bg-gray-50 rounded-lg border border-borda">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm m-0">
+                    <!-- Informações e Checkbox para editar todas as parcelas -->
+                    <div id="container-editar-todas" class="hidden mt-3 p-3.5 bg-gradient-to-r from-amber-50/70 to-orange-50/70 rounded-lg border border-amber-200">
+                        <div class="flex items-start gap-2.5 mb-2.5 pb-2.5 border-b border-amber-200/80">
+                            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="bi bi-layers-half text-base"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span id="badge-parcela-edicao" class="font-bold text-xs bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded"></span>
+                                    <span class="text-xs text-amber-800 font-medium">Despesa Parcelada</span>
+                                </div>
+                                <div class="text-sm font-bold text-amber-950 mt-1" id="texto-ultima-parcela-edicao"></div>
+                                <div class="text-xs text-amber-800/80 mt-0.5" id="subtexto-parcela-edicao"></div>
+                            </div>
+                        </div>
+                        <label class="flex items-center gap-2 cursor-pointer text-sm m-0 text-texto font-medium">
                             <input type="checkbox" name="editar_todas" id="editar_todas" value="1" class="accent-verde w-4 h-4">
                             <span>Aplicar alterações a todas as parcelas deste grupo</span>
                         </label>
@@ -216,11 +243,14 @@ $dia = date('d');
                         // Reseta recorrente para 0
                         const recorrenteInput = document.getElementById('recorrente');
                         if (recorrenteInput) recorrenteInput.value = '0';
+                        atualizarPreviewParcelasCadastro();
                     } else {
                         if (containerRecorrente) containerRecorrente.classList.remove('hidden');
                         if (containerParcelas) containerParcelas.classList.add('hidden');
                         const numParcelas = document.getElementById('num_parcelas');
                         if (numParcelas) numParcelas.value = '';
+                        const previewParcelas = document.getElementById('preview-parcelas');
+                        if (previewParcelas) previewParcelas.classList.add('hidden');
                     }
                 }
 
@@ -240,6 +270,173 @@ $dia = date('d');
             });
         });
     });
+
+    const MESES_NOMES = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    /**
+     * Calcula a data da última parcela baseado na data inicial e total de parcelas
+     * Segue a mesma lógica do backend PHP para garantir precisão exata.
+     */
+    function calcularDataUltimaParcela(dataStr, totalParcelas) {
+        if (!dataStr || !totalParcelas || totalParcelas < 2) return null;
+
+        const partes = dataStr.split('-');
+        if (partes.length !== 3) return null;
+
+        const anoBase = parseInt(partes[0], 10);
+        const mesBase = parseInt(partes[1], 10);
+        const diaOriginal = parseInt(partes[2], 10);
+
+        if (isNaN(anoBase) || isNaN(mesBase) || isNaN(diaOriginal)) return null;
+
+        let mesAlvo = mesBase + (totalParcelas - 1);
+        let anoAlvo = anoBase;
+        while (mesAlvo > 12) {
+            mesAlvo -= 12;
+            anoAlvo++;
+        }
+
+        const ultimoDiaMes = new Date(anoAlvo, mesAlvo, 0).getDate();
+        const diaReal = Math.min(diaOriginal, ultimoDiaMes);
+
+        const mesFmt = String(mesAlvo).padStart(2, '0');
+        const diaFmt = String(diaReal).padStart(2, '0');
+        const nomeMes = MESES_NOMES[mesAlvo - 1] || '';
+
+        return {
+            dia: diaFmt,
+            mes: mesFmt,
+            ano: anoAlvo,
+            formatada: `${diaFmt}/${mesFmt}/${anoAlvo}`,
+            mesAno: `${nomeMes} de ${anoAlvo}`
+        };
+    }
+    window.calcularDataUltimaParcela = calcularDataUltimaParcela;
+
+    /**
+     * Atualiza o card de preview da última parcela no cadastro
+     */
+    function atualizarPreviewParcelasCadastro() {
+        const containerParcelas = document.getElementById('container-parcelas');
+        const previewEl = document.getElementById('preview-parcelas');
+        if (!containerParcelas || containerParcelas.classList.contains('hidden') || !previewEl) {
+            if (previewEl) previewEl.classList.add('hidden');
+            return;
+        }
+
+        const numParcelasInput = document.getElementById('num_parcelas');
+        const dataInput = document.getElementById('data');
+        const valorInput = document.getElementById('valor');
+
+        const numParcelas = parseInt(numParcelasInput ? numParcelasInput.value : 0, 10);
+        const dataStr = dataInput ? dataInput.value : '';
+
+        if (!numParcelas || numParcelas < 2 || !dataStr) {
+            previewEl.classList.add('hidden');
+            return;
+        }
+
+        const infoUltima = calcularDataUltimaParcela(dataStr, numParcelas);
+        if (!infoUltima) {
+            previewEl.classList.add('hidden');
+            return;
+        }
+
+        // Formata data inicial
+        const pInicial = dataStr.split('-');
+        const dataInicialFmt = pInicial.length === 3 ? `${pInicial[2]}/${pInicial[1]}/${pInicial[0]}` : dataStr;
+
+        // Valor por parcela (se informado)
+        const valorParcelaEl = document.getElementById('preview-parcelas-valor');
+        if (valorParcelaEl) {
+            let valStr = valorInput ? valorInput.value.replace(/\D/g, '') : '';
+            let valCentavos = parseInt(valStr, 10);
+            if (!isNaN(valCentavos) && valCentavos > 0) {
+                let valorTotal = valCentavos / 100;
+                let valorCada = (valorTotal / numParcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                valorParcelaEl.textContent = `${numParcelas}x de ${valorCada}`;
+            } else {
+                valorParcelaEl.textContent = `${numParcelas} parcelas`;
+            }
+        }
+
+        const dataEl = document.getElementById('preview-parcelas-data');
+        if (dataEl) {
+            dataEl.innerHTML = `<i class="bi bi-calendar-event text-emerald-600 mr-1"></i> Última parcela (${numParcelas}/${numParcelas}): <span class="underline decoration-emerald-400 font-bold">${infoUltima.formatada}</span> (${infoUltima.mesAno})`;
+        }
+
+        const subtextoEl = document.getElementById('preview-parcelas-subtexto');
+        if (subtextoEl) {
+            subtextoEl.textContent = `Início em ${dataInicialFmt} • Fim em ${infoUltima.formatada}`;
+        }
+
+        previewEl.classList.remove('hidden');
+    }
+    window.atualizarPreviewParcelasCadastro = atualizarPreviewParcelasCadastro;
+
+    /**
+     * Atualiza as informações visuais da parcela e data da última parcela na edição
+     */
+    function atualizarInfoParcelasEdicao(dados) {
+        const badgeEl = document.getElementById('badge-parcela-edicao');
+        const textoUltimaEl = document.getElementById('texto-ultima-parcela-edicao');
+        const subtextoEl = document.getElementById('subtexto-parcela-edicao');
+
+        const numAtual = parseInt(dados.parcela_numero, 10) || 1;
+        const total = parseInt(dados.parcela_total, 10) || numAtual;
+
+        if (badgeEl) {
+            badgeEl.textContent = `Parcela ${numAtual} de ${total}`;
+        }
+
+        // Data da última parcela
+        let dataUltimaStr = dados.parcela_ultima_data || null;
+
+        // Se não veio pelo backend, calcula a projeção a partir da data atual
+        if (!dataUltimaStr && dados.data && total > numAtual) {
+            const restante = total - numAtual + 1;
+            const calc = calcularDataUltimaParcela(dados.data, restante);
+            if (calc) dataUltimaStr = `${calc.ano}-${calc.mes}-${calc.dia}`;
+        } else if (!dataUltimaStr && dados.data && total === numAtual) {
+            dataUltimaStr = dados.data;
+        }
+
+        if (textoUltimaEl) {
+            if (dataUltimaStr) {
+                const partes = dataUltimaStr.split('-');
+                if (partes.length === 3) {
+                    const diaFmt = partes[2];
+                    const mesFmt = partes[1];
+                    const anoFmt = partes[0];
+                    const nomeMes = MESES_NOMES[parseInt(mesFmt, 10) - 1] || '';
+                    const dataFormatada = `${diaFmt}/${mesFmt}/${anoFmt}`;
+
+                    if (numAtual === total) {
+                        textoUltimaEl.innerHTML = `<i class="bi bi-check-circle-fill text-amber-700 mr-1"></i> Esta é a última parcela (${total}/${total}): <span class="font-bold underline decoration-amber-400">${dataFormatada}</span> (${nomeMes} de ${anoFmt})`;
+                    } else {
+                        textoUltimaEl.innerHTML = `<i class="bi bi-calendar-check text-amber-700 mr-1"></i> Última parcela (${total}/${total}): <span class="font-bold underline decoration-amber-400">${dataFormatada}</span> (${nomeMes} de ${anoFmt})`;
+                    }
+                } else {
+                    textoUltimaEl.textContent = `Última parcela: ${dataUltimaStr}`;
+                }
+            } else {
+                textoUltimaEl.textContent = `Total de ${total} parcelas neste grupo`;
+            }
+        }
+
+        if (subtextoEl) {
+            if (numAtual === total) {
+                subtextoEl.textContent = 'Encerramento do parcelamento deste compromisso';
+            } else {
+                const parcelasRestantes = total - numAtual;
+                subtextoEl.textContent = `Faltam ${parcelasRestantes} ${parcelasRestantes === 1 ? 'parcela' : 'parcelas'} para quitar este compromisso`;
+            }
+        }
+    }
+    window.atualizarInfoParcelasEdicao = atualizarInfoParcelasEdicao;
 
     // Formatação em tempo real do campo Valor (moeda BRL)
     function formatarMoedaBRL(val) {
@@ -270,6 +467,15 @@ $dia = date('d');
     document.addEventListener('input', function(e) {
         if (e.target && (e.target.id === 'valor' || e.target.name === 'valor')) {
             e.target.value = formatarMoedaBRL(e.target.value);
+        }
+        if (e.target && (e.target.id === 'num_parcelas' || e.target.id === 'data' || e.target.id === 'valor')) {
+            atualizarPreviewParcelasCadastro();
+        }
+    });
+
+    document.addEventListener('change', function(e) {
+        if (e.target && (e.target.id === 'num_parcelas' || e.target.id === 'data')) {
+            atualizarPreviewParcelasCadastro();
         }
     });
 
@@ -317,6 +523,8 @@ $dia = date('d');
         // limpa campos do form
         form.reset();
         resetarToggles();
+        const catSelect = document.getElementById('categoria_id');
+        if (catSelect) catSelect.value = '';
 
         // Reseta campos de parcelas e visibilidade
         const containerParcelas = document.getElementById('container-parcelas');
@@ -332,6 +540,9 @@ $dia = date('d');
         if (containerParcelado) containerParcelado.classList.remove('hidden');
         if (sectionDetalhes) sectionDetalhes.classList.remove('hidden');
         if (parcelaGrupoInput) parcelaGrupoInput.value = '';
+
+        const previewParcelas = document.getElementById('preview-parcelas');
+        if (previewParcelas) previewParcelas.classList.add('hidden');
 
         if (btnSubmit) btnSubmit.textContent = 'Salvar Despesa';
 
@@ -393,6 +604,9 @@ $dia = date('d');
                     if (parcelaGrupoInput) parcelaGrupoInput.value = dados.parcela_grupo;
                     const editarTodas = document.getElementById('editar_todas');
                     if (editarTodas) editarTodas.checked = false;
+
+                    // Mostra dia/mês/ano da última parcela e detalhes da parcela atual
+                    atualizarInfoParcelasEdicao(dados);
                 } else {
                     if (containerEditarTodas) containerEditarTodas.classList.add('hidden');
                     if (containerRecorrente) containerRecorrente.classList.remove('hidden');
@@ -416,11 +630,13 @@ $dia = date('d');
         const containerEditarTodas = document.getElementById('container-editar-todas');
         const containerRecorrente = document.getElementById('container-recorrente');
         const containerParcelado = document.getElementById('container-parcelado-wrapper');
+        const previewParcelas = document.getElementById('preview-parcelas');
 
         if (containerParcelas) containerParcelas.classList.add('hidden');
         if (containerEditarTodas) containerEditarTodas.classList.add('hidden');
         if (containerRecorrente) containerRecorrente.classList.remove('hidden');
         if (containerParcelado) containerParcelado.classList.remove('hidden');
+        if (previewParcelas) previewParcelas.classList.add('hidden');
         resetarToggles();
     }
 </script>
