@@ -1,6 +1,6 @@
 @layer components {
   #modal {
-    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-850 w-full;
+    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-[20000] w-full;
 
     & #form-container {
       @apply bg-white shadow-lg p-6 rounded-xl w-2xl max-w-[95vw];
@@ -76,7 +76,7 @@
   }
 
   .modal-visualizar {
-    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-500 w-full;
+    @apply fixed inset-0 flex items-center justify-center bg-black/60 z-[20000] w-full;
 
     & .container-modal {
       @apply relative bg-white shadow-lg p-5 rounded-lg w-xl max-w-[90vw] max-h-[90dvh];
@@ -152,8 +152,8 @@
     }
   }
 
-  & #modal-extrato {
-    @apply hidden fixed inset-0 flex items-center justify-center bg-black/60 z-1100 w-full;
+  #modal-extrato {
+    @apply hidden fixed inset-0 flex items-center justify-center bg-black/60 z-[20000] w-full;
 
     & .container-modal {
       @apply bg-white shadow-lg p-5 rounded-lg w-xl max-h-[90dvh] min-w-1/2 max-w-[90vw] overflow-auto;

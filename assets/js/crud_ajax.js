@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cria novo div de mensagem
         const div = document.createElement("div");
         div.id = "div-erro";
-        div.style.zIndex = "9999";
+        div.style.zIndex = "30000";
         div.innerHTML = `<i class="bi bi-info-circle-fill"></i> ${mensagem}`;
         document.body.appendChild(div);
 
