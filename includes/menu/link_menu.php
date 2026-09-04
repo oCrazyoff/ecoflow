@@ -14,6 +14,10 @@
     <i class="bi bi-tags"></i>
     <span>Categorias</span>
 </a>
+<a class="<?= ($rota === 'recorrentes') ? 'atual' : '' ?>" href="recorrentes">
+    <i class="bi bi-arrow-repeat"></i>
+    <span>Recorrências</span>
+</a>
 <a class="<?= ($rota === 'relatorios') ? 'atual' : '' ?>" href="relatorios">
     <i class="bi bi-journal-text"></i>
     <span>Relatórios</span>

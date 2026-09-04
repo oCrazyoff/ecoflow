@@ -126,25 +126,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         } else {
             // Cadastro normal (sem parcelas)
-            // Gerar UUID de recorrência se for recorrente
-            $recorrencia_grupo = null;
+            $recorrente_id = null;
             if ($recorrente == 1) {
-                $recorrencia_grupo = sprintf(
-                    '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                    mt_rand(0, 0xffff),
-                    mt_rand(0, 0x0fff) | 0x4000,
-                    mt_rand(0, 0x3fff) | 0x8000,
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-                );
+                // Cria template de recorrência
+                $dia_vencimento = (int)date('d', strtotime($data));
+                $sqlTemplate = "INSERT INTO recorrentes (usuario_id, tipo, descricao, valor, categoria_id, dia_vencimento, data_inicio) VALUES (?, 'despesa', ?, ?, ?, ?, ?)";
+                $stmtT = $conexao->prepare($sqlTemplate);
+                $stmtT->bind_param("isdsis", $usuario_id, $descricao, $valor, $categoria, $dia_vencimento, $data);
+                $stmtT->execute();
+                $recorrente_id = $stmtT->insert_id;
+                $stmtT->close();
             }
 
             // Definir data_pagamento se já está pago
             $data_pagamento = ($status == 1) ? $data : null;
 
-            $sql = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, recorrencia_grupo, data_pagamento) VALUES (?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO despesas (usuario_id, descricao, valor, status, recorrente, categoria_id, data, recorrente_id, data_pagamento) VALUES (?,?,?,?,?,?,?,?,?)";
             $stmt = $conexao->prepare($sql);
-            $stmt->bind_param("issiiisss", $usuario_id, $descricao, $valor, $status, $recorrente, $categoria, $data, $recorrencia_grupo, $data_pagamento);
+            $stmt->bind_param("issiiisis", $usuario_id, $descricao, $valor, $status, $recorrente, $categoria, $data, $recorrente_id, $data_pagamento);
 
             if ($stmt->execute()) {
                 limparInsightsCache();

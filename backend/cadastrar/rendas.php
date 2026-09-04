@@ -49,21 +49,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     try {
         // Gerar UUID de recorrência se for recorrente
-        $recorrencia_grupo = null;
+        $recorrente_id = null;
         if ($recorrente == 1) {
-            $recorrencia_grupo = sprintf(
-                '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0x0fff) | 0x4000,
-                mt_rand(0, 0x3fff) | 0x8000,
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-            );
+            // Cria template de recorrência
+            $dia_vencimento = (int)date('d', strtotime($data));
+            $sqlTemplate = "INSERT INTO recorrentes (usuario_id, tipo, descricao, valor, dia_vencimento, data_inicio) VALUES (?, 'renda', ?, ?, ?, ?)";
+            $stmtT = $conexao->prepare($sqlTemplate);
+            $stmtT->bind_param("isdis", $usuario_id, $descricao, $valor, $dia_vencimento, $data);
+            $stmtT->execute();
+            $recorrente_id = $stmtT->insert_id;
+            $stmtT->close();
         }
 
-        $sql = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, recorrencia_grupo, data) VALUES (?,?,?,?,?,?)";
+        $sql = "INSERT INTO rendas (usuario_id, descricao, valor, recorrente, recorrente_id, data) VALUES (?,?,?,?,?,?)";
         $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("ississ", $usuario_id, $descricao, $valor, $recorrente, $recorrencia_grupo, $data);
+        $stmt->bind_param("issiis", $usuario_id, $descricao, $valor, $recorrente, $recorrente_id, $data);
 
         if ($stmt->execute()) {
             limparInsightsCache();

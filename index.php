@@ -67,9 +67,13 @@ $routes = [
     'deletar_avisos' => 'backend/deletar/avisos.php',
     'deletar_categorias' => 'backend/deletar/categorias.php',
 
-    // rotas de adiantamento (novo sistema)
-    'adiantar_mes' => 'backend/cadastrar/adiantar_mes.php',
-    'buscar_recorrentes_mes' => 'backend/buscar/recorrentes_mes.php',
+    // rotas de recorrências (novo sistema)
+    'recorrentes' => 'pages/recorrentes.php',
+    'criar_recorrente' => 'backend/recorrentes/criar.php',
+    'editar_recorrente' => 'backend/recorrentes/editar.php',
+    'pausar_recorrente' => 'backend/recorrentes/pausar.php',
+    'deletar_recorrente' => 'backend/recorrentes/deletar.php',
+    'buscar_recorrente' => 'backend/buscar/recorrentes.php',
 
     // rotas da função aviso
     'marcar_aviso_visto' => 'backend/aviso/marcar_visto.php',

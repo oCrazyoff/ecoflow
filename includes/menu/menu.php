@@ -45,6 +45,12 @@
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6"></div>
         
         <div class="grid grid-cols-3 gap-y-6 gap-x-2 text-center mb-8">
+            <a href="recorrentes" class="flex flex-col items-center gap-2 text-gray-700 hover:text-verde">
+                <div class="w-12 h-12 rounded-full bg-verde/10 flex items-center justify-center text-verde text-xl">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <span class="text-sm font-medium">Fixos</span>
+            </a>
             <a href="relatorios" class="flex flex-col items-center gap-2 text-gray-700 hover:text-verde">
                 <div class="w-12 h-12 rounded-full bg-verde/10 flex items-center justify-center text-verde text-xl">
                     <i class="bi bi-journal-text"></i>

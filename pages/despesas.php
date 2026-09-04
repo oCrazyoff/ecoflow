@@ -1,21 +1,18 @@
 <?php
 $titulo = "Despesas";
 require_once "includes/layout/inicio.php";
+require_once "backend/recorrentes/materializar.php";
 
-// Detectar se o mês selecionado é futuro (para exibir botão de adiantar)
-$mesAtualNum = (int)date('n');
-$mesFuturo = (isset($m) && $m > $mesAtualNum);
+$mesSelect = isset($m) && $m > 0 && $m < 13 ? $m : (int)date('n');
+$anoSelect = (int)date('Y');
+
+// Materializar recorrências para este mês/ano
+materializarRecorrentes($_SESSION['id'], $mesSelect, $anoSelect);
 
 // puxando todas as despesas do mês e ano
-if (isset($m) && $m > 0 && $m < 13) {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = YEAR(CURDATE())";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param('ii', $_SESSION['id'], $m);
-} else {
-    $sql = "SELECT id, descricao, valor, status, recorrente, categoria_id, data, tipo, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param('i', $_SESSION['id']);
-}
+$sql = "SELECT id, descricao, valor, status, recorrente, recorrente_id, categoria_id, data, tipo, parcela_grupo, parcela_numero, parcela_total FROM despesas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND ignorado = 0";
+$stmt = $conexao->prepare($sql);
+$stmt->bind_param('iii', $_SESSION['id'], $mesSelect, $anoSelect);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -38,12 +35,6 @@ while ($row = $result->fetch_assoc()) {
         <h2>Despesas</h2>
         <div class="container-btn-tabela">
             <?php require_once "includes/seletor_mes.php" ?>
-            <?php if ($mesFuturo): ?>
-                <button onclick="abrirModalAdiantarMes()" class="border border-purple-300 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg px-3 py-2 cursor-pointer flex items-center gap-1.5 text-sm font-medium">
-                    <i class="bi bi-fast-forward-fill"></i>
-                    <span>Adiantar</span>
-                </button>
-            <?php endif; ?>
             <button onclick="abrirCadastrarModal('despesas')"><i class="bi bi-plus"></i>
                 <span>Nova Despesa</span></button>
         </div>
@@ -70,9 +61,7 @@ while ($row = $result->fetch_assoc()) {
                                 <form action="deletar_despesas" method="POST" class="m-0 flex">
                                     <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
                                     <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
-                                    <button
-                                        class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta"
-                                        type="submit">
+                                    <button class="text-red-500 cursor-pointer hover:bg-gray-100 rounded p-1 flex items-center justify-center btn-deleta" type="submit">
                                         <i class="bi bi-trash3"></i>
                                     </button>
                                 </form>
@@ -202,8 +191,7 @@ while ($row = $result->fetch_assoc()) {
                                         <!--csrf-->
                                         <input type="hidden" name="csrf" id="csrf" value="<?= gerarCSRF() ?>">
                                         <input type="hidden" name="id" id="id" value="<?= $row['id'] ?>">
-
-                                        <button class="btn-deleta" type="submit"><i class="bi bi-trash3"></i></button>
+                                        <button class="btn-deleta text-red-500 hover:text-red-700 cursor-pointer text-lg p-1" type="submit"><i class="bi bi-trash3"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -224,12 +212,6 @@ while ($row = $result->fetch_assoc()) {
         </div>
     <?php endif; ?>
 </main>
-
-<!-- Modal de Adiantar Mês (aparece apenas se mês futuro) -->
-<?php if ($mesFuturo): ?>
-    <?php $tipo_adiantar = "despesas" ?>
-    <?php require_once "includes/modal_adiantar_mes.php" ?>
-<?php endif; ?>
 
 <script>
     function trocarRecorrente(botao) {

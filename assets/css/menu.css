@@ -87,7 +87,7 @@
   }
 
   .menu-mobile {
-    @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl py-2 border-t border-borda z-[1  000];
+    @apply fixed lg:hidden bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl py-2 border-t border-borda z-[1000];
 
     & nav {
       @apply grid grid-cols-4 w-full;

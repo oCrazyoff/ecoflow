@@ -19,16 +19,7 @@ if (!$row) {
     exit;
 }
 
-// Bloquear toggle em despesas adiantadas
-if ($row['tipo'] == 1) {
-    echo json_encode(["sucesso" => false, "mensagem" => "Lançamentos de adiantamento não podem ter o status alterado."]);
-    exit;
-}
 
-if ($row['status'] == 2) {
-    echo json_encode(["sucesso" => false, "mensagem" => "Despesas pagas antecipadamente não podem ter o status alterado. Cancele o adiantamento primeiro."]);
-    exit;
-}
 
 $novo_status = $row['status'] == 0 ? 1 : 0;
 

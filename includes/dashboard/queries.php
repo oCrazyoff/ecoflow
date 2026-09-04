@@ -38,7 +38,7 @@ function totalRendas($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND ignorado = 0";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -66,6 +66,7 @@ function despesasPagas($mes = null, $ano = null): float
             WHERE usuario_id = ? 
             AND status IN (1, 2) 
             AND tipo = 0
+            AND ignorado = 0
             AND MONTH(COALESCE(data_pagamento, data)) = ? 
             AND YEAR(COALESCE(data_pagamento, data)) = ?";
     $stmt = $conexao->prepare($sql);
@@ -87,7 +88,7 @@ function despesasPendentes($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND status = 0 AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -107,7 +108,7 @@ function totalDespesas($mes = null, $ano = null): float
     $mes = $mes ?? dashGetMes();
     $ano = $ano ?? (int)date('Y');
 
-    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(SUM(valor), 0) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -189,7 +190,7 @@ function getCategoriasDespesas(): array
     $sql = "SELECT c.nome, SUM(d.valor) AS total
             FROM despesas d
             JOIN categorias c ON d.categoria_id = c.id
-            WHERE d.usuario_id = ? AND d.tipo = 0 AND MONTH(d.data) = ? AND YEAR(d.data) = ?
+            WHERE d.usuario_id = ? AND d.tipo = 0 AND d.ignorado = 0 AND MONTH(d.data) = ? AND YEAR(d.data) = ?
             GROUP BY d.categoria_id, c.nome
             ORDER BY total DESC";
     $stmt = $conexao->prepare($sql);
@@ -217,7 +218,7 @@ function getCalendarioFinanceiro(): array
     $ano = (int)date('Y');
 
     // Rendas por dia
-    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? GROUP BY DAY(data)";
+    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND ignorado = 0 GROUP BY DAY(data)";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -227,7 +228,7 @@ function getCalendarioFinanceiro(): array
     $stmt->close();
 
     // Despesas normais por dia (sem parcela, sem recorrente)
-    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NULL AND recorrente = 0 GROUP BY DAY(data)";
+    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NULL AND recorrente = 0 GROUP BY DAY(data)";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -237,7 +238,7 @@ function getCalendarioFinanceiro(): array
     $stmt->close();
 
     // Dias com parcelas
-    $sql = "SELECT DISTINCT DAY(data) as dia FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NOT NULL";
+    $sql = "SELECT DISTINCT DAY(data) as dia FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NOT NULL";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -247,7 +248,7 @@ function getCalendarioFinanceiro(): array
     $stmt->close();
 
     // Dias com recorrentes
-    $sql = "SELECT DISTINCT DAY(data) as dia FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND recorrente = 1";
+    $sql = "SELECT DISTINCT DAY(data) as dia FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND recorrente = 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -312,7 +313,7 @@ function getGastoPorSemana(): array
         ['label' => 'Semana 4', 'periodo' => '22+', 'total' => 0],
     ];
 
-    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? GROUP BY DAY(data)";
+    $sql = "SELECT DAY(data) as dia, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? GROUP BY DAY(data)";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -341,7 +342,7 @@ function getResumoParcelas(): array
     // Parcelas neste mês
     $sql = "SELECT COUNT(*) as qtd, COALESCE(SUM(valor), 0) as valor
             FROM despesas
-            WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NOT NULL";
+            WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND parcela_grupo IS NOT NULL AND ignorado = 0";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -353,7 +354,7 @@ function getResumoParcelas(): array
     // Parcelas futuras (após o mês selecionado)
     $sql = "SELECT COUNT(*) as restantes, COALESCE(SUM(valor), 0) as saldo
             FROM despesas
-            WHERE usuario_id = ? AND parcela_grupo IS NOT NULL
+            WHERE usuario_id = ? AND parcela_grupo IS NOT NULL AND ignorado = 0
             AND ((YEAR(data) = ? AND MONTH(data) > ?) OR YEAR(data) > ?)";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iiii", $_SESSION['id'], $ano, $mes, $ano);
@@ -381,7 +382,7 @@ function getRecordes(): array
     $ano = (int)date('Y');
 
     // Maior despesa
-    $sql = "SELECT descricao, valor FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
+    $sql = "SELECT descricao, valor FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -389,7 +390,7 @@ function getRecordes(): array
     $stmt->close();
 
     // Maior renda
-    $sql = "SELECT descricao, valor FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
+    $sql = "SELECT descricao, valor FROM rendas WHERE usuario_id = ? AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -397,7 +398,7 @@ function getRecordes(): array
     $stmt->close();
 
     // Dia com mais gasto
-    $sql = "SELECT data, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? GROUP BY data ORDER BY total DESC LIMIT 1";
+    $sql = "SELECT data, SUM(valor) as total FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? GROUP BY data ORDER BY total DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -422,7 +423,7 @@ function getIndicadores(): array
 
     // Maior categoria
     $sql = "SELECT c.nome FROM despesas d JOIN categorias c ON d.categoria_id = c.id
-            WHERE d.usuario_id = ? AND d.tipo = 0 AND MONTH(d.data) = ? AND YEAR(d.data) = ?
+            WHERE d.usuario_id = ? AND d.tipo = 0 AND d.ignorado = 0 AND MONTH(d.data) = ? AND YEAR(d.data) = ?
             GROUP BY d.categoria_id, c.nome ORDER BY SUM(d.valor) DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
@@ -432,7 +433,7 @@ function getIndicadores(): array
     $stmt->close();
 
     // Maior compra
-    $sql = "SELECT descricao FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
+    $sql = "SELECT descricao FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ? ORDER BY valor DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -442,7 +443,7 @@ function getIndicadores(): array
 
     // Dia com mais gasto
     $sql = "SELECT DATE_FORMAT(data, '%d/%m') as dia_fmt FROM despesas
-            WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?
+            WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ?
             GROUP BY data ORDER BY SUM(valor) DESC LIMIT 1";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
@@ -453,8 +454,8 @@ function getIndicadores(): array
 
     // Total de lançamentos (rendas + despesas)
     $sql = "SELECT
-            (SELECT COUNT(*) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ?) +
-            (SELECT COUNT(*) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?) AS total";
+            (SELECT COUNT(*) FROM rendas WHERE usuario_id = ? AND MONTH(data) = ? AND YEAR(data) = ? AND ignorado = 0) +
+            (SELECT COUNT(*) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ? AND ignorado = 0) AS total";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iiiiii", $_SESSION['id'], $mes, $ano, $_SESSION['id'], $mes, $ano);
     $stmt->execute();
@@ -463,7 +464,7 @@ function getIndicadores(): array
     $stmt->close();
 
     // Despesa média
-    $sql = "SELECT COALESCE(AVG(valor), 0) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
+    $sql = "SELECT COALESCE(AVG(valor), 0) FROM despesas WHERE usuario_id = ? AND tipo = 0 AND ignorado = 0 AND MONTH(data) = ? AND YEAR(data) = ?";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("iii", $_SESSION['id'], $mes, $ano);
     $stmt->execute();

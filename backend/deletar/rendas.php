@@ -2,7 +2,11 @@
 require_once __DIR__ . '/../valida.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $inputJSON = file_get_contents('php://input');
+    $inputData = json_decode($inputJSON, true);
+
+    $id = $inputData['id'] ?? filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $modo = $inputData['modo'] ?? ($_POST['modo'] ?? null);
 
     // lógica de redirecionamento
     if (isset($_SESSION['m'])) {
@@ -22,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $usuario_id = $_SESSION['id'];
 
     // validar csrf
-    $csrf = trim(strip_tags($_POST["csrf"]));
+    $csrf = trim(strip_tags($inputData['csrf'] ?? $_POST["csrf"] ?? ''));
     if (validarCSRF($csrf) == false) {
         $msg = "Token de segurança inválido!";
         $_SESSION['resposta'] = $msg;
@@ -32,28 +36,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
-        $sql = "DELETE FROM rendas WHERE id = ? AND usuario_id = ?";
-        $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("ii", $id, $usuario_id);
+        // Verificar se a renda é recorrente
+        $sqlCheck = "SELECT recorrente FROM rendas WHERE id = ? AND usuario_id = ?";
+        $stmtCheck = $conexao->prepare($sqlCheck);
+        $stmtCheck->bind_param("ii", $id, $usuario_id);
+        $stmtCheck->execute();
+        $resCheck = $stmtCheck->get_result();
+        $renda = $resCheck->fetch_assoc();
+        $stmtCheck->close();
 
-        if ($stmt->execute()) {
-            limparInsightsCache();
-            if ($stmt->affected_rows > 0) {
-                $msg = "Renda excluída com sucesso!";
-                $_SESSION['resposta'] = $msg;
-                if (isAjax()) responderJSON(true, $msg);
-            } else {
-                $msg = "Não foi possível excluir a renda. Verifique as permissões.";
-                $_SESSION['resposta'] = $msg;
-                if (isAjax()) responderJSON(false, $msg);
-            }
+        if ($renda && $renda['recorrente'] == 1) {
+            $sqlDel = "UPDATE rendas SET ignorado = 1 WHERE id = ? AND usuario_id = ?";
+            $stmtD = $conexao->prepare($sqlDel);
+            $stmtD->bind_param("ii", $id, $usuario_id);
+            $sucesso = $stmtD->execute();
+            $stmtD->close();
         } else {
-            $msg = "Ocorreu um erro ao tentar excluir a renda.";
+            // Fluxo normal para não recorrentes
+            $sql = "DELETE FROM rendas WHERE id = ? AND usuario_id = ?";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param("ii", $id, $usuario_id);
+            $sucesso = $stmt->execute();
+            $stmt->close();
+        }
+
+        if ($sucesso) {
+            limparInsightsCache();
+            $msg = "Renda excluída com sucesso!";
+            $_SESSION['resposta'] = $msg;
+            if (isAjax()) responderJSON(true, $msg);
+        } else {
+            $msg = "Não foi possível excluir a renda.";
             $_SESSION['resposta'] = $msg;
             if (isAjax()) responderJSON(false, $msg);
         }
 
-        $stmt->close();
         header($redirecionamento);
         exit;
 
